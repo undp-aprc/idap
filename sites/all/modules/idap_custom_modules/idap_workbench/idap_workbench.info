@@ -1,0 +1,4 @@
+name = IDAP Workbench
+description = Workbench to manage thematic sections of the IDAP website
+core = 7.x
+package = "IDAP"

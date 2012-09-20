@@ -1,0 +1,61 @@
+<?php
+/**
+ * @file
+ * extends EntityFieldQuery, providing some useful added methods and some defaults
+ */
+
+class IDAPEntityFieldQuery extends EntityFieldQuery {
+  /**
+   * define some defaults for the class
+   */
+  public function __construct() {
+    $this
+      ->entityCondition('entity_type', 'node')
+      ->propertyCondition('status', 1)
+      ->propertyOrderBy('created', 'DESC');
+  }
+
+  public function SetGroupContentCondition($values) {
+	/* Find all Entity IDs for the value passed to this method */
+	$entity_id = array();
+	$result = db_query('SELECT om.etid FROM {og_membership} om LEFT join {og} og ON om.gid = og.etid WHERE og.gid = :gid',array(':gid' => $values));
+	foreach($result as $record) {
+		$entity_id[] = $record->etid;
+	}
+	
+	/* Pass the Entity IDs into the EFQ->propertyCondition and return results */
+	if (!empty($entity_id)) {
+		$this->propertyCondition('nid', $entity_id);
+		return $this;
+	}
+  }
+
+	public function SetContentTermCondition($values) {
+		$entity_id = array();
+		
+		$result = db_query('SELECT field_theme.entity_id FROM {field_data_field_theme} field_theme WHERE field_theme.field_theme_tid = :tid',array(':tid' => $values));
+		
+		foreach($result as $record) {
+			$entity_id[] = $record->entity_id;
+		}
+		
+		if (!empty($entity_id)) {
+			$this->propertyCondition('nid', $entity_id);
+			return $this;
+		}
+	}
+	
+	/**
+	   * If we're on a node, and if the entity_type is node, exclude the local node from the query
+	   */
+	  public function excludeNode($nid) {
+	    if (!$nid) {
+	      $object = menu_get_object();
+	      $nid = $object->nid;
+	    }
+	    if (!empty($nid) && $this->entityConditions['entity_type']['value'] === 'node') {
+	      $this->propertyCondition('nid', $nid, '<>');
+	    }
+	    return $this;
+	  }
+}

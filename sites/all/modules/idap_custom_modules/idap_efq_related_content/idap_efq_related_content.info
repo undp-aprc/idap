@@ -1,0 +1,6 @@
+name = IDAP EFQ Related Content
+description = Create blocks for displaying content related to the current node.
+core = 7.x
+package = "IDAP"
+
+dependencies[] = idap_efq_ext

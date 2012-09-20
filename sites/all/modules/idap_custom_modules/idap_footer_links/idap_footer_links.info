@@ -1,0 +1,4 @@
+name = IDAP Footer Links
+description = Generate links to the site's sub-sections based on the 'theme' taxonomy
+core = 7.x
+package = "IDAP"

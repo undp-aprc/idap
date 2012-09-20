@@ -1,0 +1,66 @@
+#comments {
+	background-color:#FCFBE2;
+	margin-bottom:20px;
+}
+
+#comments .enclosure {
+	padding:20px;
+}
+
+#comment-form-wrapper {
+	background-color:#FDF8C1;
+}
+
+#comment-form-wrapper .enclosure {
+	padding:20px !important;
+}
+
+.comment {
+	margin-bottom:10px;
+	padding-bottom:10px;
+	border-bottom:1px dotted #ccc;
+}
+
+#comments h1 {
+	margin-bottom:20px;
+	padding:20px;
+	border-radius:10px;
+	background-color:#FCEEB6;
+}
+
+.comment .new {
+	padding:5px;
+	background-color:#E7A43F;
+	border-radius:3px;
+	color: #FFFFFF;
+	float: left;
+	margin-right:20px;
+	width: 30px;
+}
+
+.comment .submitted {
+	float:left;
+	padding:5px 0 5px 0;
+	color:#888;
+}
+
+.comment .inline li {
+	float:left;
+	margin-right:10px;
+	display:block;
+	background-color:#FCEEB6;
+	padding:5px;
+	border-radius:5px;
+	width:50px;
+	text-align:center;
+}
+
+.page-comment-reply .comment {
+	border-bottom:0px;
+	margin-bottom:0px;
+	padding-bottom:0px;
+}
+
+.page-comment-reply #comments .enclosure {
+	padding-bottom:5px;
+}

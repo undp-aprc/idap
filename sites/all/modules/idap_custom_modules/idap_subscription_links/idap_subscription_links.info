@@ -1,0 +1,6 @@
+name = IDAP Subscription Links
+description = Make it possible to subscribe to content types using a single link
+core = 7.x
+dependencies[] = subscriptions
+package = Subscriptions
+

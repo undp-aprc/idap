@@ -1,0 +1,4 @@
+name = IDAP Custom Blocks
+description = Expose some fixed blocks to Drupal block system.
+core = 7.x
+package = "IDAP"

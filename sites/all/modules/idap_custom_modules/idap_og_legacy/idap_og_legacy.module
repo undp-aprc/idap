@@ -1,0 +1,11 @@
+<?php
+
+function idap_og_legacy_get_group_ids($entity_id) {
+	$result = db_query('SELECT og.gid FROM {og} og WHERE og.etid = :entity_id', array(':entity_id' => $entity_id));
+	foreach ($result as $record) {
+		if (isset($record->gid)) {
+			$group_id = $record->gid;
+			return $group_id;
+		}
+	}	
+}

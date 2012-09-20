@@ -1,0 +1,7 @@
+#e-discussion-list table {
+	width:100%;
+}
+
+#e-discussion-list thead {
+	border-top:1px #ccc dotted;
+}

@@ -1,0 +1,7 @@
+<?php
+/* Implements hook_page_alter(&$page) */
+function idap_page_builder_page_alter(&$page) {
+	foreach($node = $page['content']['system_main']['nodes'] as $nid=>$value) {
+		dsm($node[$nid]['#node']);
+	}
+}

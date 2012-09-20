@@ -1,0 +1,31 @@
+
+name = Inclusive Development Asia-Pacific
+description = The default theme for inclusivegrowthasiapacific.net (Designed by Peter Siris and developed by Matthew Clark).
+package = Custom Theme
+core = 7.x
+
+stylesheets[all][] = css/reset.css
+stylesheets[all][] = css/global.css
+stylesheets[all][] = css/tabs.css
+stylesheets[all][] = css/main-menu.css
+stylesheets[all][] = css/block-customizations.css
+stylesheets[all][] = css/comments.css
+stylesheets[all][] = css/temp.css
+
+scripts[] = js/jquery.plugins/jquery.autofill.js
+scripts[] = js/jquery.plugins/jquery.blockFunctions.js
+scripts[] = js/jquery.plugins/jquery.blockUserRegionWidth.js
+scripts[] = js/jquery.plugins/jquery.equal-height-columns.js
+scripts[] = js/global.js
+
+regions[page_top] = Page top
+regions[top] = Top
+regions[header] = Header
+regions[search] = Search
+regions[main_menu] = Main Menu
+regions[masthead] = Masthead
+regions[content] = Content
+regions[sidebar_first] = First Sidebar (Right-hand Side)
+regions[footer] =Footer
+regions[devel] = Development Blocks
+regions[help] = Help

@@ -1,0 +1,132 @@
+<?php
+/* Implements hook_block_info() */
+function idap_page_builder_block_info() {
+	$blocks['masthead_banner'] = array(
+		'info' => t('Masthead Banner for Sub-theme Pages'),
+		'cache' => DRUPAL_CACHE_GLOBAL,
+		'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+	);
+	return $blocks;
+}
+
+function idap_page_builder_block_view($delta = '') {
+	
+	$block = array();
+
+	$block['content'] = array(
+		'#markup' => theme('subtheme_masthead_banner'),
+		'#attached' => array(
+			'css' => array(
+				drupal_get_path('module', 'idap_page_builder').'/css/idap_page_builder.css' => array(
+					'type','file',
+				),
+			),
+		),
+	);
+
+	return $block;
+}
+
+function idap_page_builder_theme() {
+	$items = array();
+	
+	$items['subtheme_masthead_banner'] = array(
+		'arguments' => array(
+			'elements' => NULL,
+			'render element' => 'element',
+		),
+	);
+	
+	return $items;
+}
+
+function idap_page_builder_preprocess_subtheme_masthead_banner(&$variables) {
+	$contexts = context_active_contexts();
+	
+	foreach($contexts as $context_delta=>$context_value) {
+		if (isset($contexts[$context_delta]->conditions['node_taxonomy']['values'])) {
+			$context_taxonomy_values = $contexts[$context_delta]->conditions['node_taxonomy']['values'];
+
+			foreach($context_taxonomy_values as $delta=>$value) {
+				$taxonomy_ids[] = $value;
+			}
+			
+			$variables['elements']['taxonomy_id'] = $taxonomy_ids[0]; // We only want the first group context found
+			$variables['elements']['path_to_banner_images'] = '/sites/default/files/thematic_sections/banner_images/'; // @to do: remove hardcoding for path to image
+			$variables['elements']['banner_image'] = select_banner_item($variables['elements']['taxonomy_id']);
+
+		}
+	}
+	$taxonomy_term = taxonomy_term_load($variables['elements']['taxonomy_id']);
+	$variables['elements']['taxonomy_title'] = $taxonomy_term->name;
+}
+
+function theme_subtheme_masthead_banner($variables) {
+	$elements = $variables['elements'];
+	$output = '';
+	$output .= '<div class="subtheme-masthead-block">';
+	$output .= theme('image',array('path'=>$elements['path_to_banner_images'].$elements['banner_image'], 'alt'=>t('Masthead Banner'), 'attributes'=>array('width'=>983, 'height'=>150)));
+	$output .= "<h1>".$elements['taxonomy_title']."</h1>";
+	$output .= '</div>';
+	
+	return $output;
+}
+
+/* Implements hook_menu_breadcrumb_alter() */
+function idap_page_builder_menu_breadcrumb_alter(&$active_trail, $item) {
+	// Checks the path to see if it matches one of the pillars. If so, remove the link because we don't want people to go there.
+	$path = array();
+	if ($vocabulary = taxonomy_vocabulary_machine_name_load('themes')) {
+		if ($terms = taxonomy_get_tree($vocabulary->vid)) {
+	    	foreach ($terms as $term) {
+				if ($term->depth == 0) { // Only want the top level terms (aka pillars)
+					$path[$term->tid] = 'taxonomy/term/'.$term->tid;
+			  	}
+	        }
+		}
+	}
+	
+	foreach($active_trail as $item=>$value) {
+		$href = $active_trail[$item]['href'];
+		if (in_array($href, $path)) {
+			$active_trail[$item]['href'] = '#';
+		}
+	}
+}
+
+/*
+/*
+/* **** Helper Functions **/
+
+function select_banner_item($tid) {
+	$result = db_query('SELECT iw.banner_fid, iw.tid
+	FROM {idap_workbench} iw WHERE iw.tid = :tid', array(':tid' => $tid));
+	// Result is returned as a iterable object that returns a stdClass object on each iteration
+	foreach ($result as $record) {
+	  	$file = file_load($record->banner_fid);
+	 	$banners[$record->tid] = $file->filename;
+	}
+	return $banners[$tid];
+}
+
+function get_taxonomy_terms($page) {
+	if (isset($page['content']['system_main']['nodes'])) {
+		// If this is a node, get the taxonomy term from its group field (if it exists) 
+		$nodes = $page['content']['system_main']['nodes'];
+		foreach ($nodes as $delta=>$value) {
+			if (isset($nodes[$delta]['#node']->og_group_ref_taxonomy_term)) {
+				$node_obj = $nodes[$delta]['#node']->og_group_ref_taxonomy_term['und'];
+				foreach ($node_obj as $node_obj_delta=>$node_obj_value) {
+					$taxonomy_term[] = $node_obj[$node_obj_delta]['target_id'];
+				}
+			}
+		}
+	} elseif (isset($page['content']['system_main']['term_heading']['term']['#term']->tid)) {
+		// If this is a taxonomy term page, get its taxonomy term
+		$taxonomy_term[] = $page['content']['system_main']['term_heading']['term']['#term']->tid;
+	} else {
+		// This is neither, return false
+		$taxonomy_term = FALSE;
+	}
+	return $taxonomy_term;
+}

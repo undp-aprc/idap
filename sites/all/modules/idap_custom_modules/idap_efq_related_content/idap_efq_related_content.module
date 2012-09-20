@@ -1,0 +1,82 @@
+<?php
+
+ /* Implements hook_block_info(). */
+function idap_efq_related_content_block_info() {
+  $blocks['content_by_term_photo_teaser'] = array(
+    'info' => t('Related Content (Photo Teaser)'),
+    'cache' => DRUPAL_NO_CACHE
+  );
+  $blocks['content_by_term_teaser'] = array(
+    'info' => t('Related Content (Teaser)'),
+    'cache' => DRUPAL_NO_CACHE
+  );
+  return $blocks;
+}
+
+ /* Implements hook_block_view(). */
+function idap_efq_related_content_block_view($delta = '') {
+  $block = array();
+  if (idap_efq_related_content_by_term()) { //Only create this block if there is content, otherwise return an empty array, which will not be rendered
+	switch ($delta) {
+	    case 'content_by_term_photo_teaser':
+		  $block['subject'] = t('Related Articles');
+	      $block['content'] = array(
+	      	'#markup' => idap_efq_related_content_by_term('photo_teaser'),
+	      );
+	      break;
+
+		 case 'content_by_term_teaser':
+		  $block['subject'] = t('Related Articles');
+	      $block['content'] = array(
+	      	'#markup' => idap_efq_related_content_by_term('teaser'),
+	      );
+	      break;
+	  }
+  }
+  return $block;
+}
+
+function idap_efq_related_content_by_term($view_mode = 'teaser') {
+  $block = array();
+  // if we don't have a node to draw from, in our current setup, we won't have a state and can't continue
+  if ($node = menu_get_object()) {
+    // get the term value
+    $field_name = "field_theme";
+
+	// Get the content type -- we want to display other content of the same type
+	$node_type = $node->type;
+	
+    if (!empty($node->$field_name)) {
+      $items = field_get_items('node', $node, $field_name);
+      $term = $items[0]['tid'];
+    }
+    // only continue if we have a state value
+    if ($term) {
+      // instantiate the query
+      $query = new IDAPEntityFieldQuery;
+      // limit the query to our established node types
+      $query->entityCondition('bundle', $node_type);
+      // add the state value
+      $query->SetContentTermCondition($term);
+      // add a small range
+      $query->range(0, 3);
+      // remove the current node from the query
+      $query->excludeNode();
+
+      // execute the query
+      $result = $query->execute();
+      $output = array();
+      $block['subject'] = t('Other Content for @theme', array('@theme' => $term));
+
+      if (!empty($result['node'])) {
+        // return the nodes as teasers
+        $nodes = node_view_multiple(node_load_multiple(array_keys($result['node'])), $view_mode);
+		
+        $block = render($nodes);
+       } else {
+        $block = FALSE;
+      }
+    }
+  }
+  return $block;
+}

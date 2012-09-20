@@ -1,0 +1,105 @@
+<?php
+/**
+ * @file
+ * IDAP Custom Beans.
+ */
+
+/**
+ * Implements hook_bean_types_api_info().
+ */
+function idap_og_beans_bean_types_api_info() {
+  return array('api' => 4);
+}
+
+/**
+ * Implements hook_bean_types().
+ */
+function idap_og_beans_bean_types() {
+$plugins = array();
+$plugin_path = drupal_get_path('module', 'idap_og_beans') . '/plugins';
+	$plugins['item_summary_listing_photo_2col'] = array(
+    'label' => t('Item listing with photo (2 column widths).'),
+    'handler' => array(
+      'class' => 'IDAPItemSummaryPhoto',
+      'parent' => 'bean',
+    ),
+    'path' => $plugin_path,
+    'file' => 'idap_item_summary_photo.inc',
+	);
+	$plugins['item_summary_listing_photo_3col'] = array(
+    'label' => t('Item listing with photo (3 column widths).'),
+    'handler' => array(
+      'class' => 'IDAPItemSummaryPhoto',
+      'parent' => 'bean',
+    ),
+    'path' => $plugin_path,
+    'file' => 'idap_item_summary_photo.inc',
+	);
+	$plugins['item_listing_1col'] = array(
+    'label' => t('Item listing (1 column width).'),
+    'handler' => array(
+      'class' => 'IDAPItemSummaryListing',
+      'parent' => 'bean',
+    ),
+    'path' => $plugin_path,
+    'file' => 'idap_item_summary_listing.inc',
+	);
+	return $plugins;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function idap_og_beans_theme() {
+	$items = array();
+	module_load_include('inc', 'idap_og_beans', 'idap_og_beans_preprocess_functions');
+
+	$items['article_listing'] = array(
+	 	'arguments' => array(
+	  		'elements' => NULL,
+			'bean_elements' => NULL,
+	  	),
+		'file' => 'idap_og_beans.theme.inc',
+		'template' => 'article-listing',
+		'path' => drupal_get_path('module','idap_og_beans').'/templates',
+	);
+	$items['article_listing_settings'] = array(
+	    'arguments' => array(
+	    'records_shown' => NULL,
+	    ),
+	    'file' => 'idap_og_beans.theme.inc',
+		'path' => drupal_get_path('module','idap_og_beans').'/templates',
+	);
+	
+	$items['article_listing_more_link'] = array(
+	    'arguments' => array(
+	      'text' => NULL,
+	      'path'  => NULL,
+	    ),
+	    'file' => 'idap_og_beans.theme.inc',
+		'path' => drupal_get_path('module','idap_og_beans').'/templates',
+	);
+  return $items;
+}
+
+function idap_og_beans_preprocess_block(&$variables) {
+	if(isset($variables['elements']['bean'])) {
+		$bean_elements = $variables['elements']['bean'];
+		foreach($bean_elements as $delta=>$value) {
+			if (is_integer($delta)) {
+				$variables['title'] = $bean_elements[$delta]['#entity']->title;
+				$variables['more_link']['text'] = $bean_elements[$delta]['#entity']->more_link['text'];
+				$variables['more_link']['path'] = $bean_elements[$delta]['#entity']->more_link['path'];
+				if ($bean_elements[$delta]['#bundle'] == 'item_summary_listing_photo_2col') {
+					$variables['theme_hook_suggestions'][] = 'block__bean__summary_listing_photo';
+				}
+				if ($bean_elements[$delta]['#bundle'] == 'item_summary_listing_photo_3col') {
+					$variables['theme_hook_suggestions'][] = 'block__bean__summary_listing_photo_3col';
+				}
+				if ($bean_elements[$delta]['#bundle'] == 'item_listing_1col') {
+					$variables['theme_hook_suggestions'][] = 'block__bean__item_listing';
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,5 @@
+name = OG Legacy Functions
+description = Recreate some of the useful functions that were lost in transition to og-7.x-2.x branch
+core = 7.x
+package = "IDAP"
+

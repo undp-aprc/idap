@@ -1,0 +1,4 @@
+name = IDAP Custom Forms
+description = Customisations to the default node forms output by Drupal
+core = 7.x
+package = "IDAP"

@@ -1,0 +1,4 @@
+name = IDAP Custom Helper Functions
+description = Some helpful functions to trim text and do other things
+core = 7.x
+package = "IDAP"

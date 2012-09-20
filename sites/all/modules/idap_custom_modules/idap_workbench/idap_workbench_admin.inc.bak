@@ -1,0 +1,105 @@
+<?php
+/* Page Callback for admin/workbench/list */
+function idap_workbench_add() {
+	$form = drupal_get_form('idap_workbench_form_theme_section');
+	return $form;
+}
+
+function idap_workbench_edit($sid) {
+	$form_values = db_query('SELECT iw.sid, iw.section_title, iw.taxonomy_pid, iw.nodes
+	FROM {idap_workbench} iw WHERE iw.sid = :sid', array(':sid' => $sid));
+	
+	$form_state = array();
+	foreach ($form_values as $row) {
+		$form_state['values']['sid'] = $row->sid;
+		$form_state['values']['section_title'] = $row->section_title;
+		$form_state['values']['taxonomy_parent'] = $row->taxonomy_pid;
+		$form_state['values']['nodes'] = json_decode($row->nodes);
+	}
+	$form = drupal_build_form('idap_workbench_form_theme_section', $form_state);
+	return $form;
+}
+
+function idap_workbench_form_theme_section($form, &$form_state) {
+	kpr($form_state);
+	$section_title = isset($form_state['values']) ? $form_state['values']['section_title'] : '';
+	$sid = isset($form_state['values']) ? $form_state['values']['sid'] : '';
+	$taxonomy_parent = isset($form_state['values']) ? $form_state['values']['taxonomy_parent'] : '';
+	$nodes = isset($form_state['values']) ? $form_state['values']['nodes'] : '';
+	
+	$form['sid'] = array(
+		'#type' => 'hidden',
+		'#value' => $sid,
+	);
+	$form['section_title'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Section Title'),
+		'#required' => TRUE,
+		'#default_value' => $section_title,
+	);
+	$form['taxonomy_parent'] = array(
+		'#type' => 'radios',
+		'#options' => idap_workbench_load_taxonomy_vocab(),
+		'#required' => TRUE,
+		'#default_value' => $taxonomy_parent,
+	);
+	$form['subpage_types'] = array(
+		'#type' => 'checkboxes',
+		'#options' => idap_workbench_node_types(),
+		//'#default_value' => $subpage_types,
+	);
+	$form['submit'] = array(
+	    '#type' => 'submit',
+	    '#value' => t('Submit'),
+	);
+	
+	if (isset($form_state['values'])) {
+		$form['#submit'][] = 'idap_workbench_form_theme_section_update_existing';
+	} else {
+		$form['#submit'][] = 'idap_workbench_form_theme_section_submit_new';
+	}
+	return $form;
+}
+
+function idap_workbench_form_theme_section_validate($form, &$form_state) {
+	
+}
+
+function idap_workbench_form_theme_section_submit_new($form, &$form_state) {
+ 	$variables['section_title'] = $form_state['values']['section_title'];
+	$variables['machine_title'] = strtolower(str_replace(' ', '_', $variables['section_title']));
+	$variables['taxonomy_parent'] = $form_state['values']['taxonomy_parent'];
+	$variables['subpage_types'] = $form_state['values']['subpage_types'];
+	$variables['node_types'] = idap_workbench_node_types();
+	
+	//Save a new taxonomy term
+	$tid = idap_workbench_save_taxonomy_term($variables);
+	$variables['tid'] = $tid;
+	
+	//Store contexts
+	foreach($variables['node_types'] as $key=>$type) {
+		idap_workbench_save_breadcrumb_context($variables, $key);
+	}
+	
+	$fields = array('section_title' => $section_title,'taxonomy_pid'=>$taxonomy_parent, 'tid'=>$tid);
+	db_insert('idap_workbench')->fields($fields)->execute();
+	dsm(t('Created a new section'));
+}
+
+function idap_workbench_form_theme_section_update_existing($form, &$form_state) {
+	$section_title = $form_state['values']['section_title'];
+	$taxonomy_parent = $form_state['values']['taxonomy_parent'];
+	$subpage_types = json_encode($form_state['values']['subpage_types']);
+	$sid = $form_state['values']['sid'];
+	
+	$num_updated = db_update('idap_workbench') // Table name no longer needs {}
+	  ->fields(array(
+	    'section_title' => $section_title,
+		'subpage_types' => $subpage_types,
+	  ))
+	  ->condition('sid', $sid, '=')
+	  ->execute();
+	dsm(t('Updated an existing section'));
+}
+
+?>

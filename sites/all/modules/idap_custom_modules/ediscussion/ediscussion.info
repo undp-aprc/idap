@@ -1,0 +1,4 @@
+name = E-Discussion Manager
+description = Display and manage E-discussions
+core = 7.x
+package = "IDAP"

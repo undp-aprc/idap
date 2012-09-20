@@ -1,0 +1,97 @@
+<?php
+
+/* Implements hook_menu() */
+
+function idap_subscription_links_menu() {
+	$items['subscription/content-type/nojs/%'] = array(
+	      'page callback' => 'idap_subscription_links_create',
+	      'page arguments' => array(2, 3),
+		  'access arguments' => array('subscribe to content'),
+	);
+	$items['subscription/content-type/ajax/%'] = array(
+		'delivery callback' => 'ajax_deliver',
+	) + $items['subscription/content-type/nojs/%'];
+	return $items;
+}
+
+/* Store a subscription for the current user for a valid content type */
+
+function idap_subscription_links_create($ajax, $content_type) {
+	global $user;
+	$is_ajax = $ajax === 'ajax';
+	if (isset($user->uid) && $user->uid != 0) { // Only create subscriptions for a logged in user
+		$subscription_exists = idap_subscription_links_check_existing($content_type, $user->uid);
+		if (!$subscription_exists) { // Avoid creating duplicate subscriptions
+			if (idap_subscription_links_check_valid_content_type($content_type)) { //Make sure the content type is valid
+				$update = db_insert('subscriptions')
+					->fields(array(
+						'module'=>'node',
+						'field' =>'type',
+						'value' => $content_type,
+						'recipient_uid' =>$user->uid,
+						'send_interval' => 1,
+						'author_uid' => -1,
+						'send_updates' => 1,
+						'send_comments' => 1
+					))
+				->execute();
+				if ($is_ajax) {
+					$commands = array();
+					$commands[] = ajax_command_invoke('a.use-ajax', 'addClass', array('Subscribed'));
+					return array(
+						'#type' => 'ajax',
+						'#commands' => $commands,
+					);
+				} else {
+					drupal_set_message('You successfully subscribed to some content');
+					drupal_goto();
+				}
+			} else { // Invalid content type was passed
+				if ($is_ajax) {
+					$commands = array();
+					$commands[] = ajax_command_invoke('a.use-ajax', 'addClass', array('invalid-content'));
+					return array(
+						'#type' => 'ajax',
+						'#commands' => $commands,
+					);
+				} else {
+					drupal_set_message('That content type does not exist');
+					drupal_goto();
+				}
+			}
+		} else { // Subscription already exists
+			if ($is_ajax) {
+				$commands = array();
+				$commands[] = ajax_command_invoke('a.use-ajax', 'addClass', array('subscription-exists'));
+				return array(
+					'#type' => 'ajax',
+					'#commands' => $commands,
+				);
+			} else {
+				drupal_set_message('Subscription Exists');
+				drupal_goto();
+			}
+		}
+	} else { // Not logged in
+		drupal_set_message('You must be logged in to create a subscription');
+		drupal_goto();
+	}
+}
+
+function idap_subscription_links_check_valid_content_type($content_type) {
+	$num_content_types = db_query("SELECT COUNT(*) FROM {node_type} WHERE type = :type", array(':type' => $content_type))->fetchField();
+	if ($num_content_types == 0) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function idap_subscription_links_check_existing($content_type, $user_id) {
+	$num_subscriptions = db_query("SELECT COUNT(*) FROM {subscriptions} WHERE `recipient_uid` = :uid AND `value` = :type", array(':uid'=>$user_id, ':type'=>$content_type))->fetchField();
+	if ($num_subscriptions > 0) {
+		return true;
+	} else {
+		return false;
+	}
+} 

@@ -1,0 +1,48 @@
+<?php
+
+/**
+* Implements hook_entity_info_alter().
+*/
+function idap_view_modes_entity_info_alter(&$entity_info) {
+  	$entity_info['node']['view modes']['photo_teaser'] = array(
+	    'label' => t('Photo Teaser'),
+	    'custom settings' => TRUE,
+	 );
+	$entity_info['node']['view modes']['teaser_no_title'] = array(
+	    'label' => t('Teaser with no title'),
+	    'custom settings' => TRUE,
+	 );
+	$entity_info['node']['view modes']['title_only'] = array(
+	    'label' => t('Title only'),
+	    'custom settings' => TRUE,
+	 );
+	$entity_info['node']['view modes']['title_bullets'] = array(
+	    'label' => t('Bullet list of titles'),
+	    'custom settings' => TRUE,
+	 );
+	$entity_info['node']['view modes']['teaser_bullets'] = array(
+	    'label' => t('Bullet list of teasers'),
+	    'custom settings' => TRUE,
+	 );
+}
+
+function idap_view_modes_preprocess_node(&$variables) {
+	if($variables['view_mode'] == 'photo_teaser') {
+		$variables['theme_hook_suggestions'][] = 'node__idap_bean__photo_teaser';
+	}
+	if($variables['view_mode'] == 'teaser') {
+		$variables['theme_hook_suggestions'][] = 'node__idap_bean__teaser';
+	}
+	if($variables['view_mode'] == 'teaser_no_title') {
+		$variables['theme_hook_suggestions'][] = 'node__idap_bean__teaser_no_title';
+	}
+	if($variables['view_mode'] == 'title_only') {
+		$variables['theme_hook_suggestions'][] = 'node__idap_bean__title_only';
+	}
+	if($variables['view_mode'] == 'title_bullets') {
+		$variables['theme_hook_suggestions'][] = 'node__idap_bean__title_bullets';
+	}
+	if($variables['view_mode'] == 'teaser_bullets') {
+		$variables['theme_hook_suggestions'][] = 'node__idap_bean__teaser_bullets';
+	}
+}

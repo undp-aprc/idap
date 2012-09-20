@@ -1,0 +1,17 @@
+<?php
+
+function sentence_summary($text) {
+	$clean_text = strip_tags($text);
+	kpr($clean_text);
+	$needle = '.';
+
+	$needle_len = strlen($needle);
+
+	$position_num = strpos($clean_text,$needle) + $needle_len;
+
+	$result_string = substr("$clean_text",0,$position_num);
+	
+	$trimmed_text = $result_string;
+	
+	return $trimmed_text;
+}

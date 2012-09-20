@@ -1,0 +1,417 @@
+<?php
+
+/**
+* Implements hook_theme().
+*/
+function idap_custom_forms_theme($existing, $type, $theme, $path) {
+	//Default template path
+	$template_path = drupal_get_path('module', 'idap_custom_forms').'/templates';
+	
+	$items['network_news_node_form'] = array(
+      	'render element' => 'form',
+    	'template' => 'network-news-node-form',
+    	// this will set to module/theme path by default:
+    	'path' => $template_path,
+  	);
+	$items['blog_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'blog-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
+	$items['resource_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'resource-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
+	$items['event_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'event-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
+	$items['media_article_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'media-article-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
+	$items['content_landing_page_type_1_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'content-landing-page-type-1-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
+	$items['content_landing_page_type_2_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'content-landing-page-type-2-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
+	$items['content_landing_page_type_3_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'content-landing-page-type-3-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
+	return $items;
+}
+
+/**
+* Preprocessor for theme('network_news_node_form').
+*/
+function template_preprocess_network_news_node_form(&$variables) {
+
+    $variables['sidebar'] = array(); // Create a sidebar region
+	$variables['node_main'] = array(); // Create a main node region
+	
+	// Put title and body fields in main node region
+	$variables['node_main'][] = $variables['form']['title'];
+	hide($variables['form']['title']);
+	
+	$variables['node_main'][] = $variables['form']['body'];
+	hide($variables['form']['body']);
+	
+	// Put theme and group options in the sidebar
+    $variables['sidebar'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	$variables['sidebar'][] = $variables['form']['field_country'];
+	hide($variables['form']['field_country']);
+
+	//Only display the group audience box if the current user has groups they can create content for
+	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+		hide($variables['form']['og_group_ref']);
+	} else {
+		$variables['sidebar'][] = $variables['form']['og_group_ref'];
+	    hide($variables['form']['og_group_ref']);
+	}
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/**
+* Preprocessor for theme('blog_node_form').
+*/
+function template_preprocess_blog_node_form(&$variables) {
+    $variables['sidebar'] = array(); // Create a sidebar region
+	
+	// Put theme and group options in the sidebar
+    $variables['sidebar'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	$variables['sidebar'][] = $variables['form']['field_country'];
+	hide($variables['form']['field_country']);
+
+	//Only display the group audience box if the current user has groups they can create content for
+	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+		hide($variables['form']['og_group_ref']);
+	} else {
+		$variables['sidebar'][] = $variables['form']['og_group_ref'];
+	    hide($variables['form']['og_group_ref']);
+	}
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/**
+* Preprocessor for theme('event_node_form').
+*/
+function template_preprocess_event_node_form(&$variables) {
+    $variables['sidebar'] = array(); // Create a sidebar region
+	
+	// Put theme and group options in the sidebar
+    $variables['sidebar'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	$variables['sidebar'][] = $variables['form']['field_country'];
+	hide($variables['form']['field_country']);
+
+	//Only display the group audience box if the current user has groups they can create content for
+	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+		hide($variables['form']['og_group_ref']);
+	} else {
+		$variables['sidebar'][] = $variables['form']['og_group_ref'];
+	    hide($variables['form']['og_group_ref']);
+	}
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/**
+* Preprocessor for theme('media_articles_node_form').
+*/
+function template_preprocess_media_article_node_form(&$variables) {
+    $variables['sidebar'] = array(); // Create a sidebar region
+	
+	// Put theme and group options in the sidebar
+    $variables['sidebar'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	$variables['sidebar'][] = $variables['form']['field_country'];
+	hide($variables['form']['field_country']);
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/**
+* Preprocessor for theme('resource_node_form').
+*/
+function template_preprocess_resource_node_form(&$variables) {
+	
+	// Add js and css for jquery_ui tabs
+	drupal_add_js('/misc/ui/jquery.ui.tabs.min.js');
+	drupal_add_css('misc/ui/jquery.ui.tabs.css'); 
+	drupal_add_js(drupal_get_path('module', 'idap_custom_forms').'/js/resource-node-form.js');
+	
+    $variables['sidebar'] = array(); // Create a sidebar region
+	$variables['node_main'] = array(); // Create a main node region
+	
+	// Put title field in main node region
+	$variables['node_main'][] = $variables['form']['title'];
+	hide($variables['form']['title']);
+	
+	// Put theme and group options in the sidebar
+    $variables['sidebar'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	$variables['sidebar'][] = $variables['form']['field_country'];
+	hide($variables['form']['field_country']);
+
+	//Only display the group audience box if the current user has groups they can create content for
+	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+		hide($variables['form']['og_group_ref']);
+	} else {
+		$variables['sidebar'][] = $variables['form']['og_group_ref'];
+	    hide($variables['form']['og_group_ref']);
+	}
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+
+	$variables['form']['field_resource_file']['und']['0']['#title_display'] = 'invisible';
+	$variables['form']['field_resource_url']['und']['0']['#title_display'] = 'invisible';
+}
+
+/**
+* Preprocessor for theme('content_landing_page_type_1_node_form').
+*/
+function template_preprocess_content_landing_page_type_1_node_form(&$variables) {
+    $variables['sidebar'] = array(); // Create a sidebar region
+	$variables['node_main'] = array(); // Create a main node region
+	$variables['block_1'] = array();
+	$variables['block_2'] = array();
+	
+	// Put title field in main node region
+	$variables['node_main'][] = $variables['form']['title'];
+	hide($variables['form']['title']);
+	
+    $variables['node_main'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	//Put blocks into their regions
+	$variables['block_1'][] = $variables['form']['field_block_1'];
+	$variables['block_2'][] = $variables['form']['field_block_2'];
+	hide($variables['form']['field_block_1']);
+	hide($variables['form']['field_block_2']);
+
+	//Only display the group audience box if the current user has groups they can create content for
+	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+		hide($variables['form']['og_group_ref']);
+	} else {
+		$variables['sidebar'][] = $variables['form']['og_group_ref'];
+	    hide($variables['form']['og_group_ref']);
+	}
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/**
+* Preprocessor for theme('content_landing_page_type_2_node_form').
+*/
+function template_preprocess_content_landing_page_type_2_node_form(&$variables) {
+    $variables['sidebar'] = array(); // Create a sidebar region
+	$variables['node_main'] = array(); // Create a main node region
+	$variables['block_1'] = array();
+	$variables['block_2'] = array();
+	$variables['block_3'] = array();
+	$variables['block_4'] = array();
+	$variables['block_5'] = array();
+	$variables['block_6'] = array();
+	
+	// Put title field in main node region
+	$variables['node_main'][] = $variables['form']['title'];
+	hide($variables['form']['title']);
+	
+    $variables['node_main'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	//Put blocks into their regions
+	$variables['block_1'][] = $variables['form']['field_block_1'];
+	$variables['block_2'][] = $variables['form']['field_block_2'];
+	$variables['block_3'][] = $variables['form']['field_block_3'];
+	$variables['block_4'][] = $variables['form']['field_block_4'];
+	$variables['block_5'][] = $variables['form']['field_block_5'];
+	$variables['block_6'][] = $variables['form']['field_block_6'];
+	hide($variables['form']['field_block_1']);
+	hide($variables['form']['field_block_2']);
+	hide($variables['form']['field_block_3']);
+	hide($variables['form']['field_block_4']);
+	hide($variables['form']['field_block_5']);
+	hide($variables['form']['field_block_6']);
+
+	//Only display the group audience box if the current user has groups they can create content for
+	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+		hide($variables['form']['og_group_ref']);
+	} else {
+		$variables['sidebar'][] = $variables['form']['og_group_ref'];
+	    hide($variables['form']['og_group_ref']);
+	}
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/**
+* Preprocessor for theme('content_landing_page_type_3_node_form').
+*/
+function template_preprocess_content_landing_page_type_3_node_form(&$variables) {
+    $variables['sidebar'] = array(); // Create a sidebar region
+	$variables['node_main'] = array(); // Create a main node region
+	$variables['block_1'] = array();
+	$variables['block_2'] = array();
+	$variables['block_3'] = array();
+	$variables['block_4'] = array();
+	$variables['block_5'] = array();
+	$variables['block_6'] = array();
+	
+	// Put title field in main node region
+	$variables['node_main'][] = $variables['form']['title'];
+	hide($variables['form']['title']);
+	
+    $variables['node_main'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	//Put blocks into their regions
+	$variables['block_1'][] = $variables['form']['field_block_1'];
+	$variables['block_2'][] = $variables['form']['field_block_2'];
+	$variables['block_3'][] = $variables['form']['field_block_3'];
+	$variables['block_4'][] = $variables['form']['field_block_4'];
+	$variables['block_5'][] = $variables['form']['field_block_5'];
+	$variables['block_6'][] = $variables['form']['field_block_6'];
+	hide($variables['form']['field_block_1']);
+	hide($variables['form']['field_block_2']);
+	hide($variables['form']['field_block_3']);
+	hide($variables['form']['field_block_4']);
+	hide($variables['form']['field_block_5']);
+	hide($variables['form']['field_block_6']);
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/* Implements hook_form_alter() */
+function idap_custom_forms_form_alter(&$form, &$form_state, $form_id) {
+	if (isset($form['#node'])) { // All node forms including node comment forms
+		$form['#validate'][] = 'idap_custom_forms_node_validation';
+		
+		$path_to_css = drupal_get_path('module', 'idap_custom_forms').'/css/idap_custom_forms.css';
+		drupal_add_css($path_to_css);
+		
+		if (isset($form['#node_edit_form'])) { // Only for node edit forms
+			if($form['#node_edit_form']) {
+
+				//Change the text on the submit buttom for node edit forms
+				$form['actions']['submit']['#value'] = t('Publish');
+
+				// Remove top level taxonomy terms from the theme select box on all node forms
+				if (isset($form['field_theme'])) {
+					$langague = $form['field_theme']['#language'];
+
+					if ($vocabulary = taxonomy_vocabulary_machine_name_load('themes')) {
+						if ($terms = taxonomy_get_tree($vocabulary->vid)) {
+					    	foreach ($terms as $term) {
+								if ($term->depth == 0) { // Don't display the top level, these are pillars and we don't want to assign any content there
+									unset($form['field_theme']['und']['#options'][$term->tid]);
+							  	}
+					        }
+						}
+					}
+				}
+			}
+		}
+		// For all node forms including node comment forms
+		$form['#after_build'][] = 'idap_custom_forms_node_form_after_build'; 
+	}
+	
+	if ($form_id == 'resource_node_form') {
+		$form['#validate'][] = 'idap_custom_forms_resource_validate';
+	}
+	
+	if (fnmatch('comment_node_*_form',$form_id)) {
+		$form['actions']['submit']['#value'] = t('Publish Comment');
+		$form['comment_body']['und'][0]['#title_display'] = 'invisible';
+		hide($form['author']);
+	}
+}
+
+/* validation callback for hook_form_alter() -- only called for node forms */
+function idap_custom_forms_node_validation(&$form, &$form_state) {
+	$path_to_css = drupal_get_path('module', 'idap_custom_forms').'/css/idap_custom_forms.css';
+	drupal_add_css($path_to_css);
+}
+
+/* Custom validation function for hook_form_alter() -- only called on resource node form */
+function idap_custom_forms_resource_validate(&$form, &$form_state) {
+	$language = $form_state['values']['language'];
+
+	if ($form_state['values']['field_resource_file'][$language][0]['fid'] == 0 && empty($form_state['values']['field_resource_url'][$language][0]['url'])) {
+		form_set_error('field_resource_file', t('You must either upload a file or submit a URL for this resource.'));
+	}
+}
+
+/* #after_build callback for hook_form_alter() */
+/* Removes access to the format widget on textarea items for non-admin users */
+function idap_custom_forms_node_form_after_build($form) {
+		global $user;
+		$admin_role = FALSE;
+		
+		foreach($user->roles as $delta=>$role) { //Get current logged in user's roles and check if has admin rights
+			if ($role == 'administrator' || $role == 'Content Manager' || $user->uid == 1) {
+				$admin_role = TRUE;
+			}
+		}
+		
+		if(!$admin_role) {
+			foreach($form as $key=>$field) {
+				if (fnmatch('field_*', $key) || $key == 'body' || $key == 'comment_body') {
+					$language = $form[$key]['#language'];
+					foreach($form[$key][$language] as $field_delta=>$field_item) {
+						if(is_integer($field_delta)) {
+							foreach($form[$key][$language][$field_delta] as $field_item_delta=>$field_item_value) {
+								if ($field_item_delta == 'format') {
+									$form[$key][$language][$field_delta][$field_item_delta]['#access'] = FALSE;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	    
+	return $form;
+}

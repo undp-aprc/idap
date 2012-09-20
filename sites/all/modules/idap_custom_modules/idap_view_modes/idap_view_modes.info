@@ -1,0 +1,4 @@
+name = IDAP View Modes
+description = Register custom entity view modes
+core = 7.x
+package = "IDAP"

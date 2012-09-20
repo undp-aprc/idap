@@ -1,0 +1,75 @@
+.network-news-node-form {
+	margin-bottom:40px;
+}
+
+.node-column-main {
+	float:left;
+	width:600px;
+}
+
+.node-column-main .enclosure {
+	padding-right:10px;
+}
+
+.node-column-sidebar {
+	float:left;
+	width:354px;
+	margin-left:10px;
+}
+
+.node-column-sidebar .enclosure {
+	padding-left:10px;
+}
+
+.node-form select {
+	width:100%;
+	padding-left:10px;
+}
+
+.node-column-sidebar select {
+	height:200px;
+}
+
+#edit-body, #edit-field-publication-date, #edit-field-publication-name, #edit-field-source-url, #edit-field-contact-details, #edit-field-photo, #edit-field-news-date  {
+	border-bottom:1px dotted #E7A43F;
+	padding-bottom:10px;
+	margin-bottom:10px;
+}
+
+#edit-field-date fieldset {
+	border:0px !important;
+	padding:0px;
+}
+
+#edit-field-date .date-padding {
+	padding:0px;
+}
+
+#edit-field-date .form-type-date-popup {
+	margin:0px;
+	padding:0px;
+}
+
+#edit-field-date legend {
+	display:none;
+}
+
+.node-column-main #edit-field-date .form-item {
+	border-bottom:0px !important; 
+}
+
+#edit-field-date {
+	border-bottom:1px dotted #FCEBD9;
+}
+
+.form-item-title input {
+	width:100%;
+}
+
+.form-content-blocks {
+	float:left;
+}
+
+.grippie {
+	display:none;
+}

@@ -1,0 +1,143 @@
+<?php
+
+/* Implements hook_theme() */
+function idap_footer_links_theme($existing, $type, $theme, $path) {
+	$items = array();
+	
+	$items['footer_links'] = array(
+		'arguments' => array(
+			'elements' => NULL,
+			'render element' => 'element',
+		),
+	);
+	
+	$items['footer_horizontal_links'] = array(
+		'arguments' => array(
+			'elements' => NULL,
+			'render element' => 'element',
+		),
+	);
+	
+	return $items;
+}
+
+/* Implements hook_block_info() */
+function idap_footer_links_block_info() {
+	$blocks = array();
+	
+	$blocks['footer_links'] = array(
+		'info' => t('Footer Links'),
+		'cache' => DRUPAL_CACHE_GLOBAL,
+		'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+	);
+	$blocks['footer_horizontal_links'] = array(
+		'info' => t('Horizontal Links Bar for footer'),
+		'cache' => DRUPAL_CACHE_GLOBAL,
+		'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+	);
+	
+	return $blocks;
+}
+
+/* Implements hook_block_view() */
+function idap_footer_links_block_view($delta) {
+	$block = array();
+	
+	switch($delta) {
+		case 'footer_links':
+			$items = fetch_footer_items();
+
+			$block['content'] = array(
+				'#markup' => theme('footer_links', array('elements' => $items)),
+			);
+		break;
+		
+		case 'footer_horizontal_links':
+		
+			$footer_menu_tree = menu_tree('menu-footer-menu');
+			
+			$block['content'] = array(
+				'#markup' => theme('footer_horizontal_links',array('elements' => $footer_menu_tree)),
+			);
+		break;
+	}
+
+	return $block;
+}
+
+function fetch_footer_items() {
+	$query = new EntityFieldQuery();
+	$tree_array = array();
+	$i = 0;
+	
+	// Get the taxonomy vid using the machine name
+	$query
+		->entityCondition('entity_type','taxonomy_vocabulary')
+		->propertyCondition('machine_name','themes');
+		
+	$result = $query->execute();
+	
+	foreach($result['taxonomy_vocabulary'] as $delta=>$value) {
+		$vid = $result['taxonomy_vocabulary'][$delta]->vid;
+	}
+	
+	$taxonomy_tree = taxonomy_get_tree($vid);
+	
+	foreach($taxonomy_tree as $delta=>$value) {
+		if ($taxonomy_tree[$delta]->parents['0'] == 0) { // Must be top level
+			$tid = $taxonomy_tree[$delta]->tid;
+			$tree_array[$tid]['name'] = $taxonomy_tree[$delta]->name;
+			$tree_array[$tid]['path'] = '/term/'.$taxonomy_tree[$delta]->tid; 
+			$tid_parent = $tid;
+			$i = 0;
+		} else {
+			$tree_array[$tid_parent][$i]['name'] = $taxonomy_tree[$delta]->name;
+			$tree_array[$tid_parent][$i]['tid'] = $taxonomy_tree[$delta]->tid;
+			$tree_array[$tid_parent][$i]['path'] = 'taxonomy/term/'.$taxonomy_tree[$delta]->tid;
+			$i++;
+		}
+	}
+	
+	return $tree_array;
+}
+
+function theme_footer_horizontal_links($variables) {
+	$elements = $variables['elements'];
+	$output = '';
+	$output .= '<div id="footer-horizontal-band"><div class="left copyright">&copy; United Nations Development Programme 2012</div><div class="right menu">';
+	$output .= render($elements);
+	$output .= '</div><div class="clearfix"></div></div>';
+	
+	return $output;
+}
+
+function theme_footer_links($variables) {
+	$elements = $variables['elements'];
+	$count = count($elements);
+	$i = 1;
+	$output = '';
+	
+	foreach($elements as $delta=>$value) {
+		$last_block = ($i == $count) ? 'last' : '';
+		$output .= "<div class='left theme-block $last_block'>";
+		$output .= "<div class='enclosure'>";
+		$output .= "<ul class='theme-$delta'>";
+		$output .= "<li>"."<p>".$elements[$delta]['name']."</p>";
+		$output .= "<ul>";
+		foreach($elements[$delta] as $child=>$value) {
+			if (is_array($elements[$delta][$child])) {
+				$output .= "<li>".l($elements[$delta][$child]['name'], $elements[$delta][$child]['path'], array('attributes'=>array()))."</li>";
+			}
+		}
+		$output .= "</ul>";
+		$output .= "</li>";
+		$output .= "</ul>";
+		$output .= "</div>";
+		$output .= "</div>";
+		$i++;
+	}
+	$output .= "<div class='clearfix'></div>";
+	return $output;
+}
+
+

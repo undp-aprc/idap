@@ -1,0 +1,18 @@
+#block-idap-page-builder-masthead-banner {
+	height:150px;
+}
+
+.subtheme-masthead-block {
+	position:relative;
+}
+
+.subtheme-masthead-block h1 {
+	position:absolute;
+	top:20px;
+	right:20px;
+	color:#fff;
+	padding:20px;
+	background-color:#000;
+	border-radius:20px;
+	opacity:0.7;
+}

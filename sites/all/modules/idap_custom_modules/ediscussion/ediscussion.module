@@ -1,0 +1,139 @@
+<?php
+/* Implements hook_menu_alter() */
+function ediscussion_menu() {
+	$items['e-discussion/view'] = array(
+		'title' => t('E-Discussions'),
+		'page callback' => 'ediscussion_list_view',
+		'access callback' => TRUE,
+	);
+	$items['e-discussion/view/%'] = array(
+		'title' => t('E-Discussions'),
+		'page callback' => 'ediscussion_list_view',
+		'access callback' => TRUE,
+		'page arguments' => array(2),
+	);
+	return $items;
+}
+
+function ediscussion_list_view($tid) {
+	return theme('ediscussion_list_view_page', array('tid'=>$tid));
+}
+
+function ediscussion_theme($existing, $type, $theme, $path) {
+	$items['ediscussion_list_view_page'] = array(
+		'template' => 'ediscussion-list-view-page',
+		'render element' => 'element',
+	);
+	$items['ediscussion_list_table'] = array(
+		'render element' => 'element',
+		'variables' =>array(
+			'element' => array(
+				'table_data' => NULL,
+			),
+		),
+	);
+	return $items;
+}
+
+function ediscussion_preprocess_ediscussion_list_view_page(&$variables) {
+	$path_to_css = drupal_get_path('module', 'ediscussion').'/ediscussion.css';
+	drupal_add_css($path_to_css);
+	
+	$variables['ediscussion_list'] = theme('ediscussion_list_table', array('element'=>array('table_data'=>ediscussion_list_view_table($variables['tid']))));
+}
+
+function ediscussion_preprocess_ediscussion_list_table(&$variables) {
+	foreach($variables['element']['table_data']['rows'] as $delta=>$row) {
+		$theme_links = array();
+		// Transform theme item list into themed item list
+		foreach ($row['data']['themes'] as $theme) {
+			$tid = $theme;
+			$path = 'taxonomy/term/'.$tid;
+			$term = taxonomy_term_load($tid);
+			$term = $term->name;
+			if (module_exists('path')) {
+				$path = drupal_get_path_alias($path);
+			}
+			$theme_links[] = l($term,$path,array());
+		}
+		
+		$list = array(
+			'items' => $theme_links,
+		);
+		$variables['element']['table_data']['rows'][$delta]['data']['themes'] = theme('comma_list',$list);
+		
+		// Transfrom last response field to formatted date
+		$variables['element']['table_data']['rows'][$delta]['data']['last response'] = format_date($row['data']['last response'], 'medium');
+		
+		// Transform title into a link using correctly aliased URL
+		$path = 'node/'.$row['data']['nid'];
+
+		if (module_exists('path')) {
+			$path = drupal_get_path_alias($path);
+		}
+		
+		$variables['element']['table_data']['rows'][$delta]['data']['title'] = l($row['data']['title'],$path, array());
+		if($row['data']['responses'] == 0) {
+			$variables['element']['table_data']['rows'][$delta]['data']['last response'] = '';
+		}
+		
+		// Unset the nid column, we don't need it any more
+		unset($variables['element']['table_data']['rows'][$delta]['data']['nid']);
+	}
+}
+
+function theme_ediscussion_list_table($variables) {
+	$table = theme('table', $variables['element']['table_data']);
+	return $table;
+}
+
+function ediscussion_list_view_table($theme) {
+	$table = array();
+	$table['header'] = array(
+		'Title' => t('Title'),
+		'Theme' => t('Theme'),
+		'Responses' => t('# Responses'),
+		'Last Response' => t('Last Response'),  
+	);
+	
+	$table['rows'] = ediscussion_fetch_row_data($theme);
+	return $table;
+}
+
+function ediscussion_fetch_row_data($tid) {
+	$query = new IDAPEntityFieldQuery();
+	$query->entityCondition('bundle', 'e_discussion');
+	
+	if(!empty($theme)) {
+		$query->SetContentTermCondition($tid);
+	}
+
+	$result = $query->execute();
+	
+	$nodes = array();
+	$rows = array();
+	$row = array();
+	
+	$nodes = node_load_multiple(array_keys($result['node']));
+	foreach($nodes as $node_array) {
+		$theme = array(); //Initialise $theme for each iteration
+		$language = $node_array->language;
+		
+		foreach($node_array->field_theme[$language] as $item_array) {
+			$theme[] = $item_array['tid'];
+		}
+		
+		$themes_array = $theme;
+		
+		$title = $node_array->title;
+		$themes = $themes_array;
+		$responses = (int)$node_array->comment_count;
+		$last_response = $node_array->last_comment_timestamp;
+		$nid = $node_array->nid;
+		
+		$row[] = array('data' => array('title'=>$title, 'themes'=>$themes, 'responses'=>$responses, 'last response'=>$last_response, 'nid'=>$nid));
+	};
+	
+	$rows = $row;
+	return $rows;
+}

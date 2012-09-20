@@ -1,0 +1,8 @@
+name = IDAP Custom Beans
+description = Allow content administers easily create blocks of content for IDAP
+core = 7.x
+package = "IDAP"
+files[] = "plugins/idap_item_summary_photo.inc"
+files[] = "plugins/idap_item_summary_listing.inc"
+files[] = "idap_custom_beans_preprocess_functions.inc"
+

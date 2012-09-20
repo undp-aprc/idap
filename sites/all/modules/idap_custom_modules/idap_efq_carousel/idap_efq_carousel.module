@@ -1,0 +1,108 @@
+<?php
+
+function idap_efq_carousel_theme() {
+	$items = array();
+	
+	$items['efq_carousel'] = array(
+		'arguments' => array(
+			'elements' => NULL,
+			'render element' => 'element',
+		),
+	);
+	
+	return $items;
+}
+
+function idap_efq_carousel_block_info() {
+	$blocks['efq_carousel'] = array(
+		'info' => t('Entity Field Query Carousel'),
+		'cache' => DRUPAL_CACHE_GLOBAL,
+		'visibility' => BLOCK_VISIBILITY_LISTED,
+	);
+	return $blocks;
+}
+
+function idap_efq_carousel_block_view($delta = '') {
+	$block = array();
+	
+	$items = fetch_carousel_items();
+	
+	$block['content'] = array(
+		'#markup' => theme('efq_carousel', array('elements' => $items)),
+		'#attached' => array(
+			'js' => array(
+				drupal_get_path('module','idap_efq_carousel').'/js/slides/source/slides.jquery.js' => array(
+					'type','file',
+				),
+				drupal_get_path('module','idap_efq_carousel').'/js/attach.js' => array(
+					'type','file',
+				),
+			),
+			'css' => array(
+				drupal_get_path('module', 'idap_efq_carousel').'/css/idap_efq_carousel.css' => array(
+					'type','file',
+				),
+			),
+		),
+	);
+	
+	return $block;
+}
+
+function fetch_carousel_items() {
+	$query = new EntityFieldQuery;
+
+	$result = $query
+	  ->entityCondition('entity_type', 'node')
+	  ->entityCondition('bundle', array('carousel'))
+	  ->propertyCondition('status', 1)
+	  ->range(0,3)
+	  ->propertyOrderBy('created','DESC')
+	  ->execute();
+	
+	$nodes = $result['node'];
+	
+	foreach($nodes as $delta=>$value) {
+		if(isset($nodes[$delta]->nid)) {
+			$node = node_load($nodes[$delta]->nid);
+			
+			$items[$delta]['title'] = $node->title;
+			$items[$delta]['text'] = $node->body[$node->language]['0']['safe_value'];
+			$items[$delta]['photo'] = isset($node->field_carousel_image[$node->language]['0']['filename']) ? theme('image_style', array('style_name'=>'380x250','path'=>$node->field_carousel_image[$node->language]['0']['filename'],'title'=>$node->field_carousel_image[$node->language]['0']['alt'],'attributes'=>array('class'=>array('photo')))) : NULL;
+			$items[$delta]['link'] = isset($node->field_read_more_link[$node->language]['0']['url']) ? l(t('Read More >'), $node->field_read_more_link[$node->language]['0']['url'], $options = array('attributes'=>array())) : NULL;
+		}
+	}
+	return $items;
+}
+
+function theme_efq_carousel($variables) {
+	$element = $variables['elements'];
+	
+	$path_to_image = drupal_get_path('module', 'idap_efq_carousel').'/css/images/';
+	
+	$output = "<div id='carousel'>";
+	$output .= "<div id='slides'>";
+	$output .= "<div class='slides_container'>";
+	
+	foreach($element as $delta=>$value) {
+		$output .= "<div class='slide'>";
+		$output .= "<div class='slide-content'>";
+		$output .= "<div class='slide-text'>";
+		$output .= "<h1>".$element[$delta]['title']."</h1>";
+		$output .= "<p>".$element[$delta]['text']."</p>";
+		$output .= "<p>".$element[$delta]['link']."</p>";
+		$output .= "</div>"; //slide-text
+		$output .= "<div class='photo-container'>";
+		$output .= $element[$delta]['photo'];
+		$output .= "<div class='photo-frame'>".theme('image',array('path'=>$path_to_image.'bg-photo.png', 'alt'=>t('Photo frame')))."</div>";
+		$output .= "</div>";
+		$output .= "</div>"; //slide-content
+		$output .= "</div>"; //Slide
+	}
+	$output .= "</div>"; //Slides Container
+	$output .= l(theme('image',array('path'=>$path_to_image.'carousel-back-button.png', 'alt'=>t('Carousel Back Button'), 'attributes'=>array('width'=>12, 'height'=>19))), '#', $options = array('html'=>TRUE, 'attributes'=>array('class'=>array('prev'))));
+	$output .= l(theme('image',array('path'=>$path_to_image.'carousel-forward-button.png', 'alt'=>t('Carousel Forward Button'), 'attributes'=>array('width'=>12, 'height'=>19))), '#', $options = array('html'=>TRUE, 'attributes'=>array('class'=>array('next'))));
+	$output .= "</div>"; //Slides
+	$output .= "</div>"; //Carousel
+	return $output;
+}

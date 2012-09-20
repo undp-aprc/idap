@@ -1,0 +1,26 @@
+.group-photo-container {
+	float:left;
+	margin:0px 20px 20px 0;
+	padding:5px 0 0 0;
+}
+
+.date-display {
+	color:#888;
+	font-style:italic;
+	margin-bottom:20px;
+}
+
+.contact-details {
+	margin-top:20px;
+	border-top:2px #ccc solid;
+	border-bottom: 1px #ccc dotted;
+	padding:20px;
+}
+
+.node-type-network-news .region-sidebar-first {
+	margin-top:20px;
+}
+
+.node-type-network-news h1.node-title {
+	width:689px;
+}

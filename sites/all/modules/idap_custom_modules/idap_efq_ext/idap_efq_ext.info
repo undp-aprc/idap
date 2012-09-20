@@ -1,0 +1,4 @@
+name = Extend the EntityFieldQuery Class
+description = Add custom methods to the EntityFieldQuery Class
+core = 7.x
+package = "IDAP"
