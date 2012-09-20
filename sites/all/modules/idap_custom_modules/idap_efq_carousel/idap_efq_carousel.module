@@ -68,7 +68,12 @@ function fetch_carousel_items() {
 			
 			$items[$delta]['title'] = $node->title;
 			$items[$delta]['text'] = $node->body[$node->language]['0']['safe_value'];
-			$items[$delta]['photo'] = isset($node->field_carousel_image[$node->language]['0']['filename']) ? theme('image_style', array('style_name'=>'380x250','path'=>$node->field_carousel_image[$node->language]['0']['filename'],'title'=>$node->field_carousel_image[$node->language]['0']['alt'],'attributes'=>array('class'=>array('photo')))) : NULL;
+			
+			if(isset($node->field_carousel_image[$node->language]['0']['fid'])) {
+				$file = file_load($node->field_carousel_image[$node->language]['0']['fid']);
+			}
+			
+			$items[$delta]['photo'] = isset($node->field_carousel_image[$node->language]['0']['filename']) ? theme('image_style', array('style_name'=>'380x250','path'=>$file->uri,'title'=>$node->field_carousel_image[$node->language]['0']['alt'],'attributes'=>array('class'=>array('photo')))) : NULL;
 			$items[$delta]['link'] = isset($node->field_read_more_link[$node->language]['0']['url']) ? l(t('Read More >'), $node->field_read_more_link[$node->language]['0']['url'], $options = array('attributes'=>array())) : NULL;
 		}
 	}
