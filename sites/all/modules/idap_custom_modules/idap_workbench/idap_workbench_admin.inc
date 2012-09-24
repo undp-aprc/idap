@@ -1,90 +1,183 @@
 <?php
+/* Page Callbacks */
 
-function idap_workbench_add() {
-	$form = drupal_get_form('idap_workbench_form_theme_section');
-	return $form;
+/* Page Callback for admin/structure/workbench */
+function idap_workbench_list() {
+	$output = '<h1>Sections Overview</h1>'; 
+	$output .= theme('table', idap_workbench_list_view_table());
+	return $output;
 }
 
-function idap_workbench_form_theme_section($form, &$form_state) {
-	$form['sid'] = array(
-		'#type' => 'hidden',
-		//'#value' => $sid,
-	);
-	$form['title'] = array(
-		'#type' => 'textfield',
-		'#title' => t('Section Title'),
-		'#required' => TRUE,
-		//'#default_value' => $title,
-	);
-	$form['machine_name'] = array(
-		'#type' => 'machine_name',
-		'#machine_name' => array(
-			'source' => array('title'),
-			'label' => t('Machine Name'),
-			'exists' => 'section_name_exists'
+/* theme_table array to display the list of sections on admin/structure/workbench */
+function idap_workbench_list_view_table() {
+	$table = array();
+	$table['header'] = array(
+		'title' => array(
+			'data' => t('Section Title'),
+			'class' => array(
+				'table-title',
+			),
+		),
+		'pillar' => array(
+			'data' => t('Pillar'),
+		),
+		'operations' => array(
+			'data' => t('Operations'),
+			'colspan' => 4,
+			'class' => 'table-operations'
 		),
 	);
-	$form['section'] = array(
-		'#type' => 'fieldset',
-		'#title' => t('Thematic Section Properties'),
-		'#description' => t('Please choose the pillar to which this section belongs. This sets where the section appears in the site\'s main naviagation structure.'),
-	);
-	$form['section']['taxonomy_parent'] = array(
-		'#type' => 'radios',
-		'#options' => idap_workbench_load_taxonomy_vocab(),
-		'#required' => TRUE,
-		//'#default_value' => $taxonomy_parent,
-	);
-	$form['section']['banner_image'] = array(
-		'#title' => t('Banner Image'),
-		 '#type' => 'managed_file',
-		 '#description' => t('This image must be 983 pixels wide by 150 pixels high.'),
-		 '#default_value' => variable_get('carousel_image'),
-		 '#upload_location' => 'public://thematic_sections/banner_images/',
-	);
-	$form['carousel'] = array( // @to do: add size and filetype validation and create in form preview image
-		'#type' => 'fieldset',
-		'#title' => t('carousel'),
-		'#description' => t('These options are used to create an item that appears on the home page carousel. <em>Note:</em> The title for the carousel item will be taken from the title field above.'),
-		'#tree' => TRUE,
-	);
-	$form['carousel']['body'] = array(
-		'#type' => 'textarea',
-		'#title' => t('Carousel Text'),
-		'#description' => t('The text in this box will be displayed on the carousel item. We recommend this text be less than 50 words.'),
-		'#required' => TRUE,
-	);
-	$form['carousel']['carousel_image'] = array( // @to do: add size and filetype validation and create in form preview image
-		'#title' => t('Carousel Image'),
-		 '#type' => 'managed_file',
-		 '#description' => t('This image should be 380 pixels wide by 250 pixels high.'),
-		 '#default_value' => variable_get('carousel_image'),
-		 '#upload_location' => 'public://thematic_sections/carousel_images/',
-	);
-	$form['submit'] = array(
-	    '#type' => 'submit', 
-	    '#value' => t('Create Section'),
-	  );
-
-	$form['#submit'][] = 'idap_workbench_form_theme_section_submit_new';
+	
+	$result = db_query('SELECT * FROM {idap_workbench} iw ORDER by iw.pid');
+	
+	foreach($result as $row) {
+		$variables[$row->sid]['sid'] = $row->sid;
+		$variables[$row->sid]['title'] = $row->title;
+		$variables[$row->sid]['pid'] = $row->pid;
+		$variables[$row->sid]['tid'] = $row->tid;
 		
-	return $form;
+		$table['rows'][] = array(
+			array(
+				'data' => l($row->title, 'taxonomy/term/'.$row->tid, array()),
+				'class' => 'table-cell-title',
+			),
+			array(
+				'data' => !empty($row->pid) ? taxonomy_term_load($row->pid)->name : NULL,
+				'class' => 'table-cell-pillar',
+			),
+			array(
+				'data' => l(t('Manage Pages'),'admin/structure/workbench/'.$row->sid.'/manage-pages', array()),
+				'class' => 'table-operations-add',
+			),
+			array(
+				'data' => l(t('Edit Section'),'admin/structure/workbench/'.$row->sid.'/edit', array()),
+				'class' => 'table-operations-edit',
+			),
+			array(
+				'data' => l(t('Delete Section'),'admin/structure/workbench/'.$row->sid.'/delete', array()),
+				'class' => 'table-operations-delete',
+			),
+		);
+	}
+	
+	return $table;
 }
 
+/* Page callback for admin/structure/workbench/%/manage-pages */
+/* @To Do: Needs review -- separate structure from HTML */
+function idap_workbench_manage_pages($sid) {
+	$result = db_query('SELECT iw.sid, iw.title, iw.tid, iwp.sid, iwp.page_type, iwp.page_title, iwp.node_type, iwp.page_nid FROM {idap_workbench} iw LEFT JOIN {idap_workbench_pages} iwp ON iw.sid = iwp.sid WHERE iw.sid = :sid', array(':sid'=>$sid));
+	
+	$table = array();
+	$table_landing_page['header'] = array(
+		'title' => array(
+			'data' => t('Page Title'),
+			'class' => array(
+				'table-title',
+			),
+			'style' => array(
+				'width:50%;'
+			),
+		),
+		'operations' => array(
+			'data' => t('Operations'),
+			'colspan' => 2,
+			'class' => 'table-operations',
+			'style' => array(
+				'text-align:center;'
+			),
+		),
+	);
+	$table_subpage['header'] = array(
+		'title' => array(
+			'data' => t('Page Title'),
+			'class' => array(
+				'table-title',
+			),
+			'style' => array(
+				'width:50%;'
+			),
+		),
+		'operations' => array(
+			'data' => t('Operations'),
+			'colspan' => 2,
+			'class' => 'table-operations',
+			'style' => array(
+				'text-align:center;'
+			),
+		),
+	);
+	
+	foreach($result as $row) {
+		$title = $row->title;
+		if ($row->page_type == 'landing-page') {
+			$table_landing_page['rows'][] = array(
+				array(
+					'data' => l($row->page_title, 'node/'.$row->page_nid, array()),
+					'class' => 'table-cell-page-title',
+				),
+				array(
+					'data' => l(t('Edit Page'),'node/'.$row->page_nid.'/edit', array()),
+					'class' => 'table-operations-page-edit',
+					'style' => array(
+						'text-align:center;'
+					),
+				),
+				array(
+					'data' => l(t('Delete Page'),'node/'.$row->page_nid.'/delete', array()),
+					'class' => 'table-operations-edit',
+					'style' => array(
+						'text-align:center;'
+					),
+				),
+			);	
+		}
+		if ($row->page_type == 'subpage') {
+			$table_subpage['rows'][] = array(
+				array(
+					'data' => l($row->page_title, 'node/'.$row->page_nid, array()),
+					'class' => 'table-cell-page-title',
+				),
+				array(
+					'data' => l(t('Edit Page'),'node/'.$row->page_nid.'/edit', array()),
+					'class' => 'table-operations-page-edit',
+					'style' => array(
+						'text-align:center;'
+					),
+				),
+				array(
+					'data' => l(t('Delete Page'),'node/'.$row->page_nid.'/delete', array()),
+					'class' => 'table-operations-edit',
+					'style' => array(
+						'text-align:center;'
+					),
+				),
+			);	
+		}
+	}
+	$output = '<h1>Pages in section: '.$title.'</h1>';
+	$output .= '<div style="height:20px;"></div>';
+	$output .= '<h2>Section Home Page</h2>';
+	$output .= theme('table',$table_landing_page);
+	$output .= '<h2>Section Subpages</h2>';
+	$output .= theme('table',$table_subpage);
+	return $output;
+}
+
+/* Validate callback for idap_form_theme_section */
+function idap_workbench_form_theme_section_validate($form, &$form_state) {
+	// Validation functions
+}
+
+/* Submit callback for idap_workbench_form_theme_section */
 function idap_workbench_form_theme_section_submit_new($form, &$form_state) {
 	
 	$variables['section_title'] = $form_state['values']['title']; //Section title
-	
 	$variables['machine_name'] = $form_state['values']['machine_name'];
-	
 	$variables['taxonomy_parent'] = $form_state['values']['taxonomy_parent'];
-	
 	$variables['tid'] = idap_workbench_save_taxonomy_term($variables); //Taxonomy term
-	
 	$variables['carousel_nid'] = idap_workbench_store_carousel_node($form_state['values']['carousel'], $variables['section_title'], $variables['tid']); //Store carousel node
-	
 	$variables['carousel_fid'] = $form_state['values']['carousel']['carousel_image'];
-	
 	$variables['banner_fid'] = $form_state['values']['banner_image'];
 	
 	idap_workbench_save_page_builder_context($variables['tid'], $variables['machine_name']); //Create a context for this section
