@@ -1,62 +1,132 @@
 <?php
 
-include_once('idap_workbench_functions.inc');
+include_once('idap_workbench_create.inc');
+include_once('idap_workbench_edit.inc');
+include_once('idap_workbench_delete.inc');
+include_once('idap_workbench_misc.inc');
 
 /* Implements hook_menu() */
 function idap_workbench_menu() {
 	$items['admin/structure/workbench'] = array(
 		'title' => t('Workbench'),
-		'page callback' => 'idap_workbench_overview',
+		'page callback' => 'idap_workbench_list',
 		'description' => 'IDAP Workbench',
 		'access callback' => 'user_access',
 		'access arguments' => array('administer thematic sections'),
 		'type'=>MENU_NORMAL_ITEM,
-	);
-	$items['admin/structure/workbench/view'] = array(
-		'title' => t('View'),
-		'page callback' => 'idap_workbench_view',
-		'description' => t('Lists the sub-themes that have been created on the IDAP platform'),
-		'access callback' => 'user_access',
-		'access arguments' => array(
-			'administer thematic sections',
-		),
-		'type' => MENU_DEFAULT_LOCAL_TASK,
-		'weight' => -20,
+		'file' => 'idap_workbench_admin.inc'
 	);
 	$items['admin/structure/workbench/add'] = array(
-		'title' => t('Create'),
+		'title' => t('Create a new section'),
 		'page callback' => 'idap_workbench_add',
 		'description' => t('Create a new thematic section'),
 		'access callback' => 'user_access',
 		'access arguments' => array(
 			'administer thematic sections',
 		),
-		'type' => MENU_LOCAL_TASK,
+		'type' => MENU_LOCAL_ACTION,
 		'file' => 'idap_workbench_admin.inc',
 	);
-	$items['admin/structure/workbench/delete/%'] = array(
-		'title' => t('Delete'),
-		'page callback' => 'idap_workbench_delete',
+	$items['admin/structure/workbench/%/manage-pages'] = array(
+		'title' => t('Manage Pages'),
+		'page callback' => 'idap_workbench_manage_pages',
+		'page arguments' => array(3),
+		//'title callback' => 'idap_workbench_menu_title',
+		//'title arguments' => array(3,4),
 		'description' => t('Lists the sub-themes that have been created on the IDAP platform'),
 		'access callback' => 'user_access',
 		'access arguments' => array(
 			'administer thematic sections',
 		),
-		'type' => MENU_CALLBACK,
+		'type' => MENU_NORMAL_ITEM,
+		'file' => 'idap_workbench_admin.inc',
 	);
-	$items['admin/structure/workbench/edit/%'] = array(
-		'title' => t('Edit'), /* To do: add title callback to print name of section being edited */
-		'page callback' => 'idap_workbench_edit',
-		'page arguments' => array(4),
+	$items['admin/structure/workbench/%/manage-pages/add/landing-page'] = array(
+		'title' => t('Add a section home page'),
+		'page callback' => 'idap_workbench_manage_pages_add_landing_page',
+		'page arguments' => array(3),
+		//'title callback' => 'idap_workbench_menu_title',
+		//'title arguments' => array(3,4),
+		'description' => t('Lists the sub-themes that have been created on the IDAP platform'),
+		'access callback' => 'user_access',
+		'access arguments' => array(
+			'administer thematic sections',
+		),
+		'type' => MENU_LOCAL_ACTION,
+		'file' => 'idap_workbench_admin.inc',
+	);
+	$items['admin/structure/workbench/%/manage-pages/add/subpage'] = array(
+		'title' => t('Add a subpage'),
+		'page callback' => 'idap_workbench_manage_pages_add_subpage',
+		'page arguments' => array(3),
+		//'title callback' => 'idap_workbench_menu_title',
+		//'title arguments' => array(3,4),
+		'description' => t('Lists the sub-themes that have been created on the IDAP platform'),
+		'access callback' => 'user_access',
+		'access arguments' => array(
+			'administer thematic sections',
+		),
+		'type' => MENU_LOCAL_ACTION,
+		'file' => 'idap_workbench_admin.inc',
+	);
+	$items['admin/structure/workbench/%/delete'] = array(
+		'title' => t('Delete a section'),
+		'page callback' => 'idap_workbench_section_delete',
+		'page arguments' => array(3),
+		//'title callback' => 'idap_workbench_menu_title',
+		//'title arguments' => array(3,4),
 		'description' => t('Lists the sub-themes that have been created on the IDAP platform'),
 		'access callback' => 'user_access',
 		'access arguments' => array(
 			'administer thematic sections',
 		),
 		'type' => MENU_CALLBACK,
-		'file' => 'idap_workbench_admin.inc'
+		'file' => 'idap_workbench_admin.inc',
+	);
+	$items['admin/structure/workbench/%/edit'] = array(
+		'title' => t('Edit a section'),
+		'page callback' => 'idap_workbench_section_edit',
+		'page arguments' => array(3),
+		//'title callback' => 'idap_workbench_menu_title',
+		//'title arguments' => array(3,4),
+		'description' => t('Lists the sub-themes that have been created on the IDAP platform'),
+		'access callback' => 'user_access',
+		'access arguments' => array(
+			'administer thematic sections',
+		),
+		'type' => MENU_CALLBACK,
+		'file' => 'idap_workbench_admin.inc',
 	);
 	return $items;
+}
+
+function idap_workbench_menu_title($sid, $type) {
+	if (!empty($type)) {
+		switch ($type) {
+			case 'add-landing-page':
+				$title = t('Add landing page to: ');
+				break;
+			case 'edit':
+				$title = t('Edit section: ');
+				break;
+			case 'delete':
+				$title = t('Delete section: ');
+				break;
+			case 'add-subpage':
+				$title = t('Add a subpage to: ');
+				break;
+			default:
+				$title = '';
+		}
+	}
+	
+	
+	$result = db_query('SELECT iw.title from {idap_workbench} iw WHERE sid = :sid', array(':sid'=>$sid));
+	foreach ($result as $record) {
+		$section = $record->title;
+	}
+			
+	return $title.$section;
 }
 
 /* Implements hook_permission() */
@@ -67,9 +137,4 @@ function idap_workbench_permission() {
       		'description' => t('Create, manage and destroy thematic sections of the IDAP site.'),
     	),
   	);
-}
-
-/* Page Callback for admin/workbench */
-function idap_workbench_overview() {
-	return '<p>My Workbench Overview</p>';
 }
