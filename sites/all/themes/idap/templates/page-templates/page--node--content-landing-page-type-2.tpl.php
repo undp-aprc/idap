@@ -123,6 +123,9 @@
 				<?php if ($breadcrumb): ?>
 					<?php print $breadcrumb; ?>
 				<?php endif; ?>
+				<?php if ($messages): ?>
+					<?php print($messages); ?>
+				<?php endif; ?>
 				<?php if($is_admin): //Only show tabs for administrator users ?>
 					<?php if($tabs): ?>
 						<?php print render($tabs); ?>
