@@ -1,0 +1,32 @@
+#country-activity-table {
+	margin-top:20px;
+	border-bottom:1px solid #ccc;
+	margin-bottom:20px;
+}
+
+#country-activity-table p {
+	font-size:1em !important;
+}
+
+#country-activity-table td {
+	vertical-align:top;
+	padding-top:10px;
+	padding-bottom:10px;
+	margin-bottom:10px;
+	border-bottom:1px dotted #eee;
+}
+
+#country-activity-table .title {
+	font-weight:bold;
+	width:25%;
+	padding-left:10px;
+}
+
+
+#country-activity-table tr.odd {
+	background-color:#FCEEB6;
+}
+
+#country-activity-table tr.even {
+	background-color:#FDF8C1;
+}

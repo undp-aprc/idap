@@ -182,6 +182,8 @@ function idap_workbench_form_theme_section_submit_new($form, &$form_state) {
 	
 	idap_workbench_save_page_builder_context($variables['tid'], $variables['machine_name']); //Create a context for this section
 	
+	idap_workbench_save_page_builder_context_breadcrumb($variables['tid'], $variables['machine_name']); //Create a breadcrumb context for this section
+	
 	//Write values to idap_workbench
 	$variables['sid'] = db_insert('idap_workbench') // Table name no longer needs {}
 	->fields(array(

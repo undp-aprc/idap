@@ -24,6 +24,10 @@ function idap_view_modes_entity_info_alter(&$entity_info) {
 	    'label' => t('Bullet list of teasers'),
 	    'custom settings' => TRUE,
 	 );
+	$entity_info['node']['view modes']['files'] = array(
+	    'label' => t('List of files in file fields'),
+	    'custom settings' => TRUE,
+	 );
 }
 
 function idap_view_modes_preprocess_node(&$variables) {
@@ -44,5 +48,8 @@ function idap_view_modes_preprocess_node(&$variables) {
 	}
 	if($variables['view_mode'] == 'teaser_bullets') {
 		$variables['theme_hook_suggestions'][] = 'node__idap_bean__teaser_bullets';
+	}
+	if($variables['view_mode'] == 'files') {
+		$variables['theme_hook_suggestions'][] = 'node__idap_bean__files';
 	}
 }

@@ -194,6 +194,46 @@ function idap_workbench_save_page_builder_context($tid, $machine_name) {
 	context_save($context);
 }
 
+function idap_workbench_save_page_builder_context_breadcrumb($tid, $machine_name) {
+	$context = new stdClass();
+	$context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+	$context->api_version = 3;
+	$context->name = 'taxonomy_breadcrumb_'.$machine_name;
+	$context->description = t('Sets up a breadcrumb to this content');
+	$context->tag = 'Breadcrumbs';
+	$context->conditions = array(
+	  'node' => array(
+	    'values' => array(
+	      'blog' => 'blog',
+	      'carousel' => 'carousel',
+	      'e_discussion' => 'e_discussion',
+	      'event' => 'event',
+	      'group_collaboration' => 'group_collaboration',
+	      'media_article' => 'media_article',
+	      'network_news' => 'network_news',
+	      'resource' => 'resource',
+	    ),
+	    'options' => array(
+	      'node_form' => '1',
+	    ),
+	  ),
+	  'node_taxonomy' => array(
+	    'values' => array(
+	      $tid => $tid,
+	    ),
+	    'options' => array(
+	      'node_form' => '0',
+	    ),
+	  ),
+	);
+	$context->reactions = array(
+	  'breadcrumb' => 'taxonomy/term/'.$tid,
+	);
+	$context->condition_mode = 1;
+	
+	context_save($context);
+}
+
 /* Change the status of temporary uploaded files to permanent */
 function store_uploaded_files($fid, $module, $type, $id) {
 	

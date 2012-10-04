@@ -59,7 +59,9 @@
 }
 
 #edit-field-date {
-	border-bottom:1px dotted #FCEBD9;
+	border-bottom:1px dotted #E7A43F;
+	padding-bottom:10px;
+	margin-bottom:10px;
 }
 
 .form-item-title input {
@@ -71,5 +73,52 @@
 }
 
 .grippie {
+	display:none;
+}
+
+.tabledrag-toggle-weight {
+	display:none;
+}
+
+.form-item-og-group-ref-und-0-admin {
+	display:none;
+}
+
+.node-column-sidebar fieldset {
+	border:0px;
+	padding:0px;
+}
+
+/* Tidy default formatting of autocomplete widgets */
+.field-widget-entityreference-autocomplete thead th {
+	border:0px;
+}
+
+.field-widget-entityreference-autocomplete tbody {
+	border:0px;
+}
+
+.field-widget-entityreference-autocomplete tbody tr {
+	background:none;
+	border:0px;
+	margin-bottom:10px;
+}
+
+.field-widget-entityreference-autocomplete .form-autocomplete {
+	background-image:none !important;
+	border:1px solid #888;
+}
+
+.node-column-sidebar .fieldset-legend  {
+	display:none;
+}
+
+/* Fieldet Formatting */
+fieldset.captcha {
+	border:0px !important;
+	background-color:#FCEEB6;
+}
+
+fieldset.captcha legend {
 	display:none;
 }

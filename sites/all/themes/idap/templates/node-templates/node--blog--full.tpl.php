@@ -77,33 +77,25 @@
  * @see template_preprocess_node()
  * @see template_process()
  */
-kpr($variables);
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-  	<div class="date-display">
-		<?php print render($content['field_news_date']); ?>
-	</div>
-  <?php if($region_photo): ?>
-	<?php print render($region_photo); ?>
-  <?php endif; ?>
   <div class="content clearfix"<?php print $content_attributes; ?>>
     <?php
       // We hide the comments and links now so that we can render them later.
       hide($content['comments']);
       hide($content['links']);
-	  hide($content['field_contact_details']);
+	  hide($content['body']);
 	?>
     <?php print render($content); ?>
-	
-	<?php $contact_details = render($content['field_contact_details']); ?>
-	
-	<?php if($contact_details): ?>
-	<div class="contact-details">
-		<h3><?php print t('For further information please contact:');?></h3>
-		<?php print $contact_details; ?>
+	<div id="blog-body">
+		<?php print render($content['body']); ?>
 	</div>
-	<?php endif; ?>
   </div>
+  <?php if($region_metadata): ?>
+	<div class="metadata">
+		<?php print render($region_metadata); ?>
+	</div> 	
+  <?php endif; ?>
 
   <?php
     // Remove the "Add new comment" link on the teaser page or if the comment

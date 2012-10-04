@@ -55,6 +55,18 @@ function idap_custom_forms_theme($existing, $type, $theme, $path) {
       	// this will set to module/theme path by default:
       	'path' => $template_path,
   	);
+	$items['group_collaboration_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'group-collaboration-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
+	$items['e_discussion_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'e-discussion-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
 	return $items;
 }
 
@@ -86,7 +98,66 @@ function template_preprocess_network_news_node_form(&$variables) {
 	} else {
 		$variables['sidebar'][] = $variables['form']['og_group_ref'];
 	    hide($variables['form']['og_group_ref']);
+	
+		$variables['sidebar'][] = $variables['form']['group_content_access'];
+		hide($variables['form']['group_content_access']);
 	}
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/**
+* Preprocessor for theme('e_discussion_node_form').
+*/
+function template_preprocess_e_discussion_node_form(&$variables) {
+
+    $variables['sidebar'] = array(); // Create a sidebar region
+	
+	// Put theme and group options in the sidebar
+    $variables['sidebar'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	//Only display the group audience box if the current user has groups they can create content for
+	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+		hide($variables['form']['og_group_ref']);
+	} else {
+		$variables['sidebar'][] = $variables['form']['og_group_ref'];
+	    hide($variables['form']['og_group_ref']);
+	
+		$variables['sidebar'][] = $variables['form']['group_content_access'];
+		hide($variables['form']['group_content_access']);
+	}
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/**
+* Preprocessor for theme('network_news_node_form').
+*/
+function template_preprocess_group_collaboration_node_form(&$variables) {
+    $variables['sidebar'] = array(); // Create a sidebar region
+	
+	// Put theme and group options in the sidebar
+    $variables['sidebar'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	$variables['sidebar'][] = $variables['form']['field_country'];
+	hide($variables['form']['field_country']);
+
+	$variables['sidebar'][] = $variables['form']['og_roles_permissions'];
+	hide($variables['form']['og_roles_permissions']);
+	
+	$variables['sidebar'][] = $variables['form']['group_access'];
+	hide($variables['form']['group_access']);
+	
+	$variables['sidebar'][] = $variables['form']['group_content_access'];
+	hide($variables['form']['group_content_access']);
+	
+	
 
     // Extract the form buttons, and put them in independent variable.
     $variables['buttons'] = $variables['form']['actions'];
@@ -105,6 +176,8 @@ function template_preprocess_blog_node_form(&$variables) {
 
 	$variables['sidebar'][] = $variables['form']['field_country'];
 	hide($variables['form']['field_country']);
+	
+	
 
 	//Only display the group audience box if the current user has groups they can create content for
 	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
@@ -112,6 +185,9 @@ function template_preprocess_blog_node_form(&$variables) {
 	} else {
 		$variables['sidebar'][] = $variables['form']['og_group_ref'];
 	    hide($variables['form']['og_group_ref']);
+	
+		$variables['sidebar'][] = $variables['form']['group_content_access'];
+		hide($variables['form']['group_content_access']);
 	}
 
     // Extract the form buttons, and put them in independent variable.
@@ -138,6 +214,9 @@ function template_preprocess_event_node_form(&$variables) {
 	} else {
 		$variables['sidebar'][] = $variables['form']['og_group_ref'];
 	    hide($variables['form']['og_group_ref']);
+	
+		$variables['sidebar'][] = $variables['form']['group_content_access'];
+		hide($variables['form']['group_content_access']);
 	}
 
     // Extract the form buttons, and put them in independent variable.
@@ -193,6 +272,9 @@ function template_preprocess_resource_node_form(&$variables) {
 	} else {
 		$variables['sidebar'][] = $variables['form']['og_group_ref'];
 	    hide($variables['form']['og_group_ref']);
+	
+		$variables['sidebar'][] = $variables['form']['group_content_access'];
+		hide($variables['form']['group_content_access']);
 	}
 
     // Extract the form buttons, and put them in independent variable.
@@ -272,14 +354,6 @@ function template_preprocess_content_landing_page_type_2_node_form(&$variables) 
 	hide($variables['form']['field_block_5']);
 	hide($variables['form']['field_block_6']);
 
-	//Only display the group audience box if the current user has groups they can create content for
-	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
-		hide($variables['form']['og_group_ref']);
-	} else {
-		$variables['sidebar'][] = $variables['form']['og_group_ref'];
-	    hide($variables['form']['og_group_ref']);
-	}
-
     // Extract the form buttons, and put them in independent variable.
     $variables['buttons'] = $variables['form']['actions'];
     hide($variables['form']['actions']);
@@ -326,7 +400,7 @@ function template_preprocess_content_landing_page_type_3_node_form(&$variables) 
 
 /* Implements hook_form_alter() */
 function idap_custom_forms_form_alter(&$form, &$form_state, $form_id) {
-	if (isset($form['#node'])) { // All node forms including node comment forms
+	if (isset($form['#node']) || $form['#form_id'] == 'contact_site_form') { // All node forms including node comment forms
 		$form['#validate'][] = 'idap_custom_forms_node_validation';
 		
 		$path_to_css = drupal_get_path('module', 'idap_custom_forms').'/css/idap_custom_forms.css';
@@ -358,14 +432,27 @@ function idap_custom_forms_form_alter(&$form, &$form_state, $form_id) {
 		$form['#after_build'][] = 'idap_custom_forms_node_form_after_build'; 
 	}
 	
+	// Add custom validation callback for resource form to validate the file upload/URL
 	if ($form_id == 'resource_node_form') {
 		$form['#validate'][] = 'idap_custom_forms_resource_validate';
 	}
 	
+	// Change various options on all comment forms
 	if (fnmatch('comment_node_*_form',$form_id)) {
 		$form['actions']['submit']['#value'] = t('Publish Comment');
 		$form['comment_body']['und'][0]['#title_display'] = 'invisible';
 		hide($form['author']);
+	}
+	
+	// Change the default label on the 'group audience' box from 'default' to 'group audience'
+	if (isset($form['og_group_ref']['und']['0']['default'])) {
+		$form['og_group_ref']['und']['0']['default']['#title'] = t('Group Audience');
+	}
+	
+	// Remove 'group default' option from 'group_content_access' field
+	$language = isset($form['language']['#value']) ? $form['language']['#value'] : 'und';
+	if (isset($form['group_content_access'][$language])) {
+		unset($form['group_content_access'][$language]['#options'][0]);
 	}
 }
 
@@ -412,6 +499,30 @@ function idap_custom_forms_node_form_after_build($form) {
 				}
 			}
 		}
+		
+		// If field_date
+		if (isset($form['field_date'])) {
+			$form['field_date']['und']['0']['#theme_wrappers'] = array('form_element');
+			$form['field_date']['und']['0']['#suffix'] = "<div class='clearfix'></div>";
+			$form['field_date']['und']['0']['show_todate']['#prefix'] = '<div class="date-no-float">';
+			$form['field_date']['und']['0']['value']['#wrapper_attributes']['class'][0] = 'date-float';
+			$form['field_date']['und']['0']['value2']['#wrapper_attributes']['class'][0] = 'date-float';
+			$form['field_date']['und']['0']['value2']['#prefix'] = '<div class="date-float">--</div>';
+			$form['field_date']['und']['0']['value']['#title_display'] = 'invisible';
+			$form['field_date']['und']['0']['value']['date']['#title_display'] = 'invisible';
+			$form['field_date']['und']['0']['value2']['date']['#title_display'] = 'invisible';
+			$form['field_date']['und']['0']['value2']['#title_display'] = 'invisible';
+		}
 	    
+	return $form;
+}
+
+/* Contact Form */
+function idap_custom_forms_form_contact_site_form_alter(&$form, &$form_state, $form_id) {
+	$form['#after_build'][] = 'site_contact_form_after_build';
+}
+
+function site_contact_form_after_build($form) {
+	kpr($form);
 	return $form;
 }

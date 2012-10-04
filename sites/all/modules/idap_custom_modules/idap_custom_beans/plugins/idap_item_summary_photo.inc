@@ -138,16 +138,6 @@ class IDAPItemSummaryPhoto extends BeanPlugin {
 	      '#size' => 10,
 		  '#required' => TRUE,
 	    );
-	$form['filters']['themes'] = array(
-	      '#type' => 'select',
-	      '#title' => t('Content Theme Filter'),
-	      '#description' => t('Choose a theme from this list to display content from a fixed theme.'),
-	      '#options' => $themes,
-	      '#default_value' => $bean->filters['themes'],
-	      '#multiple' => FALSE,
-	      '#size' => 10,
-		  '#required' => FALSE,
-	    );
     return $form;
   }
 
@@ -161,8 +151,13 @@ class IDAPItemSummaryPhoto extends BeanPlugin {
       ->entityCondition('bundle', array($bean->filters['types']))
       ->propertyCondition('status', 1)
       ->propertyOrderBy('created', 'DESC')
-      ->range(0, $bean->settings['records_shown'])
-      ->SetContentTermCondition($bean->filters['themes']);
+      ->range(0, $bean->settings['records_shown']);
+
+		if($node = menu_get_object()) {
+			if($tid = $node->field_theme['und']['0']['tid']) {
+				$query->SetContentTermCondition($tid); 
+			};
+		};
 
     $result = $query->execute();
     if (empty($result)) {
