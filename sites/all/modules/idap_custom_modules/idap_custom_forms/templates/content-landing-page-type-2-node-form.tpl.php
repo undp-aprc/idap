@@ -33,19 +33,6 @@
 											</div>
 										</div>
 									</div>
-									<div class="content-block block country-activities-block col-2 colPos-0 rowNum-2">
-										<div class="inner-block">
-											<div class="block-heading">
-												<h2><?php //print t('Block 4'); ?></h2>
-											</div>
-											<div class="clearfix block-heading-divider"></div>
-											<div class="block-content">
-												<?php if ($block_4): ?>
-													<?php print render($block_4); ?>
-												<?php endif; ?>
-										 	</div>
-										</div> <!-- .inner-block -->
-									</div>
 								</div> <!-- #form-content-blocks-1 -->
 								<div class="form-content-blocks blocks container-blocks" id="form-content-blocks-2"> <!-- The main container for content blocks with be form-content-blocks on sub-theme pages as this will allow us to wrap block regions into containers and place blocks within those containers using Drupal entity references. The reason for this is to allow us to create advanced custom page layouts for blocks -->
 										<div class="content-block block resources-block col-1 odd  colPos-2 rowNum-3">
@@ -55,8 +42,8 @@
 												</div>
 												<div class="clearfix block-heading-divider"></div>
 												<div class="block-content">
-													<?php if ($block_5): ?>
-														<?php print render($block_5); ?>
+													<?php if ($block_4): ?>
+														<?php print render($block_4); ?>
 													<?php endif; ?>
 									 			</div>
 											</div>
@@ -70,14 +57,27 @@
 												</div>
 												<div class="clearfix block-heading-divider"></div>
 												<div class="block-content">
-													<?php if ($block_6): ?>
-														<?php print render($block_6); ?>
+													<?php if ($block_5): ?>
+														<?php print render($block_5); ?>
 													<?php endif; ?>
 											 	</div>
 											</div> <!-- .inner-block -->
 										</div>
 								</div> <!-- #form-content-blocks-3 -->
 								<div class="form-content-blocks blocks container-blocks" id="form-content-blocks-4"> <!-- The main container for content blocks with be form-content-blocks on sub-theme pages as this will allow us to wrap block regions into containers and place blocks within those containers using Drupal entity references. The reason for this is to allow us to create advanced custom page layouts for blocks -->
+									<div class="content-block block col-4 colPos-0 rowNum-2">
+										<div class="inner-block">
+											<div class="block-heading">
+												<h2><?php //print t('Block 4'); ?></h2>
+											</div>
+											<div class="clearfix block-heading-divider"></div>
+											<div class="block-content">
+												<?php if ($block_6): ?>
+													<?php print render($block_6); ?>
+												<?php endif; ?>
+										 	</div>
+										</div> <!-- .inner-block -->
+									</div>
 
 								</div> <!-- #form-content-blocks-4 -->
 								<div class="clearfix"></div>

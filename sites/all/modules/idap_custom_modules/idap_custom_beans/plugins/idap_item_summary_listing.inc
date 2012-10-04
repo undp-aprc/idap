@@ -138,16 +138,6 @@ class IDAPItemSummaryListing extends BeanPlugin {
 	      '#size' => 10,
 		  '#required' => TRUE,
 	    );
-	$form['filters']['themes'] = array(
-	      '#type' => 'select',
-	      '#title' => t('Content Theme Filter'),
-	      '#description' => t('Choose a theme from this list to display content from a fixed theme.'),
-	      '#options' => $themes,
-	      '#default_value' => $bean->filters['themes'],
-	      '#multiple' => FALSE,
-	      '#size' => 10,
-		  '#required' => FALSE,
-	    );
     return $form;
   }
 
@@ -155,14 +145,24 @@ class IDAPItemSummaryListing extends BeanPlugin {
    * Displays the bean.
    */
   public function view($bean, $content, $view_mode = 'default', $langcode = NULL) {
+	
     $query = new IDAPEntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'node')
       ->entityCondition('bundle', array($bean->filters['types']))
       ->propertyCondition('status', 1)
       ->propertyOrderBy('created', 'DESC')
-      ->range(0, $bean->settings['records_shown'])
-      ->SetContentTermCondition($bean->filters['themes']);
+      ->range(0, $bean->settings['records_shown']);
+
+	if($node = menu_get_object()) {
+		if(isset($node->group_group)) { // Filter by group take precendence over filter by theme
+			if($node->group_group['und']['0']['value'] == 1) {
+				$query->SetGroupContentCondition($node->nid);
+			}
+		} elseif($tid = $node->field_theme['und']['0']['tid']) {
+			$query->SetContentTermCondition($tid); 
+		};
+	};
 
     $result = $query->execute();
     if (empty($result)) {

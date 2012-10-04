@@ -44,28 +44,31 @@ function idap_page_builder_preprocess_subtheme_masthead_banner(&$variables) {
 	$contexts = context_active_contexts();
 	
 	foreach($contexts as $context_delta=>$context_value) {
-		if (isset($contexts[$context_delta]->conditions['node_taxonomy']['values'])) {
-			$context_taxonomy_values = $contexts[$context_delta]->conditions['node_taxonomy']['values'];
+		if (fnmatch('taxonomy_breadcrumb_*',$context_delta)) {
+			if (isset($contexts[$context_delta]->conditions['node_taxonomy']['values'])) {
+				$context_taxonomy_values = $contexts[$context_delta]->conditions['node_taxonomy']['values'];
 
-			foreach($context_taxonomy_values as $delta=>$value) {
-				$taxonomy_ids[] = $value;
+				foreach($context_taxonomy_values as $delta=>$value) {
+					$taxonomy_ids[] = $value;
+				}
+
+				$variables['elements']['taxonomy_id'] = $taxonomy_ids[0]; // We only want the first group context found
+
+				$variables['elements']['banner_image'] = select_banner_item($variables['elements']['taxonomy_id']);
+
 			}
-			
-			$variables['elements']['taxonomy_id'] = $taxonomy_ids[0]; // We only want the first group context found
-			$variables['elements']['path_to_banner_images'] = '/sites/default/files/thematic_sections/banner_images/'; // @to do: remove hardcoding for path to image
-			$variables['elements']['banner_image'] = select_banner_item($variables['elements']['taxonomy_id']);
-
 		}
-	}
-	$taxonomy_term = taxonomy_term_load($variables['elements']['taxonomy_id']);
-	$variables['elements']['taxonomy_title'] = $taxonomy_term->name;
+		$taxonomy_term = taxonomy_term_load($variables['elements']['taxonomy_id']);
+		$variables['elements']['taxonomy_title'] = $taxonomy_term->name;
+			
+		}
 }
 
 function theme_subtheme_masthead_banner($variables) {
 	$elements = $variables['elements'];
 	$output = '';
 	$output .= '<div class="subtheme-masthead-block">';
-	$output .= theme('image',array('path'=>$elements['path_to_banner_images'].$elements['banner_image'], 'alt'=>t('Masthead Banner'), 'attributes'=>array('width'=>983, 'height'=>150)));
+	$output .= theme('image_style',array('style_name'=>'983x150','path'=>$elements['banner_image'], 'alt'=>t('Masthead Banner')));
 	$output .= "<h1>".$elements['taxonomy_title']."</h1>";
 	$output .= '</div>';
 	
@@ -104,7 +107,8 @@ function select_banner_item($tid) {
 	// Result is returned as a iterable object that returns a stdClass object on each iteration
 	foreach ($result as $record) {
 	  	$file = file_load($record->banner_fid);
-	 	$banners[$record->tid] = $file->filename;
+	    
+	 	$banners[$record->tid] = $file->uri;
 	}
 	return $banners[$tid];
 }

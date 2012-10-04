@@ -8,6 +8,14 @@ function idap_theme($existing, $type, $theme, $path) {
 			),
 		),
 	);
+	$items['vertical_table'] = array(
+		'render element' => 'element',
+		'variables' => array(
+			'element' => array(
+				'data' => NULL,
+			),
+		),
+	);
 	return $items;
 }
 
@@ -91,7 +99,128 @@ function idap_preprocess_node(&$variables) {
 				hide($variables['content']['group_photo_container']);
 			}
 		break;
+		case 'country_activity':
+			drupal_add_css(path_to_theme().'/css/nodes/country-activity.css');
+			if ($variables['view_mode'] == 'full') {
+				$variables['theme_hook_suggestions'][] = 'node__country_activity__full';
+				
+				$variables['content']['vertical_table'] = theme('vertical_table',array('element'=>array('data' => $variables['content'])));
+			}
+		break;
+		case 'blog':
+			drupal_add_css(path_to_theme().'/css/nodes/blog.css');
+			if ($variables['view_mode'] == 'full') {
+				$variables['theme_hook_suggestions'][] = 'node__blog__full';
+				
+				$variables['region_metadata'] = array();
+				
+				$variables['region_metadata'][] = $variables['content']['field_theme'];
+				hide($variables['content']['field_theme']);
+				
+				if (isset($variables['content']['og_group_ref'])) {
+					$variables['region_metadata'][] = $variables['content']['og_group_ref'];
+					hide($variables['content']['og_group_ref']);
+				}
+			}
+		break;
+		case 'resource':
+			drupal_add_css(path_to_theme().'/css/nodes/resource.css');
+			if ($variables['view_mode'] == 'full') {
+				$variables['theme_hook_suggestions'][] = 'node__resource__full';
+				
+				$variables['region_metadata'] = array();
+				
+				$variables['region_metadata'][] = $variables['content']['field_resource_type'];
+				hide($variables['content']['field_resource_type']);
+				
+				$variables['region_metadata'][] = $variables['content']['field_resource_url'];
+				hide($variables['content']['field_resource_url']);
+				
+				$variables['region_metadata'][] = $variables['content']['field_resource_file'];
+				hide($variables['content']['field_resource_file']);
+				
+				$variables['region_metadata'][] = $variables['content']['field_theme'];
+				hide($variables['content']['field_theme']);
+				
+				if (isset($variables['content']['og_group_ref'])) {
+					$variables['region_metadata'][] = $variables['content']['og_group_ref'];
+					hide($variables['content']['og_group_ref']);
+				}
+			}
+		break;
 	}
+}
+
+/* Preprocess functino for theme_vertical_table */
+function idap_preprocess_vertical_table(&$variables) {
+	$data = $variables['element']['data'];
+	$row = array();
+	if (isset($data['field_country'])) {
+		$row['field_country'] = array(
+			'title'=>t('Country(s):'),
+			'data'=>$data['field_country'],
+		); 
+	};
+	if (isset($data['field_regions'])) {
+		$row['field_regions'] = array(
+			'title'=>t('Region(s):'),
+			'data'=>$data['field_regions'],
+		); 
+	};
+	if (isset($data['field_expected_results'])) {
+		$row['field_expected_results'] = array(
+			'title'=>t('Expected Results:'),
+			'data'=>$data['field_expected_results'],
+		); 
+	};
+	if (isset($data['field_activity_scope'])) {
+		$row['field_activity_scope'] = array(
+			'title'=>t('Activity Scope:'),
+			'data'=>$data['field_activity_scope'],
+		); 
+	};
+	if (isset($data['field_coordinating_agency'])) {
+		$row['field_coordinating_agency'] = array(
+			'title'=>t('Coordinating Agency(s):'),
+			'data'=>$data['field_coordinating_agency'],
+		); 
+	};
+	if (isset($data['field_partners'])) {
+		$row['field_partners'] = array(
+			'title'=>t('Partner(s):'),
+			'data'=>$data['field_partners'],
+		); 
+	};
+	if (isset($data['field_activity_timeline'])) {
+		$row['field_activity_timeline'] = array(
+			'title'=>t('Activity Timeline:'),
+			'data'=>$data['field_activity_timeline'],
+		); 
+	};
+	if (isset($data['field_related_files'])) {
+		$row['field_related_files'] = array(
+			'title'=>t('Related Files/URLs:'),
+			'data'=>$data['field_related_files'],
+		); 
+	};
+	
+	$variables['rows'] = $row;
+}
+
+/* Theme function: theme_vertical_table */
+function idap_vertical_table($variables) {
+	$stripe = 'odd';
+	$rows = array();
+	
+	foreach($variables['rows'] as $key=>$row) {
+		$rows[$key] = '<tr class="'.$stripe.'"><td class="title">'.$row['title'].'</td><td>'.drupal_render($row['data']).'</td></tr>';
+		$stripe == 'odd' ? $stripe = 'even' : $stripe = 'odd';
+	}
+	 
+	$table_rows = implode($rows);
+	$output = '<table id="country-activity-table">'.$table_rows.'</table>';
+	
+	return $output;
 }
 
 function idap_preprocess_block(&$variables) {

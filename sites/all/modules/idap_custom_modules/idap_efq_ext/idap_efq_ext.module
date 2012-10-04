@@ -15,10 +15,28 @@ class IDAPEntityFieldQuery extends EntityFieldQuery {
       ->propertyOrderBy('created', 'DESC');
   }
 
+  public function CheckGroupContentAccess() {
+  /* Check if content is either public, or if the current user is a member of the group to which the content belongs */
+	global $user;
+	$entity_id = array();
+	$result = db_query("SELECT DISTINCT fdgca.entity_id FROM {field_data_group_content_access} fdgca LEFT JOIN {og_membership} om ON fdgca.entity_id = om.etid LEFT JOIN {og_membership} oma ON om.gid = oma.gid
+	WHERE (fdgca.group_content_access_value != 2 AND fdgca.bundle != :bundle) OR (oma.entity_type = :entity_type AND oma.etid = :uid)", array(':uid'=>$user->uid,':bundle'=>'group_collaboration',':entity_type'=>'user'));
+	
+	foreach($result as $record) {
+		$entity_id[] = $record->entity_id;
+	}
+	
+	/* Pass the Entity IDs into the EFQ->propertyCondition and return results */
+	if (!empty($entity_id)) {
+		$this->propertyCondition('nid', $entity_id);
+		return $this;
+	}
+  }
+
   public function SetGroupContentCondition($values) {
 	/* Find all Entity IDs for the value passed to this method */
 	$entity_id = array();
-	$result = db_query('SELECT om.etid FROM {og_membership} om LEFT join {og} og ON om.gid = og.etid WHERE og.gid = :gid',array(':gid' => $values));
+	$result = db_query('SELECT om.etid FROM {og_membership} om WHERE om.gid = :gid',array(':gid' => $values));
 	foreach($result as $record) {
 		$entity_id[] = $record->etid;
 	}
