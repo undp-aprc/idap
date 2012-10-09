@@ -122,3 +122,8 @@ fieldset.captcha {
 fieldset.captcha legend {
 	display:none;
 }
+
+/* Resource Form Formatting */
+.form-item-field-resource-url-und-0-url input {
+	width:500px;
+}

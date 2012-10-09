@@ -245,8 +245,7 @@ function template_preprocess_media_article_node_form(&$variables) {
 /**
 * Preprocessor for theme('resource_node_form').
 */
-function template_preprocess_resource_node_form(&$variables) {
-	
+function template_preprocess_resource_node_form(&$variables) {	
 	// Add js and css for jquery_ui tabs
 	drupal_add_js('/misc/ui/jquery.ui.tabs.min.js');
 	drupal_add_css('misc/ui/jquery.ui.tabs.css'); 
@@ -400,7 +399,8 @@ function template_preprocess_content_landing_page_type_3_node_form(&$variables) 
 
 /* Implements hook_form_alter() */
 function idap_custom_forms_form_alter(&$form, &$form_state, $form_id) {
-	if (isset($form['#node']) || $form['#form_id'] == 'contact_site_form') { // All node forms including node comment forms
+	if (isset($form['#node']) || $form['#form_id'] == 'contact_site_form') { // All node forms including node comment forms and site contact form
+		
 		$form['#validate'][] = 'idap_custom_forms_node_validation';
 		
 		$path_to_css = drupal_get_path('module', 'idap_custom_forms').'/css/idap_custom_forms.css';
@@ -449,10 +449,12 @@ function idap_custom_forms_form_alter(&$form, &$form_state, $form_id) {
 		$form['og_group_ref']['und']['0']['default']['#title'] = t('Group Audience');
 	}
 	
-	// Remove 'group default' option from 'group_content_access' field
+	// Remove 'group defaults' option and set default to 'public' (Value 1)
+	// Important to set a default value because prevents AJAX errors during file upload
 	$language = isset($form['language']['#value']) ? $form['language']['#value'] : 'und';
 	if (isset($form['group_content_access'][$language])) {
 		unset($form['group_content_access'][$language]['#options'][0]);
+		$form['group_content_access'][$language]['#default_value'] = 1;
 	}
 }
 
