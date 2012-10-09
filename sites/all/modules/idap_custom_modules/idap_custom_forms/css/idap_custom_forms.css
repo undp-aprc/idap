@@ -124,6 +124,10 @@ fieldset.captcha legend {
 }
 
 /* Resource Form Formatting */
-.form-item-field-resource-url-und-0-url input {
+.page-node-add-resource .form-type-textfield .form-text {
 	width:500px;
+}
+
+.page-node-add-resource #edit-title {
+	width:100% !important;
 }
