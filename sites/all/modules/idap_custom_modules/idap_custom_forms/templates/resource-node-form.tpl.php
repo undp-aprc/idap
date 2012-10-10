@@ -1,10 +1,10 @@
-<div class="node-add-wrapper network-news-node-form">
+<div class="node-add-wrapper resource-node-form">
 	<div class="node-main">
 		<?php if($node_main): ?>
 	      	<?php print render($node_main); ?>
 	    <?php endif; ?>
 	<div style="height:20px;"></div>
-  	<div class="node-column-main equal-column-heights">
+  	<div class="node-column-main">
 		<div class="enclosure">
 			<div id="resource-content">
 				<div id="tabs">
@@ -35,7 +35,7 @@
 	  	<?php endif; ?>
 		</div>
   	</div>
-  	<div class="node-column-sidebar highlight equal-column-heights">
+  	<div class="node-column-sidebar highlight">
 		<div class="enclosure">
 		<h3><?php print t('Content Audience Options'); ?></h3>
 		<p class="dark-grey"><?php print t('By using the options below you can choose where your content will be displayed within this site\'s sub-theme pages, block and groups.'); ?></p>
