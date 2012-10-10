@@ -68,6 +68,7 @@
  * @see bartik_process_page()
  * @see html.tpl.php
  */
+kpr($variables);
 ?>
 <!-- Beginning page.tpl.php template -->
 <div id="top">
@@ -131,22 +132,27 @@
 						<?php print render($tabs); ?>
 					<?php endif; ?>
 				<?php endif; ?>
-				<?php if($title): ?>
-					<h1 class='node-title'><?php print $title; ?></h1>
+				<?php if ($page['sidebar_first']): ?>
+					<div class="sidebar" id="sidebar-left">
+						<div class="enclosure">
+							<?php print render($page['sidebar_first']); ?>
+						</div> <!-- .enclosure -->
+					</div>
 				<?php endif; ?>
 				<div id="content">
 					<div class="enclosure">
-						<?php /* Move the title and tabs into the content region on this page so title wraps if there is sidebar content */ ?>
-						
+					<?php if($title): ?>
+						<h1><?php print $title; ?></h1>
+					<?php endif; ?>
 					<?php if ($page['content']): ?>
 						<?php print render($page['content']); ?>
 					<?php endif; ?>
 					</div> <!-- .enclosure -->
 				</div> <!-- #content -->
-				<?php if ($page['sidebar_first']): ?>
+				<?php if ($page['sidebar_second']): ?>
 					<div class="sidebar" id="sidebar-right">
 						<div class="enclosure">
-							<?php print render($page['sidebar_first']); ?>
+							<?php print render($page['sidebar_second']); ?>
 						</div> <!-- .enclosure -->
 					</div>
 				<?php endif; ?>
