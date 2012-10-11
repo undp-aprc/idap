@@ -1,20 +1,55 @@
 <?php
 
 /* Implements hook_menu() */
-
 function idap_subscription_links_menu() {
-	$items['subscription/content-type/nojs/%'] = array(
-	      'page callback' => 'idap_subscription_links_create',
-	      'page arguments' => array(2, 3),
-		  'access arguments' => array('subscribe to content'),
+	$items = array();
+	$items['subscription/test/nojs'] = array(
+		'title' => t('Simple Subscription Links'),
+		'page callback' => 'idap_subscription_links_create_subscription',
+		'access callback' => TRUE,
 	);
-	$items['subscription/content-type/ajax/%'] = array(
+	$items['subscription/test/ajax']	= array(
 		'delivery callback' => 'ajax_deliver',
-	) + $items['subscription/content-type/nojs/%'];
+	) + $items['subscription/test/nojs'];
+	
 	return $items;
 }
 
-/* Store a subscription for the current user for a valid content type */
+/* Implements hook_block_info() */
+function idap_subscription_links_block_info() {
+	return array(
+		'idap_subscription_links_block' => array(
+			'info' => t('Display simple AJAX enabled links for the subscriptions module'),
+			'cache' => DRUPAL_CACHE_GLOBAL,
+			'visibility' => BLOCK_VISIBILITY_LISTED,
+		),
+	);
+}
+
+/* Implements hook_block_view() */
+function idap_subscription_links_block_view($delta = '') {
+	switch ($delta) {
+		case 'idap_subscription_links_block':
+			$block['subject'] = t('Simple Links for Subscription');
+			$block['content'] = array(
+				'#markup' => '<a href="/subscription/test/nojs" class="use-ajax">Subscribe Now</a>',
+			);
+		break;
+	}
+	
+	return $block;
+}
+
+/* Page callback for subscription/%/ajax */
+function idap_subscription_links_create_subscription() {
+	$html = '<p>My AJAX callback works!</p>';
+	return $html;
+}
+
+/*
+
+
+/* Store a subscription for the current user for a valid content type
 
 function idap_subscription_links_create($ajax, $content_type) {
 	global $user;
@@ -94,4 +129,4 @@ function idap_subscription_links_check_existing($content_type, $user_id) {
 	} else {
 		return false;
 	}
-} 
+} */
