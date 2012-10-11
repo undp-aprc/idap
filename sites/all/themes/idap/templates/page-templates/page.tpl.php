@@ -131,20 +131,27 @@
 						<?php print render($tabs); ?>
 					<?php endif; ?>
 				<?php endif; ?>
-				<?php if($title): ?>
-					<h1><?php print $title; ?></h1>
+				<?php if ($page['sidebar_first']): ?>
+					<div class="sidebar" id="sidebar-left">
+						<div class="enclosure">
+							<?php print render($page['sidebar_first']); ?>
+						</div> <!-- .enclosure -->
+					</div>
 				<?php endif; ?>
 				<div id="content">
 					<div class="enclosure">
+					<?php if($title): ?>
+						<h1><?php print $title; ?></h1>
+					<?php endif; ?>
 					<?php if ($page['content']): ?>
 						<?php print render($page['content']); ?>
 					<?php endif; ?>
 					</div> <!-- .enclosure -->
 				</div> <!-- #content -->
-				<?php if ($page['sidebar_first']): ?>
+				<?php if ($page['sidebar_second']): ?>
 					<div class="sidebar" id="sidebar-right">
 						<div class="enclosure">
-							<?php print render($page['sidebar_first']); ?>
+							<?php print render($page['sidebar_second']); ?>
 						</div> <!-- .enclosure -->
 					</div>
 				<?php endif; ?>

@@ -52,7 +52,7 @@ ol, ul {
 }
 
 li {
-	font-size:1em;
+	font-size:0.8em;
 }
 
 #content a {
@@ -458,28 +458,54 @@ body {
 	width:984px;
 }
 
-.one-sidebar.sidebar-first #content {
+.one-sidebar.sidebar-first #content, .one-sidebar.sidebar-second #content {
 	width:689px;
 	float:left;
+}
+
+.one-sidebar.sidebar-first #content {
+	margin-left:10px;
+	border-left:1px dotted #eee;
+}
+
+.one-sidebar.sidebar-second #content {
 	margin-right:10px;
 	border-right:1px dotted #eee;
 }
 
 .one-sidebar.sidebar-first #content .enclosure {
+	padding:0 0 0 10px;
+}
+
+.one-sidebar.sidebar-right #content .enclosure {
 	padding:0 10px 0 0;
 }
 
-.one-sidebar.sidebar-first .region-sidebar-first {
+.two-sidebars #content {
+	width:416px;
+	float:left;
+}
+
+.two-sidebars #content .enclosure {
+	padding:0 10px 0 10px;
+}
+
+.region-sidebar-first, .region-sidebar-second {
 	width:284px;
 	float:left;
 }
 
-.one-sidebar.sidebar-first .region-sidebar-first .enclosure {
-	padding:0 0 0 10px;
-	float:left;
+#sidebar-left .enclosure {
+	padding:0 10px 0 0;
+	border-right:1px dotted #eee;
 }
 
-#sidebar-right {
+#sidebar-right .enclosure {
+	padding:0 0 0 10px;
+	border-left:1px dotted #eee;
+}
+
+#sidebar-right, #sidebar-left {
 	margin-bottom:20px;
 }
 
