@@ -454,8 +454,9 @@ body {
 }
 
 /* Content and Sidebars */
-.no-sidebars #content {
-	width:984px;
+.no-sidebars #content, .front #content {
+	width:984px !important;
+	float:none !important;
 }
 
 .one-sidebar.sidebar-first #content, .one-sidebar.sidebar-second #content {
