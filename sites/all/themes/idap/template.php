@@ -41,6 +41,7 @@ function idap_comma_list($variables) {
 
 /* Preprocess function for theme_page() */
 function idap_preprocess_page(&$page) {
+	global $user;
 
 	// Custom settings for the front page
 	if ($page['is_front']) {
@@ -78,6 +79,13 @@ function idap_preprocess_page(&$page) {
 			if ($value == 'page__node__content_landing_page_type_3') {
 				unset($page['theme_hook_suggestions'][$delta]);
 			}
+		}
+	}
+	
+	//Consider 'Content Manager' role to be admin too
+	foreach ($user->roles as $delta=>$role) {
+		if ($role == 'Content Manager') {
+			$page['is_admin'] = TRUE;
 		}
 	}
 }
