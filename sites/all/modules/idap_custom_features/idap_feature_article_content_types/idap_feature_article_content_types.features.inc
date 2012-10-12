@@ -5,6 +5,16 @@
  */
 
 /**
+ * Implements hook_ctools_plugin_api().
+ */
+function idap_feature_article_content_types_ctools_plugin_api() {
+  list($module, $api) = func_get_args();
+  if ($module == "field_group" && $api == "field_group") {
+    return array("version" => "1");
+  }
+}
+
+/**
  * Implements hook_node_info().
  */
 function idap_feature_article_content_types_node_info() {
@@ -47,6 +57,22 @@ function idap_feature_article_content_types_node_info() {
       'description' => t('News items from the network. If you wish to share published news articles, please use the <em>media articles</em> content type.'),
       'has_title' => '1',
       'title_label' => t('Title'),
+      'help' => '',
+    ),
+    'opportunities' => array(
+      'name' => t('Jobs and Opportunities'),
+      'base' => 'node_content',
+      'description' => t('A listing of jobs and other opportunities, such as grants, fellowships and pro bono service opportunities.'),
+      'has_title' => '1',
+      'title_label' => t('Job Title'),
+      'help' => '',
+    ),
+    'page' => array(
+      'name' => t('Page'),
+      'base' => 'node_content',
+      'description' => t('Use <em>basic pages</em> for your static content, such as an \'About us\' page.'),
+      'has_title' => '1',
+      'title_label' => t('Page Title'),
       'help' => '',
     ),
     'resource' => array(
