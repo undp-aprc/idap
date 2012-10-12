@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * article_content_types.field_group.inc
+ * idap_feature_article_content_types.field_group.inc
  */
 
 /**
  * Implements hook_field_group_info().
  */
-function article_content_types_field_group_info() {
+function idap_feature_article_content_types_field_group_info() {
   $export = array();
 
   $field_group = new stdClass();

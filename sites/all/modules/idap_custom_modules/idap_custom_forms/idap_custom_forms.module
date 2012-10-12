@@ -67,6 +67,12 @@ function idap_custom_forms_theme($existing, $type, $theme, $path) {
       	// this will set to module/theme path by default:
       	'path' => $template_path,
   	);
+	$items['country_activity_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'country-activity-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
 	return $items;
 }
 
@@ -118,6 +124,36 @@ function template_preprocess_e_discussion_node_form(&$variables) {
 	// Put theme and group options in the sidebar
     $variables['sidebar'][] = $variables['form']['field_theme'];
     hide($variables['form']['field_theme']);
+
+	//Only display the group audience box if the current user has groups they can create content for
+	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+		hide($variables['form']['og_group_ref']);
+	} else {
+		$variables['sidebar'][] = $variables['form']['og_group_ref'];
+	    hide($variables['form']['og_group_ref']);
+	
+		$variables['sidebar'][] = $variables['form']['group_content_access'];
+		hide($variables['form']['group_content_access']);
+	}
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/**
+* Preprocessor for theme('country_activity_node_form').
+*/
+function template_preprocess_country_activity_node_form(&$variables) {
+
+    $variables['sidebar'] = array(); // Create a sidebar region
+	
+	// Put theme and group options in the sidebar
+    $variables['sidebar'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	$variables['sidebar'][] = $variables['form']['field_country'];
+	hide($variables['form']['field_country']);
 
 	//Only display the group audience box if the current user has groups they can create content for
 	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
