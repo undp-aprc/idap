@@ -1,23 +1,13 @@
 <?php
 /**
  * @file
- * article_content_types.features.inc
+ * idap_feature_article_content_types.features.inc
  */
-
-/**
- * Implements hook_ctools_plugin_api().
- */
-function article_content_types_ctools_plugin_api() {
-  list($module, $api) = func_get_args();
-  if ($module == "field_group" && $api == "field_group") {
-    return array("version" => "1");
-  }
-}
 
 /**
  * Implements hook_node_info().
  */
-function article_content_types_node_info() {
+function idap_feature_article_content_types_node_info() {
   $items = array(
     'blog' => array(
       'name' => t('Blog'),
@@ -57,14 +47,6 @@ function article_content_types_node_info() {
       'description' => t('News items from the network. If you wish to share published news articles, please use the <em>media articles</em> content type.'),
       'has_title' => '1',
       'title_label' => t('Title'),
-      'help' => '',
-    ),
-    'opportunities' => array(
-      'name' => t('Jobs and Opportunities'),
-      'base' => 'node_content',
-      'description' => t('A listing of jobs and other opportunities, such as grants, fellowships and pro bono service opportunities.'),
-      'has_title' => '1',
-      'title_label' => t('Job Title'),
       'help' => '',
     ),
     'resource' => array(

@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the IDAP Feature (Article Content Types) feature.
+ */
+
+include_once 'idap_feature_article_content_types.features.inc';
