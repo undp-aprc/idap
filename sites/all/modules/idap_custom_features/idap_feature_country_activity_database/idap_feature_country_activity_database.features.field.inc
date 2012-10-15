@@ -1061,7 +1061,7 @@ function idap_feature_country_activity_database_field_default_fields() {
       'entity_type' => 'node',
       'field_name' => 'field_theme',
       'label' => 'Theme',
-      'required' => 1,
+      'required' => 0,
       'settings' => array(
         'user_register_form' => FALSE,
       ),
