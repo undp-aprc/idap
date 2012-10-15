@@ -229,7 +229,7 @@ function idap_workbench_save_page_builder_context_breadcrumb($tid, $machine_name
 	$context->reactions = array(
 	  'breadcrumb' => 'taxonomy/term/'.$tid,
 	);
-	$context->condition_mode = 0;
+	$context->condition_mode = 1;
 	
 	context_save($context);
 }
