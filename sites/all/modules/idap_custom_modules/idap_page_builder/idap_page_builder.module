@@ -44,7 +44,7 @@ function idap_page_builder_preprocess_subtheme_masthead_banner(&$variables) {
 	$contexts = context_active_contexts();
 	
 	foreach($contexts as $context_delta=>$context_value) {
-		if (fnmatch('taxonomy_breadcrumb_*',$context_delta)) {
+		if (fnmatch('masthead_*',$context_delta)) {
 			if (isset($contexts[$context_delta]->conditions['node_taxonomy']['values'])) {
 				$context_taxonomy_values = $contexts[$context_delta]->conditions['node_taxonomy']['values'];
 

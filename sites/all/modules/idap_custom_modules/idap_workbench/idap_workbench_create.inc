@@ -160,7 +160,7 @@ function idap_workbench_save_page_builder_context($tid, $machine_name) {
 	$context = new stdClass();
 	$context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
 	$context->api_version = 3;
-	$context->name = $machine_name;
+	$context->name = 'masthead_'.$machine_name;
 	$context->description = '';
 	$context->tag = 'Page Builder';
 	$context->conditions = array(
@@ -189,37 +189,29 @@ function idap_workbench_save_page_builder_context($tid, $machine_name) {
 	    'class' => $class,
 	  ),
 	);
-	$context->condition_mode = 0;
+	$context->condition_mode = 1;
 	
 	context_save($context);
 }
 
 function idap_workbench_save_page_builder_context_breadcrumb($tid, $machine_name) {
+	$node_types = array_flip(node_type_get_names()); //Machine Names as values
+	
 	$context = new stdClass();
-	$context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
 	$context->api_version = 3;
 	$context->name = 'taxonomy_breadcrumb_'.$machine_name;
-	$context->description = t('Sets up a breadcrumb to this content');
+	$context->description = 'Sets up a breadcrumb to this content';
 	$context->tag = 'Breadcrumbs';
 	$context->conditions = array(
 	  'node' => array(
-	    'values' => array(
-	      'blog' => 'blog',
-	      'carousel' => 'carousel',
-	      'e_discussion' => 'e_discussion',
-	      'event' => 'event',
-	      'group_collaboration' => 'group_collaboration',
-	      'media_article' => 'media_article',
-	      'network_news' => 'network_news',
-	      'resource' => 'resource',
-	    ),
+	    'values' => $node_types,
 	    'options' => array(
 	      'node_form' => '1',
 	    ),
 	  ),
 	  'node_taxonomy' => array(
 	    'values' => array(
-	      $tid => $tid,
+	      277 => 277,
 	    ),
 	    'options' => array(
 	      'node_form' => '0',
@@ -227,7 +219,7 @@ function idap_workbench_save_page_builder_context_breadcrumb($tid, $machine_name
 	  ),
 	);
 	$context->reactions = array(
-	  'breadcrumb' => 'taxonomy/term/'.$tid,
+	  'breadcrumb' => 'taxonomy/term/277',
 	);
 	$context->condition_mode = 1;
 	
