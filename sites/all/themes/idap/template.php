@@ -93,6 +93,7 @@ function idap_preprocess_page(&$page) {
 /* Preprocess function for node.tpl.php */
 function idap_preprocess_node(&$variables) {
 	$node_type = $variables['type'];
+	$view_mode = $variables['view_mode'];
 	
 	switch($node_type) {
 		case 'network_news':
@@ -157,6 +158,18 @@ function idap_preprocess_node(&$variables) {
 			}
 		break;
 	}
+	
+	/* Special settings for custom view modes */
+	switch($view_mode) {
+		case 'teaser_bullets':
+			unset($variables['content']['title']['#prefix']);
+			unset($variables['content']['title']['#suffix']);
+			break;
+	}
+}
+
+function preprocess_node__idap_bean__teaser_bullets(&$variables) {
+	
 }
 
 /* Preprocess functino for theme_vertical_table */
@@ -307,9 +320,6 @@ function idap_links__system_main_menu($variables) {
 	$html .= "</ul>";
 	
 	return $html;
-	
-	
-	kpr($menu_items);
 }
 
 /*

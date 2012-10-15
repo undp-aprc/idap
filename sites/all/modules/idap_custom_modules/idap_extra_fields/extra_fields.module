@@ -52,6 +52,8 @@ function extra_fields_node_view($node, $view_mode, $langcode) {
       '#theme' => 'extra_fields_title',
       '#node' => $node,
       '#view_mode' => $view_mode,
+	  '#prefix' => '<h3 class="node-title">',
+	  '#suffix' => '</h3>',
     );
   }
   $node->content['author'] = array(
@@ -94,9 +96,9 @@ function theme_extra_fields_title($variables) {
   $node = $variables['node'];
   $view_mode = $variables['view_mode'];
   $entity_uri = entity_uri('node', $node);
-  $output = '<h3 class="node-title">';
+  //$output = '<h3 class="node-title">';
   $output .= l($node->title, $entity_uri['path']);
-  $output .= '</h3>';
+  //$output .= '</h3>';
   return $output;
 }
 
