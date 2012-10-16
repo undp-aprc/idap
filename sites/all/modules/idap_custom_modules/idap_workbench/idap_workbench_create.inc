@@ -43,6 +43,7 @@ function idap_workbench_form_theme_section($form, &$form_state) {
 		 '#description' => t('This image must be 983 pixels wide by 150 pixels high.'),
 		 '#default_value' => variable_get('carousel_image'),
 		 '#upload_location' => 'public://thematic_sections/banner_images/',
+		 '#required' => TRUE,
 	);
 	$form['carousel'] = array( // @to do: add size and filetype validation and create in form preview image
 		'#type' => 'fieldset',
@@ -62,6 +63,7 @@ function idap_workbench_form_theme_section($form, &$form_state) {
 		 '#description' => t('This image should be 380 pixels wide by 250 pixels high.'),
 		 '#default_value' => variable_get('carousel_image',''),
 		 '#upload_location' => 'public://thematic_sections/carousel_images/',
+		 '#required' => TRUE,
 	);	
 	$form['submit'] = array(
 	    '#type' => 'submit', 
