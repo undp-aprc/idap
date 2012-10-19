@@ -1,7 +1,3 @@
-* {
-	font-size:0.9em;
-}
-
 /* Hide page until all elements loaded */
 body {
 	visibility:hidden;
