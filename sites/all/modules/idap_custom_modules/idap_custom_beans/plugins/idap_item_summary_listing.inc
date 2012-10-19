@@ -106,6 +106,7 @@ class IDAPItemSummaryListing extends BeanPlugin {
       '#title' => t('Records shown'),
       '#size' => 5,
       '#default_value' => $records_shown,
+	  '#description' => t('Enter 0 for unlimited records'),
     );
     $form['more_link'] = array(
       '#type' => 'fieldset',
@@ -151,8 +152,11 @@ class IDAPItemSummaryListing extends BeanPlugin {
       ->entityCondition('entity_type', 'node')
       ->entityCondition('bundle', array($bean->filters['types']))
       ->propertyCondition('status', 1)
-      ->propertyOrderBy('created', 'DESC')
-      ->range(0, $bean->settings['records_shown']);
+      ->propertyOrderBy('created', 'DESC');
+
+	if ($bean->settings['records_shown'] > 0) {
+		$query->range(0, $bean->settings['records_shown']);
+	}
 
 	if($node = menu_get_object()) {
 		if(isset($node->group_group)) { // Filter by group take precendence over filter by theme
