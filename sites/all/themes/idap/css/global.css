@@ -1,3 +1,7 @@
+* {
+	font-size:0.9em;
+}
+
 /* Hide page until all elements loaded */
 body {
 	visibility:hidden;
@@ -25,6 +29,7 @@ h3 {
 
 p {
 	font-size:0.9em;
+	text-align:justify;
 }
 
 .content-block p {
@@ -56,10 +61,6 @@ ol, ul {
 }
 
 li {
-	font-size:0.9em;
-}
-
-#content a {
 	font-size:0.9em;
 }
 
