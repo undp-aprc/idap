@@ -29,7 +29,7 @@ p {
 }
 
 .content-block p {
-	text-align:justify; /* Only justify text in blocks; left aligned on pages ok
+	text-align:justify; /* Only justify text in blocks; left aligned on pages ok */
 }
 
 p + p { /* Gap between paragraphs */
