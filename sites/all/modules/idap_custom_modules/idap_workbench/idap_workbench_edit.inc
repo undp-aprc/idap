@@ -72,7 +72,6 @@ function idap_workbench_form_edit_theme_section($form, &$form_state) {
 }
 
 function idap_workbench_form_theme_section_submit_edit($form, &$form_state) {
-	dsm($form_state);
 	$sid = $form_state['values']['sid'];
 	$tid = $form_state['values']['tid'];
 	
