@@ -58,6 +58,7 @@ function idap_workbench_confirm_delete_submit($form, &$form_state) {
 	  ->condition('sid', $form_state['values']['sid'], '=')
 	  ->execute();
 	
+	drupal_goto('admin/structure/workbench');
 	drupal_set_message(t('The section was deleted successfully'));
 }
 
