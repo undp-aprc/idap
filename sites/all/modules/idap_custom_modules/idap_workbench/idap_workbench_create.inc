@@ -237,7 +237,7 @@ function store_uploaded_files($fid, $module, $type, $id) {
 	
 	file_save($file); // Save.
 	
-	file_usage_add($file, $module, $type, $id); // Record that the module (in this example, user module) is using the file.
+	file_usage_add($file, $module, $type, $id); // Record that the module is using the file.
 }
 
 /* Page callback for admin/structure/workbench/%/manage-pages/add/landing-page */

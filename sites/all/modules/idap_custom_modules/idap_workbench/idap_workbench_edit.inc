@@ -72,6 +72,7 @@ function idap_workbench_form_edit_theme_section($form, &$form_state) {
 }
 
 function idap_workbench_form_theme_section_submit_edit($form, &$form_state) {
+	dsm($form_state);
 	$sid = $form_state['values']['sid'];
 	$tid = $form_state['values']['tid'];
 	
@@ -99,6 +100,8 @@ function idap_workbench_form_theme_section_submit_edit($form, &$form_state) {
 	))
 	->condition('idap_workbench.sid', $sid, '=')
 	->execute();
+	
+	store_uploaded_files($form_state['values']['banner_image'], 'idap_workbench', 'section_banner',  $sid); //Update file status of banner image
 	
 	drupal_goto('admin/structure/workbench/'.$sid);
 	drupal_set_message(t('Successfully updated this section'));
