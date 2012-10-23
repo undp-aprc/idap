@@ -7,7 +7,7 @@ function idap_workbench_add() {
 }
 
 /* Form array for 'idap_workbench_form_theme_section' */
-function idap_workbench_form_theme_section($form, &$form_state) {
+function idap_workbench_form_theme_section($form, &$form_state) {	
 	$form['sid'] = array(
 		'#type' => 'hidden',
 		//'#value' => $sid,
@@ -16,7 +16,7 @@ function idap_workbench_form_theme_section($form, &$form_state) {
 		'#type' => 'textfield',
 		'#title' => t('Section Title'),
 		'#required' => TRUE,
-		//'#default_value' => $title,
+		'#default_value' => $title,
 	);
 	$form['machine_name'] = array(
 		'#type' => 'machine_name',
@@ -326,6 +326,7 @@ function idap_workbench_form_create_page($form_id, &$form_state) {
 
 /* validation callback for 'idap_workbench_form_create_page' */
 function idap_workbench_form_create_page_validate($form, &$form_state) {
+	
 	$values = $form_state['values'];
 	$page_exists = FALSE;
 	
@@ -369,7 +370,8 @@ function idap_workbench_form_create_page_submit($form, &$form_state) {
 	))
 	->execute();
 	
-	drupal_set_message(t('Create a new page called '.$values['page_title']));
+	drupal_goto('admin/structure/workbench/'.$values['section_id'].'/manage-pages');
+	drupal_set_message(t('Created a new page called '.$values['page_title']));
 }
 
 /* Save a new link in the menu */

@@ -73,8 +73,6 @@ function idap_workbench_menu() {
 		'title' => t('Delete a section'),
 		'page callback' => 'idap_workbench_section_delete',
 		'page arguments' => array(3),
-		//'title callback' => 'idap_workbench_menu_title',
-		//'title arguments' => array(3,4),
 		'description' => t('Lists the sub-themes that have been created on the IDAP platform'),
 		'access callback' => 'user_access',
 		'access arguments' => array(
@@ -87,8 +85,6 @@ function idap_workbench_menu() {
 		'title' => t('Edit a section'),
 		'page callback' => 'idap_workbench_section_edit',
 		'page arguments' => array(3),
-		//'title callback' => 'idap_workbench_menu_title',
-		//'title arguments' => array(3,4),
 		'description' => t('Lists the sub-themes that have been created on the IDAP platform'),
 		'access callback' => 'user_access',
 		'access arguments' => array(

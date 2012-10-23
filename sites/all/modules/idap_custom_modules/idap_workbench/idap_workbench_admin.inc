@@ -170,8 +170,7 @@ function idap_workbench_form_theme_section_validate($form, &$form_state) {
 }
 
 /* Submit callback for idap_workbench_form_theme_section */
-function idap_workbench_form_theme_section_submit_new($form, &$form_state) {
-	
+function idap_workbench_form_theme_section_submit_new($form, &$form_state) {	
 	$variables['section_title'] = $form_state['values']['title']; //Section title
 	$variables['machine_name'] = $form_state['values']['machine_name'];
 	$variables['taxonomy_parent'] = $form_state['values']['taxonomy_parent'];
@@ -197,7 +196,8 @@ function idap_workbench_form_theme_section_submit_new($form, &$form_state) {
 	->execute();
 	
 	store_uploaded_files($variables['carousel_fid'], 'node', 'node',  $variables['carousel_nid']); //Update file status of carousel image
-	store_uploaded_files($variables['banner_fid'], 'idap_workbench', 'section_banner	',  $variables['banner_fid']); //Update file status of carousel image
+	store_uploaded_files($variables['banner_fid'], 'idap_workbench', 'section_banner',  $variables['banner_fid']); //Update file status of banner image
 	
+	drupal_goto('admin/structure/workbench');
 	drupal_set_message(t('Successfully created a new thematic section'));
 }
