@@ -30,4 +30,13 @@ function idap_workbench_node_update($node) {
 		  ->execute();
 	}
 }
+
+function idap_workbench_fetch_theme_section($sid) {
+	$result = db_query('SELECT * FROM {idap_workbench} iw WHERE sid = :sid', array(':sid'=>$sid));
+	foreach ($result as $row) {
+		$section = $row;
+	}
+	
+	return $section;
+}
 ?>
