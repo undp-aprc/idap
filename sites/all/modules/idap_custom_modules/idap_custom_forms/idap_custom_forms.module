@@ -80,6 +80,7 @@ function idap_custom_forms_theme($existing, $type, $theme, $path) {
 * Preprocessor for theme('network_news_node_form').
 */
 function template_preprocess_network_news_node_form(&$variables) {
+	kpr($variables);
 
     $variables['sidebar'] = array(); // Create a sidebar region
 	$variables['node_main'] = array(); // Create a main node region
@@ -99,8 +100,9 @@ function template_preprocess_network_news_node_form(&$variables) {
 	hide($variables['form']['field_country']);
 
 	//Only display the group audience box if the current user has groups they can create content for
-	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+	if (!isset($variables['form']['og_group_ref']['und'][0]['default']['#options']) || count($variables['form']['og_group_ref']['und'][0]['default']['#options']) <= 1) {
 		hide($variables['form']['og_group_ref']);
+		hide($variables['form']['group_content_access']);
 	} else {
 		$variables['sidebar'][] = $variables['form']['og_group_ref'];
 	    hide($variables['form']['og_group_ref']);
@@ -126,8 +128,9 @@ function template_preprocess_e_discussion_node_form(&$variables) {
     hide($variables['form']['field_theme']);
 
 	//Only display the group audience box if the current user has groups they can create content for
-	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+	if (!isset($variables['form']['og_group_ref']['und'][0]['default']['#options']) || count($variables['form']['og_group_ref']['und'][0]['default']['#options']) <= 1) {
 		hide($variables['form']['og_group_ref']);
+		hide($variables['form']['group_content_access']);
 	} else {
 		$variables['sidebar'][] = $variables['form']['og_group_ref'];
 	    hide($variables['form']['og_group_ref']);
@@ -156,8 +159,9 @@ function template_preprocess_country_activity_node_form(&$variables) {
 	hide($variables['form']['field_country']);
 
 	//Only display the group audience box if the current user has groups they can create content for
-	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+	if (!isset($variables['form']['og_group_ref']['und'][0]['default']['#options']) || count($variables['form']['og_group_ref']['und'][0]['default']['#options']) <= 1) {
 		hide($variables['form']['og_group_ref']);
+		hide($variables['form']['group_content_access']);
 	} else {
 		$variables['sidebar'][] = $variables['form']['og_group_ref'];
 	    hide($variables['form']['og_group_ref']);
@@ -216,8 +220,9 @@ function template_preprocess_blog_node_form(&$variables) {
 	
 
 	//Only display the group audience box if the current user has groups they can create content for
-	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+	if (!isset($variables['form']['og_group_ref']['und'][0]['default']['#options']) || count($variables['form']['og_group_ref']['und'][0]['default']['#options']) <= 1) {
 		hide($variables['form']['og_group_ref']);
+		hide($variables['form']['group_content_access']);
 	} else {
 		$variables['sidebar'][] = $variables['form']['og_group_ref'];
 	    hide($variables['form']['og_group_ref']);
@@ -245,8 +250,9 @@ function template_preprocess_event_node_form(&$variables) {
 	hide($variables['form']['field_country']);
 
 	//Only display the group audience box if the current user has groups they can create content for
-	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+	if (!isset($variables['form']['og_group_ref']['und'][0]['default']['#options']) || count($variables['form']['og_group_ref']['und'][0]['default']['#options']) <= 1) {
 		hide($variables['form']['og_group_ref']);
+		hide($variables['form']['group_content_access']);
 	} else {
 		$variables['sidebar'][] = $variables['form']['og_group_ref'];
 	    hide($variables['form']['og_group_ref']);
@@ -302,8 +308,9 @@ function template_preprocess_resource_node_form(&$variables) {
 	hide($variables['form']['field_country']);
 
 	//Only display the group audience box if the current user has groups they can create content for
-	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+	if (!isset($variables['form']['og_group_ref']['und'][0]['default']['#options']) || count($variables['form']['og_group_ref']['und'][0]['default']['#options']) <= 1) {
 		hide($variables['form']['og_group_ref']);
+		hide($variables['form']['group_content_access']);
 	} else {
 		$variables['sidebar'][] = $variables['form']['og_group_ref'];
 	    hide($variables['form']['og_group_ref']);
@@ -343,8 +350,9 @@ function template_preprocess_content_landing_page_type_1_node_form(&$variables) 
 	hide($variables['form']['field_block_2']);
 
 	//Only display the group audience box if the current user has groups they can create content for
-	if (isset($variables['form']['og_group_ref']['und']['#options']) && count($variables['form']['og_group_ref']['und']['#options']) == 1) {
+	if (!isset($variables['form']['og_group_ref']['und'][0]['default']['#options']) || count($variables['form']['og_group_ref']['und'][0]['default']['#options']) <= 1) {
 		hide($variables['form']['og_group_ref']);
+		hide($variables['form']['group_content_access']);
 	} else {
 		$variables['sidebar'][] = $variables['form']['og_group_ref'];
 	    hide($variables['form']['og_group_ref']);
