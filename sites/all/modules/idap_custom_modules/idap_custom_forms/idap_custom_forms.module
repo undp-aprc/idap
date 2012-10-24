@@ -80,7 +80,6 @@ function idap_custom_forms_theme($existing, $type, $theme, $path) {
 * Preprocessor for theme('network_news_node_form').
 */
 function template_preprocess_network_news_node_form(&$variables) {
-	kpr($variables);
 
     $variables['sidebar'] = array(); // Create a sidebar region
 	$variables['node_main'] = array(); // Create a main node region
@@ -569,6 +568,5 @@ function idap_custom_forms_form_contact_site_form_alter(&$form, &$form_state, $f
 }
 
 function site_contact_form_after_build($form) {
-	kpr($form);
 	return $form;
 }
