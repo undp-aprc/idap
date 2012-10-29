@@ -1,5 +1,4 @@
 <div class="block-heading">
-	
 	<div class="clearfix"></div>
 </div>
 <div class="clearfix block-heading-divider"></div>
@@ -10,4 +9,5 @@
 		<h2><?php print $title; ?></h2>
 	<?php print $block_content['node_items']; ?>
 	</ul>
+	<div class="clearfix"></div>
 </div>
