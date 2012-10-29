@@ -173,6 +173,10 @@ function idap_preprocess_node(&$variables) {
 			unset($variables['content']['title']['#prefix']);
 			unset($variables['content']['title']['#suffix']);
 			break;
+		case 'photo_teaser':
+			unset($variables['content']['title']['#prefix']);
+			unset($variables['content']['title']['#suffix']);
+			break;
 	}
 }
 
