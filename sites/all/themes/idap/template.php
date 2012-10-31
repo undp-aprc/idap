@@ -76,7 +76,7 @@ function idap_preprocess_page(&$page) {
 	//Remove the theme_hook_suggestion for page--node--thematic-home-page-type-2.tpl.php if viewing front page because it takes precedence over page--front.tpl.php
 	if($page['is_front']) {
 		foreach($page['theme_hook_suggestions'] as $delta=>$value) {
-			if ($value == 'page__node__content_landing_page_type_3') {
+			if (fnmatch('page__node__content_landing_page_type_*',$value)) {
 				unset($page['theme_hook_suggestions'][$delta]);
 			}
 		}
