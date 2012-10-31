@@ -65,6 +65,10 @@ li p {
 	font-size:1em;
 }
 
+.subscription-link .ajax-progress-throbber {
+	display:none;
+}
+
 .underline {
 	border-bottom-width:1px;
 	border-bottom-color:#ccc;
