@@ -26,9 +26,9 @@
 	padding-left:10px;
 }
 
-.node-column-sidebar select {
+/* .node-column-sidebar select {
 	height:200px;
-}
+} */
 
 #edit-body, #edit-field-publication-date, #edit-field-publication-name, #edit-field-source-url, #edit-field-contact-details, #edit-field-photo, #edit-field-news-date  {
 	border-bottom:1px dotted #E7A43F;
