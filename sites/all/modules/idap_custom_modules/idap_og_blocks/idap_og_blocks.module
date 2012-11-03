@@ -1,0 +1,72 @@
+<?php
+
+/* Implements hook_block_info() */
+function idap_og_blocks_block_info() {
+	$blocks['idap_og_content_block'] = array(
+		'info' => t('Links to create content in OG'),
+		'cache' => DRUPAL_CACHE_PER_ROLE,
+	);
+	return $blocks;
+}
+
+/* Implements hook_block_view() */
+function idap_og_blocks_block_view($delta = '') {
+	switch ($delta) {
+		case 'idap_og_content_block':
+			$node_id = menu_get_object()->nid;
+			$types = idap_og_blocks_get_types_array($node_id);
+			$links = array();
+			
+			foreach($types as $type) {
+				$links[] = "<a href='/{$type['#path']}'>{$type['#text']}</a>"; //Can't render array because it escapes HTML entities
+			}
+			$block['title'] = t('Create content');
+			$block['content'] = array(
+				'#theme' => 'item_list',
+				'#items' => $links,
+				'#type' => 'ul',
+			);
+		break;
+	}
+	return $block;
+}
+
+function idap_og_blocks_get_types_array($og_group_ref) {
+	$types = array();
+	foreach(node_type_get_types() as $type) {
+		if(node_access('create', $type->type) && idap_og_blocks_has_group_field($type->type)) {	
+			$types[$type->type] = array(
+				'#theme' => 'link',
+				'#text' => $type->name,
+				'#path' => 'node/add/'.str_replace('_','-',$type->type).'?og_group_ref='.$og_group_ref,
+				'#options' => array(
+					'attributes' => array(),
+					'html' => TRUE,
+				),
+			);
+		}
+	}
+	return $types;
+}
+
+/* Return TRUE if content type has a group content field (ie. content of this type can be posted into a group) */
+function idap_og_blocks_has_group_field($type) {
+	$og_group_ref_exists = FALSE;
+	$fields[$type] = field_info_instances('node', $type);
+	foreach($fields[$type] as $machine_name=>$field_info) {
+		if ($machine_name == 'og_group_ref') {
+			$og_group_ref_exists = TRUE;
+		}
+	}
+	return $og_group_ref_exists;
+}
+
+function idap_og_blocks_get_group_ids($entity_id) {
+	$result = db_query('SELECT og.gid FROM {og} og WHERE og.etid = :entity_id', array(':entity_id' => $entity_id));
+	foreach ($result as $record) {
+		if (isset($record->gid)) {
+			$group_id = $record->gid;
+			return $group_id;
+		}
+	}	
+}
