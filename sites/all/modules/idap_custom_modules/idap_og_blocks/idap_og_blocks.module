@@ -20,11 +20,18 @@ function idap_og_blocks_block_view($delta = '') {
 			foreach($types as $type) {
 				$links[] = "<a href='/{$type['#path']}'>{$type['#text']}</a>"; //Can't render array because it escapes HTML entities
 			}
-			$block['title'] = t('Create content');
+			$block['subject'] = t('Create content');
 			$block['content'] = array(
 				'#theme' => 'item_list',
 				'#items' => $links,
 				'#type' => 'ul',
+				'#attached' => array(
+					'css' => array(
+						drupal_get_path('module', 'idap_og_blocks').'/css/idap_og_blocks.css' => array(
+							'type','file',
+						),
+					),
+				),
 			);
 		break;
 	}
