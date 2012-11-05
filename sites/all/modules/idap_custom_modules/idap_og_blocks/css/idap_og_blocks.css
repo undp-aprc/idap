@@ -1,0 +1,44 @@
+.block-idap-og-blocks {
+	padding:10px;
+	background-color:#FCEBD9;
+	margin-bottom:20px;
+}
+
+.block-idap-og-blocks ul {
+	list-style:none;
+}
+
+.block-idap-og-blocks li {
+	margin:0 0 10px 0 !important;
+}
+
+#block-views-og-members-og-member-list-block {
+	padding:10px;
+	background-color:#FCEBD9;
+	margin-bottom:20px;
+}
+
+#block-views-og-members-og-member-list-block ul {
+	list-style:none;
+}
+
+#block-views-og-members-og-member-list-block li {
+	margin:0 0 10px 0 !important;
+}
+
+.node-type-group-collaboration .region-sidebar-first .block h2 {
+	border-bottom:1px dotted #ccc;
+	margin-bottom:10px;
+}
+
+#block-views-og-members-og-member-list-block .add-member-button {
+	margin:10px 0;
+}
+
+#block-views-og-members-og-member-list-block .add-member-button a {
+	border-radius:5px;
+	background-color:#E7A43F;
+	color:#FCEBD9;
+	padding:5px;
+}
+
