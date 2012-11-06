@@ -158,6 +158,10 @@ body {
 	opacity:0.8;
 }
 
+.field-name-field-resource-url a:hover, .field-name-field-resource-file a:hover {
+	text-decoration:underline;
+}
+
 	/* Breadcrumb */
 	
 	#breadcrumb {
