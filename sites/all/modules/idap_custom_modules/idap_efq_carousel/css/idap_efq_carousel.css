@@ -41,6 +41,10 @@
 	margin-top:20px;
 }
 
+#carousel .slide-text p {
+	font-size:0.85em;
+}
+
 #carousel .slide-content .slide-text {
 	margin-top:10px;
 	width:400px;
