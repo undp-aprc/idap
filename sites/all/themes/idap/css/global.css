@@ -336,7 +336,7 @@ body {
 }
 
 .col-4 { /* 4 Column Widths */
-	width:984px;
+	width:964px;
 }
 
 .block.colPos-0 .inner-block {
@@ -439,6 +439,24 @@ body {
 .sub-block-content {
 	margin-top:10px;
 	width:210px !important;
+}
+
+.block-content .node-network-news {
+	float:left;
+	width:482px;
+}
+
+.content-block.col-4 img, .block-content.col-2 img{
+	float:left;
+	margin-right:10px;
+}
+
+.block-content .inner-block .block-content-item {
+	margin-right:10px;
+}
+
+.block-content .media-image {
+	display:none;
 }
 
 /* Regions */
