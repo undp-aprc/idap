@@ -41,6 +41,14 @@ function content_landing_pages_node_info() {
       'title_label' => t('Title'),
       'help' => '',
     ),
+    'content_landing_page_type_5' => array(
+      'name' => t('Content Landing Page - Type 5'),
+      'base' => 'node_content',
+      'description' => '',
+      'has_title' => '1',
+      'title_label' => t('Title'),
+      'help' => '',
+    ),
   );
   return $items;
 }
