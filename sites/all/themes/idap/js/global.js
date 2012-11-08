@@ -20,8 +20,8 @@
 		
 		/* Manage Block Page Layout */
 		
-		$('.region-content-blocks .block', context).blockFunctions(); //Add a class to each block, indicating which row it is in, so we can act on each row using equalHeightColumns()
-		$('.user-content-blocks .block', context).blockFunctions();
+		//$('.region-content-blocks .block', context).blockFunctions(); //Add a class to each block, indicating which row it is in, so we can act on each row using equalHeightColumns()
+		//$('.user-content-blocks .block', context).blockFunctions();
 		
 		/* Equalise Column Heights */
 		setTimeout(function() {
