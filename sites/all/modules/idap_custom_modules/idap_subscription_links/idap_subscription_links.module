@@ -21,31 +21,130 @@ function idap_subscription_links_menu() {
 	return $items;
 }
 
-/* Implements hook_theme() */
-function idap_subscription_links_theme($existing, $type, $theme, $path) {
-	return array(
-		'subscription_link_subscribe' => array(
-			'variables' => array(
-				'nid' => NULL,
-				'subscription type' => NULL,
-			),
-		),
-		'subscription_link_unsubscribe' => array(
-			'variables' => array(
-				'nid' => NULL,
-				'subscription type' => NULL,
-			),
-		),
-		'subscription_link_anonymous' => array(
-			'variables' => array(),
-		),
-	);
+function idap_subscription_links_page_alter(&$page) {
+	drupal_add_js('misc/ajax.js', array('weight' => JS_LIBRARY + 2));
+	if ($nodes = $page['content']['system_main']['nodes']) {
+		if($nodes) {
+			foreach($nodes as $nid=>$node) {
+				if(is_integer($nid)) {
+					$page['content']['system_main']['nodes'][$nid]['links']['subscription'] = idap_subscription_links_build($nid);
+				}
+			}
+		}
+	}
 }
 
-function idap_subscription_links_preprocess_node(&$variables) {
-	$variables['content']['links']['subscription']['#theme'] = 'subscription_link_subscribe';
-	
+function idap_subscription_links_build($nid) {
+	$links = array();
+	global $user;
+	if ($user->uid != 0) { // Only if user is logged in
+		$node = node_load($nid);
+		if (subscription_exists($node->type, $user->uid)) {
+			$links['subscription-links'] = array(
+				'#theme' => 'link',
+				'#text' => t('Unsubscribe'),
+				'#path' => 'node/'.$nid.'/'.$node->type.'/unsubscribe/nojs',
+				'#options' => array(
+					'html' => FALSE,
+					'attributes' => array(
+						'class' => array('links','inline','use-ajax','subscription-link','unsubscribe-link'),
+					),
+				)
+			);
+		} else { // No subscription
+			$links['subscription-links'] = array(
+				'#theme' => 'link',
+				'#text' => t('Subscribe'),
+				'#path' => 'node/'.$nid.'/'.$node->type.'/subscribe/nojs',
+				'#options' => array(
+					'html' => FALSE,
+					'attributes' => array(
+						'class' => array('links','inline','use-ajax','subscription-link','subscribe-link'),
+					),
+				),
+			);
+		}
+	} else { // User is not logged in
+		$links['subscription-links'] = array(
+			'title' => t('Log in or register to subscribe'),
+			'href' => 'user',
+			'html' => FALSE,
+			'attributes' => array(
+				'class' => array('links','inline'),
+			),
+		);
+	}
+	return $links;
 }
+
+/**
+ * Menu callback for node/%node/subscribe/type/%/add
+ */
+function idap_subscription_links_subscribe($node, $type = NULL, $mode = NULL) {
+	global $user;
+  	$nid = $node->nid;
+  	$type = $node->type;
+  
+  	// If the mode is not AJAX, redirect to the normal view of the page.
+  	if ($mode != 'ajax') {
+    	// Important TO DO: URL for subscription form
+  	} else {
+		
+		subscriptions_write_subscription('node','type',$type,-1,$user->uid,1,1,1);
+		
+		$link = idap_subscription_links_build($nid);
+		$html = render($link);
+		
+		$commands = array();
+	  	$commands[] = ajax_command_replace('.subscription-link', $html);
+
+	  	return array(
+	    	'#type' => 'ajax',
+	    	'#commands' => $commands,
+	  	);
+  	}
+}
+
+/**
+ * Menu callback for node/%node/subscribe/type/%/delete
+ */
+function idap_subscription_links_unsubscribe($node, $type = NULL, $mode = NULL) {
+	global $user;
+	$nid = $node->nid;
+	$type = $node->type;
+	
+  	// If the mode is not AJAX, redirect to the normal view of the page.
+  	if ($mode != 'ajax') {
+    	// Important TO DO: URL for subscription form
+  	} else {
+		$query = db_delete('subscriptions')
+					->condition('field','type')
+					->condition('value',$node->type)
+					->condition('recipient_uid',$user->uid)
+					->execute();
+		
+		$link = idap_subscription_links_build($nid);
+		$html = render($link);
+
+		$commands = array();
+		$commands[] = ajax_command_replace('.subscription-link', $html);
+
+		return array(
+		  	'#type' => 'ajax',
+		    '#commands' => $commands,
+		);
+	}
+}
+
+function subscription_exists($type, $uid) {
+	$query = db_query('SELECT * FROM {subscriptions} s WHERE s.field = :subscription_type AND s.recipient_uid = :uid AND s.value = :type',array(':subscription_type'=>'type',':uid'=>$uid,':type'=>$type));
+	return $query->rowCount() ? TRUE : FALSE;
+}
+
+
+
+
+/* Junk */
 
 function theme_subscription_link_subscribe($variables) {	
 	return '<div class="subscription-link">'.l(t('Subscribe'),'node/'.$variables['nid'].'/'.$variables['type'].'/subscribe/nojs',array('attributes' => array('class'=>array('use-ajax','no-throbber'), 'id'=>'subscribe-link'))).'</div>';
@@ -78,63 +177,6 @@ function theme_subscription_link_unsubscribe(&$variables) {
 
 function theme_subscription_link_anonymous(&$variables) {
 	return '<div class="subscription-link">'.l(t('Login or register to subscribe'),'user',array('attributes' => array())).'</div>';
-}
-
-/**
- * Menu callback for node/%node/subscribe/type/%/add
- */
-function idap_subscription_links_subscribe($node, $type = NULL, $mode = NULL) {
-	global $user;
-  	$nid = $node->nid;
-  	$type = $node->type;
-  
-  	// If the mode is not AJAX, redirect to the normal view of the page.
-  	if ($mode != 'ajax') {
-    	// Important TO DO: URL for subscription form
-  	} else {
-		
-		subscriptions_write_subscription('idap_subscription_links','type',$type,-1,$user->uid,1,1,1);
-		
-		$html = theme('subscription_link_unsubscribe',array('nid'=>$nid,'type'=>$type));
-		
-		$commands = array();
-	  	$commands[] = ajax_command_html('#subscribe-link', $html);
-
-	  	return array(
-	    	'#type' => 'ajax',
-	    	'#commands' => $commands,
-	  	);
-  	}
-}
-
-/**
- * Menu callback for node/%node/subscribe/type/%/delete
- */
-function idap_subscription_links_unsubscribe($node, $type = NULL, $mode = NULL) {
-	global $user;
-	$nid = $node->nid;
-	$type = $node->type;
-	
-  	// If the mode is not AJAX, redirect to the normal view of the page.
-  	if ($mode != 'ajax') {
-    	// Important TO DO: URL for subscription form
-  	} else {
-		$query = db_delete('subscriptions')
-					->condition('field','type')
-					->condition('value',$node->type)
-					->condition('recipient_uid',$user->uid)
-					->execute();
-		
-		$html = ($query) ? theme('subscription_link_subscribe',array('nid'=>$nid,'type'=>$type)) : '<p>Error</p>';
-
-		$commands = array();
-		$commands[] = ajax_command_html('#unsubscribe-link', $html);
-
-		return array(
-		  	'#type' => 'ajax',
-		    '#commands' => $commands,
-		);
-	}
 }
 
 /* Implements hook_block_info() */
@@ -177,10 +219,4 @@ function idap_subscription_links_block_view($delta = '') {
 	}
 	
 	return $block;
-}
-
-function subscription_exists($type, $user) {
-	$query = db_query('SELECT * FROM {subscriptions} s WHERE s.field = :subscription_type AND s.recipient_uid = :uid AND s.value = :type',array(':subscription_type'=>'type',':uid'=>$user->uid,':type'=>$type));
-	
-	return $query->rowCount() ? TRUE : FALSE;
 }
