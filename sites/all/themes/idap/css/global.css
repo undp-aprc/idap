@@ -48,6 +48,10 @@ p + a {
 	
 }
 
+p + h3 {
+	margin-top:10px;
+}
+
 a + p {
 	margin-top:10px;
 }
