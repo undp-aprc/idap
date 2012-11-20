@@ -1,0 +1,139 @@
+<?php
+/**
+ * @file
+ * Allows login using link from URL.
+ *
+ * @todo test if already logged in as someone else and abort
+ * @todo expand access string from 11 to 12 characters using SHA256 checksum
+ * @todo only allow profile module to be used if enabled with correct fields
+ * @todo reduce duplication of test code
+ * @todo generate token for simplemail-tokens
+ */
+
+/**
+ * Returns the current passphrase.
+ *
+ * If the variable $GLOBALS['urllogin_passphrase'] has been set in settings.php
+ * then use it as the passphrase.
+ * Otherwise use the string set in the admin interface and if urllogin_add_dbpass
+ * is set, then append the database access string.
+ *
+ * @return
+ *   full passphrase for encryption
+ */
+function urllogin_passphrase() {
+  if (isset($GLOBALS['urllogin_passphrase'])) { // first see if it is in settings.php
+    $passphrase = $GLOBALS['urllogin_passphrase'];
+  }
+  else {
+    $passphrase = variable_get('urllogin_passphrase', 'passphrase');
+    if (variable_get('urllogin_add_dbpass', '0') != 0) {
+      global $db_url;
+      $passphrase .= $db_url;
+    }
+  }
+  return $passphrase;
+}
+
+/********************** Admin Functions **************************/
+/**
+ * Display help and module information
+ *
+ * @param path
+ *   which path of the site we're displaying help
+ *
+ * @param arg
+ *   array that holds the current path as would be returned from arg() function
+ *
+ * @return
+ *   help text for the path
+ */
+function urllogin_help($path, $arg) {
+  $output = ''; // declare output variable
+  switch ($path) {
+    case "admin/help#urllogin":
+      $output = '<p>' . t('Allow login using link from URL') . '</p>';
+      break;
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function urllogin_permission() {
+  return array(
+  'login via url' => array(
+        'title' => t('login via url'),
+        'description' => t('Allow user to log in using this module.'),
+      ),
+      'view test pages' => array(
+        'title' => t('view test pages'),
+        'description' => t('Generate test login URLs.'),
+        'restrict access' => TRUE,
+      ),
+      'administer URL login' => array(
+        'title' => t('administer URL login'),
+        'description' => t('Configure settings for generating login URLs.'),
+        'restrict access' => TRUE,
+      ),
+      'download user access URLs' => array(
+        'title' => t('download user access URLs'),
+        'description' => t('Download bulk user login URLs.'),
+        'restrict access' => TRUE,
+      ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function urllogin_menu() {
+  $items = array();
+  $items['l'] = array(
+    'title' => 'Link to account',
+    'description' => 'Links a URL to an account',
+    'page callback' => 'urllogin_link_page',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'urllogin.inc',
+  );
+  $items['l_test'] = array(
+    'title' => 'Test URL login',
+    'description' => 'Tests URL but does not log in',
+    'page callback' => 'urllogin_test_page',
+    'access callback' => 'user_access',
+    'access arguments' => array('view test pages'),
+    'type' => MENU_CALLBACK,
+    'file' => 'urllogin.inc',
+  );
+  $items['admin/config/people/urllogin'] = array(
+    'title' => 'URL login settings',
+    'description' => 'Administer URL login',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('urllogin_admin_settings'),
+    'access arguments' => array('administer URL login'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'urllogin.inc',
+  );
+  $items['urllogin/status'] = array(
+    'title' => 'URL Login Status',
+    'description' => 'Report URL login status',
+    'page callback' => 'urllogin_status_page',
+    'access callback' => 'user_access',
+    'access arguments' => array('view test pages'),
+    'type' => MENU_CALLBACK,
+    'file' => 'urllogin.inc',
+  );
+  $items['urllogin/userlist.csv'] = array(
+    'title' => "download user access URL's",
+    'description' => "download user access URL's as a file of tab separated variables",
+    'page callback' => 'urllogin_userlist_page',
+    'access callback' => 'user_access',
+    'access arguments' => array('download user access URLs'),
+    'type' => MENU_CALLBACK,
+    'file' => 'urllogin.inc',
+  );
+  return $items;
+}
+

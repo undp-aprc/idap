@@ -1,0 +1,8 @@
+name = URLLogin Tokens
+description = Create tokens to include in subscriptions emails
+core = 7.x
+package = Other
+dependencies[] = subscriptions
+dependencies[] = token
+dependencies[] = urllogin
+files[] = urllogin_tokens.module

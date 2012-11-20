@@ -1,0 +1,10 @@
+name = "URL Login"
+description = "Allow login using link from URL"
+core = 7.x
+php = 5.1
+; Information added by drupal.org packaging script on 2012-07-28
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "urllogin"
+datestamp = "1343480218"
+
