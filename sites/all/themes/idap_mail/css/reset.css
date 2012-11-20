@@ -1,0 +1,23 @@
+* {
+	margin:0;
+	padding:0;
+}
+
+* { /* Reset fonts */
+	font-family: 'Lato', sans-serif;
+	font-size:100%;
+}
+
+a {
+	text-decoration:none;
+	color:#E7A43F;
+	font-weight:normal;
+}
+
+.clearfix:after {
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}

@@ -1,0 +1,19 @@
+<?php
+/**
+ * @file
+ * urllogin module install and uninstall hooks
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function urllogin_uninstall() {
+  // Remove variables.
+  variable_del('urllogin_add_dbpass');
+  variable_del('urllogin_passphrase');
+  variable_del('urllogin_codekey');
+  variable_del('urllogin_codemin');
+  variable_del('urllogin_destination');
+  variable_del('urllogin_useprofile');
+}
+

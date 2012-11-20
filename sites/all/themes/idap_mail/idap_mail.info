@@ -1,0 +1,13 @@
+
+name = Inclusive Development Asia-Pacific HTML Mail Theme
+description = Provide theme elements for HTML Mails generated from inclusivedevelopmentasiapacific.net.
+package = Custom Theme
+core = 7.x
+
+stylesheets[all][] = css/reset.css
+stylesheets[all][] = css/global.css
+
+regions[header] = Header
+regions[masthead] = Masthead
+regions[content] = Content
+regions[footer] =Footer
