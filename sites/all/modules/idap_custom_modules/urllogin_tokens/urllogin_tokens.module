@@ -1,5 +1,5 @@
 <?php
-include_once(drupal_get_path('module','urllogin').'/urllogin_security.inc');
+require_once(drupal_get_path('module','urllogin').'/urllogin_security.inc');
 
 /* Implements hook_token_info() */
 
