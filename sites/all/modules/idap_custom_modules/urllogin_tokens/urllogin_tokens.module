@@ -1,5 +1,7 @@
 <?php
-require_once(drupal_get_path('module','urllogin').'/urllogin_security.inc');
+if (!function_exists('_urllogin_inthash()')) {
+	require_once(drupal_get_path('module','urllogin').'/urllogin_security.inc');
+}
 
 /* Implements hook_token_info() */
 
