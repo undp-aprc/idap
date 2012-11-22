@@ -4,7 +4,7 @@
  * Include file for page callbacks.
  */
 
-include 'urllogin_security.inc';
+include_once('urllogin_security.inc');
 
 /**
  * Administration form.
@@ -380,4 +380,3 @@ function urllogin_userlist_page() {
  */
   }
 }
-
