@@ -23,7 +23,6 @@ function idap_comma_list($variables) {
 	$contents = '';
 	$list_items = $variables['items'];
 	$item_qty = count($list_items);
-	kpr($variables);
 	
 	foreach ($list_items as $delta=>$item) {
 		$next_item = $delta+1;
