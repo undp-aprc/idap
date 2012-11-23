@@ -441,6 +441,10 @@ body {
 	width:210px !important;
 }
 
+.link-wrapper {
+	margin:10px 0;
+}
+
 /* Regions */
 .region-content-divider {
 	/* border-top:1px dotted #ccc; */

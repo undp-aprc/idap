@@ -23,6 +23,7 @@ function idap_subscription_links_menu() {
 
 function idap_subscription_links_page_alter(&$page) {
 	drupal_add_js('misc/ajax.js', array('weight' => JS_LIBRARY + 2));
+	drupal_add_css(drupal_get_path('module', 'idap_subscription_links').'/idap_subscription_links.css');
 	if ($nodes = $page['content']['system_main']['nodes']) {
 		if($nodes) {
 			foreach($nodes as $nid=>$node) {
@@ -39,10 +40,11 @@ function idap_subscription_links_build($nid) {
 	global $user;
 	if ($user->uid != 0) { // Only if user is logged in
 		$node = node_load($nid);
+		$node_type = node_type_get_type($node)->name;
 		if (subscription_exists($node->type, $user->uid)) {
 			$links['subscription-links'] = array(
 				'#theme' => 'link',
-				'#text' => t('Unsubscribe'),
+				'#text' => t('Unsubscribe from all '.$node_type.'s'),
 				'#path' => 'node/'.$nid.'/'.$node->type.'/unsubscribe/nojs',
 				'#options' => array(
 					'html' => FALSE,
@@ -54,7 +56,7 @@ function idap_subscription_links_build($nid) {
 		} else { // No subscription
 			$links['subscription-links'] = array(
 				'#theme' => 'link',
-				'#text' => t('Subscribe'),
+				'#text' => t('Subscribe to all '.$node_type.'s'),
 				'#path' => 'node/'.$nid.'/'.$node->type.'/subscribe/nojs',
 				'#options' => array(
 					'html' => FALSE,
@@ -139,84 +141,4 @@ function idap_subscription_links_unsubscribe($node, $type = NULL, $mode = NULL) 
 function subscription_exists($type, $uid) {
 	$query = db_query('SELECT * FROM {subscriptions} s WHERE s.field = :subscription_type AND s.recipient_uid = :uid AND s.value = :type',array(':subscription_type'=>'type',':uid'=>$uid,':type'=>$type));
 	return $query->rowCount() ? TRUE : FALSE;
-}
-
-
-
-
-/* Junk */
-
-function theme_subscription_link_subscribe($variables) {	
-	return '<div class="subscription-link">'.l(t('Subscribe'),'node/'.$variables['nid'].'/'.$variables['type'].'/subscribe/nojs',array('attributes' => array('class'=>array('use-ajax','no-throbber'), 'id'=>'subscribe-link'))).'</div>';
-}
-
-function theme_preprocess_subscription_link_subscribe(&$variables) {
-	global $user;
-	if ($user->uid != 0) { // Only if user is logged in
-		
-		// Store nid, node type for later
-		$node = menu_get_object(); $nid = $node->nid; $type = $node->type; 
-
-		$subscription_link = subscription_exists($type, $user) ? theme('subscription_link_unsubscribe', array('nid'=>$nid,'type'=>$type)) : theme('subscription_link_subscribe', array('nid'=>$nid,'type'=>$type)); // Check if user is already subscribed and display appropriate link
-
-		$block['subject'] = t('Simple Links for Subscription');
-		$block['content'] = array(
-			'#markup' => $subscription_link,
-			'#attached' => array(
-				'js' => array(
-					'misc/ajax.js' => array('weight' => JS_LIBRARY + 2),
-				),
-			),
-		);
-	}
-}
-
-function theme_subscription_link_unsubscribe(&$variables) {
-	return '<div class="subscription-link">'.l(t('Unsubscribe'),'node/'.$variables['nid'].'/'.$variables['type'].'/unsubscribe/nojs',array('attributes' => array('class'=>array('use-ajax','no-throbber'), 'id'=>'unsubscribe-link'))).'</div>';
-}
-
-function theme_subscription_link_anonymous(&$variables) {
-	return '<div class="subscription-link">'.l(t('Login or register to subscribe'),'user',array('attributes' => array())).'</div>';
-}
-
-/* Implements hook_block_info() */
-function idap_subscription_links_block_info() {
-	return array(
-		'idap_subscription_links_block' => array(
-			'info' => t('Display simple AJAX enabled links for the subscriptions module'),
-			'cache' => DRUPAL_CACHE_GLOBAL,
-			'visibility' => BLOCK_VISIBILITY_LISTED,
-		),
-	);
-}
-
-/* Implements hook_block_view() */
-function idap_subscription_links_block_view($delta = '') {
-	switch ($delta) {
-		case 'idap_subscription_links_block':
-			global $user;
-			if ($user->uid != 0) { // Only if user is logged in
-				
-				// Store nid, node type for later
-				$node = menu_get_object(); $nid = $node->nid; $type = $node->type; 
-
-				$subscription_link = subscription_exists($type, $user) ? theme('subscription_link_unsubscribe', array('nid'=>$nid,'type'=>$type)) : theme('subscription_link_subscribe', array('nid'=>$nid,'type'=>$type)); // Check if user is already subscribed and display appropriate link
-
-				$block['subject'] = t('Simple Links for Subscription');
-				$block['content'] = array(
-					'#markup' => $subscription_link,
-					'#attached' => array(
-						'js' => array(
-							'misc/ajax.js' => array('weight' => JS_LIBRARY + 2),
-						),
-					),
-				);
-			}
-			
-			
-			
-		break;
-	}
-	
-	return $block;
 }
