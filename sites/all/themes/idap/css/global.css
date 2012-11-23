@@ -69,6 +69,10 @@ li p {
 	font-size:1em;
 }
 
+.subscription-link .ajax-progress-throbber {
+	display:none;
+}
+
 .underline {
 	border-bottom-width:1px;
 	border-bottom-color:#ccc;
@@ -461,8 +465,6 @@ body {
 	width:465px;
 }
 
-
-
 .content-block.col-4 img, .block-content.col-2 img{
 	float:left;
 	margin-right:10px;
@@ -474,6 +476,9 @@ body {
 
 .block-content .media-image {
 	display:none;
+
+.link-wrapper {
+	margin:10px 0;
 }
 
 /* Regions */
