@@ -17,22 +17,17 @@
     <td colspan="7" valign="top"><a href="http://www.inclusivedevelopmentasiapacific.net" target="_blank"><img src="http://idap:8888/sites/all/themes/idap/images/logos/logo.png" alt="Site Logo" border="0" /></a></td>
   </tr>
   <tr><td colspan="8">&nbsp;</td></tr>
-  <tr style="background-color:#EEBC5F;"><td width="50%" colspan="4" style="font-size:0.7em;">&copy; United Nations Development Programme 2012</td><td><a title="About Inclusive Development Asia-Pacific" href="http://www.inclusivedevelopmentasiapacific.net/about-us" style="text-decoration:none;color:#000;font-size:0.7em;">About Us</a>
-    <a title="Information about the privacy policy that governs how IDAP may use personal information collected through this site." href="http://www.inclusivedevelopmentasiapacific.net/privacy" style="text-decoration:none;color:#000;font-size:0.7em;"></a>
-<a title="Terms and Conditions for membership, content creation and sharing." href="http://www.inclusivedevelopmentasiapacific.net/terms" style="text-decoration:none;color:#000;"></a></li>
-</ul></td>
-    <td>
-      <a title="Contact us using our contact form or through other contact methods." href="http://www.inclusivedevelopmentasiapacific.net/contact" style="text-decoration:none;color:#000;font-size:0.7em;">Contact</a>
-    </td>
+  <tr style="background-color:#EEBC5F;"><td width="50%" colspan="4" style="font-size:0.7em;">&copy; United Nations Development Programme 2012</td><td><a title="About Inclusive Development Asia-Pacific" href="http://www.inclusivedevelopmentasiapacific.net/about-us" style="text-decoration:none;color:#000;font-size:0.7em;">About Us</a></td>
+    <td><a title="Contact us using our contact form or through other contact methods." href="http://www.inclusivedevelopmentasiapacific.net/contact" style="text-decoration:none;color:#000;font-size:0.7em;">Contact</a></td>
     <td><a title="Information about the privacy policy that governs how IDAP may use personal information collected through this site." href="http://www.inclusivedevelopmentasiapacific.net/privacy" style="text-decoration:none;color:#000;font-size:0.7em;">Privacy Statement</a></td>
     <td><a title="Terms and Conditions for membership, content creation and sharing." href="http://www.inclusivedevelopmentasiapacific.net/terms" style="text-decoration:none;color:#000;font-size:0.7em;">Terms &amp; Conditions</a></td>
   </tr>
   <tr style="background-color:#EAEAEB"><td colspan="8">
   <address style="font-style:normal;font-size:0.7em">
-  <b>The United Nations Development Programme (Asia Pacific Regional Center)</b><br/>
-  Level 3 Service Building<br/>
-  Ratchadamnoen Nok Avenue<br/>
-  Bangkok 10300 Thailand<br/>
+  <b>The United Nations Development Programme (Asia Pacific Regional Center)</b>
+  Level 3 Service Building
+  Ratchadamnoen Nok Avenue
+  Bangkok 10300 Thailand
   </address>
   </td></tr>
 </table>
