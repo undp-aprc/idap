@@ -96,11 +96,11 @@
 <?php endif; ?>
 </td></tr>
 <tr style="background-color:#EEBC5F;">
-  	<td width="50%" colspan="4" style="font-size:0.7em;">&copy; United Nations Development Programme 2012</td>
-    <td width="12.5%"><a title="About Inclusive Development Asia-Pacific" href="http://www.inclusivedevelopmentasiapacific.net/about-us" style="text-decoration:none;color:#000;font-size:0.7em;">About Us</a></td>
-    <td width="12.5%"><a title="Contact us using our contact form or through other contact methods." href="http://www.inclusivedevelopmentasiapacific.net/contact" style="text-decoration:none;color:#000;font-size:0.7em;">Contact</a></td>
-    <td width="12.5%"><a title="Information about the privacy policy that governs how IDAP may use personal information collected through this site." href="http://www.inclusivedevelopmentasiapacific.net/privacy" style="text-decoration:none;color:#000;font-size:0.7em;">Privacy Statement</a></td>
-    <td width="12.5%"><a title="Terms and Conditions for membership, content creation and sharing." href="http://www.inclusivedevelopmentasiapacific.net/terms" style="text-decoration:none;color:#000;font-size:0.7em;">Terms &amp; Conditions</a></td>
+  	<td width="60%" colspan="4" style="font-size:0.7em;">&copy; United Nations Development Programme 2012</td>
+    <td width="10%"><a title="About Inclusive Development Asia-Pacific" href="http://www.inclusivedevelopmentasiapacific.net/about-us" style="text-decoration:none;color:#000;font-size:0.7em;">About Us</a></td>
+    <td width="10%"><a title="Contact us using our contact form or through other contact methods." href="http://www.inclusivedevelopmentasiapacific.net/contact" style="text-decoration:none;color:#000;font-size:0.7em;">Contact</a></td>
+    <td width="10%"><a title="Information about the privacy policy that governs how IDAP may use personal information collected through this site." href="http://www.inclusivedevelopmentasiapacific.net/privacy" style="text-decoration:none;color:#000;font-size:0.7em;">Privacy Statement</a></td>
+    <td width="10%"><a title="Terms and Conditions for membership, content creation and sharing." href="http://www.inclusivedevelopmentasiapacific.net/terms" style="text-decoration:none;color:#000;font-size:0.7em;">Terms &amp; Conditions</a></td>
   </tr>
   <tr style="background-color:#EAEAEB"><td colspan="8">
   <address style="font-style:normal;font-size:0.7em">
