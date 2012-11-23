@@ -81,7 +81,7 @@
 <table width="800" border="0" align="center" cellpadding="10" cellspacing="0" style="background-color:#ffffff;margin:0 auto 0 auto;padding:10px;margin-bottom:20px;">
 <tr>
 <td width="77" rowspan="2"><a href="http://www.undp.org" target="_blank"><img src="http://idap:8888/sites/all/themes/idap/images/logos/undp.png" alt="UNDP Logo" style="border:0px;"/></a></td>
-<td width="25"><a href="http://www.facebook.com" target="_blank"><img src="http://idap:8888/sites/all/themes/idap/images/icons/youtube.png" alt="Youtube" border="0" /></a></td>
+<td width="25"><a href="http://www.youtube.com" target="_blank"><img src="http://idap:8888/sites/all/themes/idap/images/icons/youtube.png" alt="Youtube" border="0" /></a></td>
 <td width="25"><a href="http://www.facebook.com" target="_blank"><img src="http://idap:8888/sites/all/themes/idap/images/icons/facebook.png" alt="Facebook" border="0" /></a></td>
 <td width="100" valign="top"><a href="http://www.twitter.com" target="_blank"><img src="http://idap:8888/sites/all/themes/idap/images/icons/twitter.png" alt="Twitter" border="0" /></a></td>
 <td width="367" valign="top"></td>
