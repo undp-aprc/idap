@@ -435,6 +435,37 @@ function idap_extra_fields_title__no_html($variables) {
 	  return $output;
 }
 
+function idap_preprocess_comment_wrapper(&$variables) {
+	$variables['comment_wrapper_commment_title'] = t('Comments');
+	$variables['comment_wrapper_commment_form_title'] = t('Add a new comment');
+	
+	if ($variables['node']->type == 'e_discussion') {
+		$variables['comment_wrapper_commment_title'] = t('E-Discussion Contributions');
+		$variables['comment_wrapper_commment_form_title'] = t('Contribute to this E-Discussion');
+	}
+}
+
+function idap_field__field_facilitator_notes__comment_node_e_discussion($variables) {
+	$output = '';
+
+	  // Render the label, if it's not hidden.
+	  if (!$variables['label_hidden']) {
+	    $output .= '<span class="field-label"' . $variables['title_attributes'] . '>' . '[' . $variables['label'] . ':&nbsp;</span>';
+	  }
+
+	  // Render the items.
+	  
+	  foreach ($variables['items'] as $delta => $item) {
+	    $classes = 'field-item ' . ($delta % 2 ? 'odd' : 'even');
+	    $output .= drupal_render($item);
+	  }
+
+	  // Render the top-level DIV.
+	  $output = '<div class="' . $variables['classes'] . '"' . $variables['attributes'] . '>' . $output . ']' .'</div>';
+
+	  return $output;
+}
+
 /***
 /***
 /*** Helper functions ***/

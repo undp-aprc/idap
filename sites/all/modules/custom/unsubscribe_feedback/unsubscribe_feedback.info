@@ -1,0 +1,5 @@
+name = Unsubscribe Feedback
+description = Request feedback when user chooses to unsubscribe from content
+core = 7.x
+dependencies[] = subscriptions
+package = Subscriptions

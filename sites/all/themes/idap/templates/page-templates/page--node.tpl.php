@@ -173,4 +173,14 @@
 		<?php print render($page['devel']); ?>
 </div>
 <?php endif; ?>
+<?php if($page['overlay']): ?>
+	<div id="overlay">
+		<div class=".enclosure">
+			<div class="black-overlay"></div>
+			<div class="white-content">
+				<?php print render($page['overlay']); ?>
+			</div>
+		</div>
+	</div>
+<?php endif; ?>
 <!-- End page.tpl.php -->

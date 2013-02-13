@@ -98,7 +98,9 @@ function idap_subscription_links_subscribe($node, $type = NULL, $mode = NULL) {
 		$html = render($link);
 		
 		$commands = array();
-	  	$commands[] = ajax_command_replace('.subscription-link', $html);
+		
+		$commands[] = ajax_command_remove('.subscription-link');
+	  	$commands[] = ajax_command_html('.link-wrapper', $html);
 
 	  	return array(
 	    	'#type' => 'ajax',
@@ -129,7 +131,8 @@ function idap_subscription_links_unsubscribe($node, $type = NULL, $mode = NULL) 
 		$html = render($link);
 
 		$commands = array();
-		$commands[] = ajax_command_replace('.subscription-link', $html);
+		$commands[] = ajax_command_remove('.subscription-link');
+		$commands[] = ajax_command_html('.link-wrapper', $html);
 
 		return array(
 		  	'#type' => 'ajax',

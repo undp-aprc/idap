@@ -15,6 +15,17 @@ function ediscussion_menu() {
 	return $items;
 }
 
+/* Implements hook_permission() */
+function ediscussion_permission() {
+	$permissions = array(
+		'write facilitator notes' => array(
+			'title' => 'Facilitator Notes',
+			'description' => 'Write facilitator notes on E-Discussion posts',
+		),
+	);
+	return $permissions;
+}
+
 function ediscussion_list_view($tid) {
 	return theme('ediscussion_list_view_page', array('tid'=>$tid));
 }
@@ -136,4 +147,16 @@ function ediscussion_fetch_row_data($tid) {
 	
 	$rows = $row;
 	return $rows;
+}
+
+function ediscussion_form_alter(&$form, &$form_state, $form_id) {
+	// Hide the facilitor notes field from any user who doesn't have the 'Facilitator' role
+	if ($form_id == 'comment_node_e_discussion_form') {
+		
+		if (!user_access('write facilitator notes')) {
+			$form['field_facilitator_notes']['und']['0']['#type'] = 'hidden'; 
+		} else {
+			$form['comment_body']['und']['0']['#title_display'] = 'before';
+		}
+	}
 }

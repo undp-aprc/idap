@@ -34,12 +34,13 @@
  * @see template_preprocess_comment_wrapper()
  * @see theme_comment_wrapper()
  */
+
 ?>
 <div id="comments" class="<?php print $classes; ?>"<?php print $attributes; ?>>
 	<div class="enclosure">
   		<?php if ($content['comments'] && $node->type != 'forum'): ?>
     		<?php print render($title_prefix); ?>
-    		<h1 class="title"><?php print t('Comments'); ?></h1>
+    		<h1 class="title"><?php print $comment_wrapper_commment_title; ?></h1>
     		<?php print render($title_suffix); ?>
   		<?php endif; ?>
 
@@ -48,7 +49,7 @@
   		<?php if ($content['comment_form']): ?>
 			<div id="comment-form-wrapper">
 				<div class="enclosure">
-    				<h1 class="title comment-form"><?php print t('Add a new comment'); ?></h1>
+    				<h1 class="title comment-form"><?php print $comment_wrapper_commment_form_title; ?></h1>
     				<?php print render($content['comment_form']); ?>
 				</div>
 			</div>
