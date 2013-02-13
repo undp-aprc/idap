@@ -1,0 +1,167 @@
+<?php
+/* Implements hook_menu() */
+function unsubscribe_feedback_menu() {
+	$items = array(
+		'admin/reports/unsubscribe' => array(
+			'page callback' => 'unsubscribe_feedback_report',
+			'access callback' => 'user_access',
+			'access arguments' => 'administer user subscriptions',
+			'title' => t('Unsubscription Reports'),
+			'description' => t('View the reasons why users unsubscribed from site email subscriptions'),
+		),
+	);
+	
+	return $items;
+}
+
+function unsubscribe_feedback_report() {
+	// Return render array for table
+	// Fetch data from subscriptions_unsubscribe_feedback to display in table
+	// Add a button to clear the subscriptions_unsubscribe_feedback table data
+}
+
+
+function unsubscribe_feedback_page_alter(&$page) {
+	drupal_add_js(drupal_get_path('module','unsubscribe_feedback').'/js/unsubscribe_feedback.js', array('weight'=> JS_DEFAULT));
+	drupal_add_css(drupal_get_path('module','unsubscribe_feedback').'/css/unsubscribe_feedback.css');
+}
+
+function unsubscribe_feedback_block_info() {
+	$blocks = array(
+		'feedback_overlay' => array(
+			'info' => t('Feedback form to display when user unsubscribes from content'),
+			'cache' => DRUPAL_CACHE_GLOBAL,
+			'visibility' => BLOCK_VISIBILITY_LISTED,
+		),
+	);
+	return $blocks;
+}
+
+function unsubscribe_feedback_block_view($delta) {
+	$block = array();
+	
+	if ($delta == 'feedback_overlay') {
+		$block['subject'] = t('Subscription Feedback');
+		$block['content'] = array(
+			'#theme' => 'unsubscribe_feedback_block',
+		);
+	}
+	
+	return $block;
+}
+
+/* Implements hook_theme() */
+function unsubscribe_feedback_theme($existing, $type, $theme, $path) {
+	$items = array(
+		'unsubscribe_feedback_block' => array(
+			'variables' => array(
+				'uid' => NULL,
+				'type' => NULL,
+			),
+		),
+	);
+	return $items;
+}
+
+function unsubscribe_feedback_preprocess_unsubscribe_feedback_block(&$variables) {
+	global $user;
+	$variables['uid'] = $user->uid;
+	$node = menu_get_object();
+	$variables['type'] = $node->type;	
+}
+
+function theme_unsubscribe_feedback_block($variables) {
+	$form = drupal_get_form('unsubscribe_feedback_response_form', $variables['uid'], $variables['type']);
+	$output = '<p>Plese take a moment to tell us why you would like to stop receiving emails from us. We\'ll use this information to help us improve the quality and usefulness of this site.</p>';
+	$output .= drupal_render($form);
+	return $output;
+}
+
+function unsubscribe_feedback_response_form($form_id, $args) {
+	$args = $args['build_info']['args'];
+
+	$form['reason'] = array(
+		'#title' => t('Why do you wish to unsubscribe?'),
+		'#type' => 'radios',
+		'#default_value' => 'no longer required',
+		'#options' => array(
+			'no longer required' => t('I no longer need to receive these emails.'),
+			'too many' => t('I receive too many emails.'),
+			'irrelevant' => t('The information in these emails is irrelevant to me.'),
+			'dislike content' => t('I dislike the content, find it offensive, or factually incorrect.'),
+			'other' => t('Other'),
+		),
+	);
+	
+	$form['other'] = array(
+		'#title' => t('Please explain'),
+		'#type' => 'textfield',
+		'#states' => array(
+			'visible' => array(
+				'#edit-reason-other' => array('checked' => TRUE),
+			),
+		),
+		'#size' => 30,
+	);
+	
+	$form['uid'] = array(
+		'#type' => 'hidden',
+		'#value' => $args[0],
+		'#title' => 'uid',
+	);
+	
+	$form['type'] = array(
+		'#type' => 'hidden',
+		'#value' => $args[1],
+		'#title' => 'type',
+	);
+	
+	$form['actions']['submit'] = array(
+		'#type' => 'submit',
+		'#value' => t('Submit Feedback'),
+	);
+	
+	$form['actions']['cancel'] = array(
+		'#type' => 'submit',
+		'#value' => t('No Thanks, I just want to unsubscribe'),
+	);
+	
+	return $form;
+}
+
+function unsubscribe_feedback_response_form_validate(&$form, &$form_state) {
+	$values = $form_state['values'];
+	
+	if ($values['reason'] == 'other' && $values['other'] == '') {
+		form_set_error('other', t('Please specify a reason'));
+	}
+	
+	$form_state['values']['reason'] = $values['reason'] == 'other' ? $values['other'] : $values['reason'];
+}
+
+function unsubscribe_feedback_response_form_submit(&$form, &$form_state) {
+	$values = $form_state['values'];
+	$values['date'] = time();
+	
+	if ($values['op'] == 'Submit Feedback') {
+		$fid = db_insert('subscriptions_unsubscribe_feedback')
+		->fields(array(
+				'uid' => $values['uid'],
+				'entity_type' => $values['type'],
+				'reason' => $values['reason'],
+				'date' => $values['date'],
+		))
+		->execute();
+		drupal_set_message('Thankyou for your feedback, it will help us improve the quality of information on this site.','status');
+		
+	} else {
+		$fid = db_insert('subscriptions_unsubscribe_feedback')
+		->fields(array(
+				'uid' => $values['uid'],
+				'entity_type' => $values['type'],
+				'date' => $values['date'],
+		))
+		->execute();
+		drupal_set_message('You have successfully unsubscribed.','status');
+	}
+}

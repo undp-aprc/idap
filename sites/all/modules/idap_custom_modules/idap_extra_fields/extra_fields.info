@@ -1,4 +1,4 @@
 core = "7.x"
 description = "Helper module for extra fields"
 name = "Extra Fields"
-package = "IDAP"
+package = "Custom"

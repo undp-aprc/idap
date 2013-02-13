@@ -1,0 +1,50 @@
+<?php
+
+function comment_author_form_alter(&$form, &$form_state, $form_id) {
+	if (fnmatch('comment_node_*_form',$form_id)) {
+		$form['#submit'][] = 'comment_author_form_submit';
+		$author_uid = $form['uid']['#value'];
+		$author_user_obj = user_load($author_uid);
+		$user_list = comment_author_load_user_entities();
+		
+		if (user_access('administer comments')) {
+			$form['comment_author'] = array(
+				'#type' => 'select',
+				'#title' => t('Author'),
+				'#options' => $user_list,
+				'#default_value' => $author_uid,
+				'#description' => t('If you need to change the author of the comment, please select a new author from the user list.'),
+				'#weight' => 100,
+			);
+		}	
+	}
+}
+
+function comment_author_form_submit(&$form, &$form_state) {
+	$cid = $form_state['values']['cid'];
+	$author_uid = $form_state['values']['comment_author'];
+	db_update('comment')
+		->fields(array(
+			'uid' => $author_uid,
+		))
+		->condition('cid',$cid)
+		->execute();
+}
+
+function comment_author_load_user_entities() {
+	$query = new EntityFieldQuery;
+	$users = array();
+ 	
+	if ($result = $query
+		->entityCondition('entity_type', 'user')
+		->propertyCondition('status', 1)
+		->execute()) {
+		
+		if ($users = $result['user']) {
+			foreach($users as $uid=>$user) {
+				$user_list[$uid] = user_load($uid)->name;
+			}
+		}
+		return $user_list;
+	}
+}

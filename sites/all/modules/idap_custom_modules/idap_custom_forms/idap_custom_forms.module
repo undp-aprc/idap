@@ -483,7 +483,11 @@ function idap_custom_forms_form_alter(&$form, &$form_state, $form_id) {
 	// Change various options on all comment forms
 	if (fnmatch('comment_node_*_form',$form_id)) {
 		$form['actions']['submit']['#value'] = t('Publish Comment');
-		$form['comment_body']['und'][0]['#title_display'] = 'invisible';
+		
+		if ($form_id != 'comment_node_e_discussion_form') { // Handle this form differently in ediscussion module
+			$form['comment_body']['und'][0]['#title_display'] = 'invisible';
+		}
+		
 		hide($form['author']);
 	}
 	

@@ -30,3 +30,4 @@ regions[sidebar_second] = Right-hand Sidebar
 regions[footer] =Footer
 regions[devel] = Development Blocks
 regions[help] = Help
+regions[overlay] = Overlay

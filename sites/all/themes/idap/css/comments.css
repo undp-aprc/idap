@@ -64,3 +64,12 @@
 .page-comment-reply #comments .enclosure {
 	padding-bottom:5px;
 }
+
+.comment .field-name-field-facilitator-notes .field-label {
+	font-style:italic;
+}
+
+.comment .field-name-field-facilitator-notes {
+	font-weight:bold;
+	margin-bottom:12px;
+}

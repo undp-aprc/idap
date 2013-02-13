@@ -111,6 +111,10 @@ body {
 	background-image:url('../images/textures/bg-page.jpg');
 }
 
+#overlay {
+	display:none;
+}
+
 #top {
 	width:1024px;
 	margin:20px auto 0px auto;

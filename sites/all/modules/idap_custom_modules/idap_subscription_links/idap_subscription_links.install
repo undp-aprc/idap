@@ -1,0 +1,48 @@
+<?php
+
+/* Implements hook_schema() */
+
+function idap_subscription_links_schema() {
+	$schema = array();
+	
+	$schema['subscriptions_feedback'] = array(
+			'description' => t('Record the reasons why users unsubscribed from content subscriptions'),
+			'fields' => array(
+				'fid' => array(
+					'description' => t('Unique ID for feedback items'),
+					'type' => 'serial',
+					'unsigned' => TRUE,
+					'not null' => TRUE,
+				),
+				'uid' => array(
+					'description' => t('The User ID of the user who is unsubscribing'),
+					'type' => 'int',
+					'unsigned' => TRUE,
+					'not null' => TRUE,
+				),
+				'entity_type' => array(
+					'description' => t('The type of entity (usually content type) that is being unsubscribed'),
+					'type' => 'varchar',
+					'length' => 128,
+					'not null' => TRUE,
+				),
+				'reason' => array(
+					'description' => t('A textual description of why the user chose to unsubscribe'),
+					'type' => 'varchar',
+					'length' => 255,
+					'not null' => TRUE,
+					'default' => 'Did not offer a reason',
+				),
+				'date' => array(
+					'description' => t('Date of the unsubscribe request'),
+					'type' => 'int',
+			        'unsigned' => TRUE,
+			        'not null' => TRUE,
+			        'default' => 0,		
+				),
+			),
+		'primary key' => array('fid'),
+	);
+	
+	return $schema;
+}

@@ -1,0 +1,4 @@
+name = Comment Author
+description = Users with permission can reassign the orginal author of a comment
+core = 7.x
+package = "Comment"
