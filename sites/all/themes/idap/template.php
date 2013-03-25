@@ -290,54 +290,20 @@ function idap_preprocess_block(&$variables) {
 /* theme_links__system_main_menu() */
 /* Theme the main menu */
 function idap_links__system_main_menu($variables) {
-	$main_menu_tree = menu_tree_all_data('main-menu');
-	//kpr($main_menu_tree);
-	$array_depth = 1;
+	return theme('idap_main_menu');
+}
+
+function idap_preprocess_idap_main_menu(&$variables) {
+	$menu_tree = menu_tree_all_data('main-menu');
 	
-	$html = print theme('idap_main_menu');
-	
-	
-	
-	
-	
-	
-	
-	/* foreach($main_menu_tree as $key_level_{$array_depth}=>$value_level_{$array_depth}) {
-		$theme = 1; //Reset theme counter for new pillar
-		$menu_items[$key_level_{$array_depth}]['text'] = $main_menu_tree[$key_level_{$array_depth}]['link']['title'];
-		$menu_items[$key_level_{$array_depth}]['path'] = $main_menu_tree[$key_level_{$array_depth}]['link']['href'];
-		
-		if ($menu_items[$key_level_{$array_depth}]['text'] != 'Home') {
-			$html .= "<li class='level-$array_depth-li'>".$menu_items[$key_level_{$array_depth}]['text'];
+	// Remove home link to <front>
+	foreach($menu_tree as $item_1=>$array_1) {
+		if ($array_1['link']['link_path'] == '<front>') {
+			unset($menu_tree[$item_1]);
 		}
-		
-		$html = '</div>';
-		
-		if (isset($main_menu_tree[$key_level_{$array_depth}]['below'])) {
-			if(!empty($main_menu_tree[$key_level_{$array_depth}]['below'])) {
-				$children = 0;
-				$parent_array_depth = $array_depth;
-				$array_depth++;
-				$html .= "<ul class='level-2'>";
-				foreach($main_menu_tree[$key_level_{$parent_array_depth}]['below'] as $key_level_{$array_depth}=>$value_level_{$array_depth}) {
-					$menu_items[$key_level_{$array_depth}]['children'][$children]['text'] = $main_menu_tree[$key_level_{$parent_array_depth}]['below'][$key_level_{$array_depth}]['link']['title'];
-					$menu_items[$key_level_{$array_depth}]['children'][$children]['path'] = $main_menu_tree[$key_level_{$parent_array_depth}]['below'][$key_level_{$array_depth}]['link']['href'];
-					
-					$html .= "<li class='theme theme-$theme'>".l($menu_items[$key_level_{$array_depth}]['children'][$children]['text'], $menu_items[$key_level_{$array_depth}]['children'][$children]['path']);
-					$children++; //Increment children to add additional themes to this pillar
-					$theme++; //Increment theme for this pillar
-				}
-				$array_depth = $array_depth - 1;
-				$html .= "</ul>";
-			} else {
-				$html .= "</li>";
-			}
-		}
-		
 	}
-	$html .= "</ul>"; */
 	
-	return $html;
+	$variables['element']['menu_tree'] = $menu_tree;
 }
 
 /*

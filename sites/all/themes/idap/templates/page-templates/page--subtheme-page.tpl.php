@@ -79,41 +79,48 @@
 <div id="page">
 	<div class="enclosure page">
 		<div id="header">
-			<div class="enclosure header">
-				<div id="header-navigation">
-					<div class="enclosure header-navigation">
-						<div class="container logo undp">
-							<?php print $undp_logo; ?>
-						</div> <!-- .container .logo .undp -->
-						<div class="container logo site-logo">
-							<?php print $logo; ?>
-						</div> <!-- .container .logo .site-logo -->
-						<div id="utilities">
-							<div class="container utilities">
-								<div class="social-media-icons container-inline">
-									<div><?php print $social_media_icons['facebook']; ?></div>
-									<div><?php print $social_media_icons['twitter']; ?></div>
-									<div class="last"><?php print $social_media_icons['youtube']; ?></div>
-									<div class="clearfix"></div>
-								</div> <!-- .social-media-icon -->
-								<div class="block block-search" id="block-search-form">
-									<?php if ($page['search']): ?>
-										<?php print render($page['search']); ?>
-									<?php endif; ?>
-									<div class="clearfix"></div>
-								</div>
-							</div> <!-- .container utilities -->
-						</div><!-- #utilities -->
-						<div id="main-menu">
-							<?php if ($main_menu): ?>
-								<?php print theme('links__system_main_menu', array('links' => $main_menu, 'attributes' => array('class' => array('menu')))); ?>
-							<?php endif; ?>
-							<div class="clearfix"></div>
-						</div> <!-- #main-menu -->
+			<div class="header enclosure">
+				<div class="header-top">
+					<ul>
+						<li/><a href="#">Home</a>
+						<li/><a href="#">Share Content</a>
+						<li/><a href="#">About Us</a>
+					</ul>
+				</div> <!-- .header-top -->
+				<div class="header-middle">
+					<div class="container logo undp">
+						<?php print $undp_logo; ?>
+					</div> <!-- .container .logo .undp -->
+					<div class="container logo site-logo">
+						<?php print $logo; ?>
+					</div> <!-- .container .logo .site-logo -->
+					<div id="utilities">
+						<div class="container utilities">
+							<div class="social-media-icons container-inline">
+								<div><?php print $social_media_icons['facebook']; ?></div>
+								<div><?php print $social_media_icons['twitter']; ?></div>
+								<div class="last"><?php print $social_media_icons['youtube']; ?></div>
+								<div class="clearfix"></div>
+							</div> <!-- .social-media-icon -->
+							<div class="block block-search" id="block-search-form">
+								<?php if ($page['search']): ?>
+									<?php print render($page['search']); ?>
+								<?php endif; ?>
+								<div class="clearfix"></div>
+							</div>
+						</div> <!-- .container utilities -->
+					</div><!-- #utilities -->
+				</div> <!-- .header-middle -->
+				<div class="header-bottom">
+					<div id="main-menu">
+						<?php if ($main_menu): ?>
+							<?php print theme('links__system_main_menu', array('links' => $main_menu, 'attributes' => array('class' => array('menu')))); ?>
+						<?php endif; ?>
 						<div class="clearfix"></div>
-					</div> <!-- .enclosure .header-navigation -->
-				</div> <!-- #header-navigation -->
-			</div> <!-- .enclosure .header -->
+					</div> <!-- #main-menu -->
+				</div> <!-- .header-bottom -->
+				<div class="clearfix"></div>
+			</div> <!-- .header .enclosure -->
 		</div> <!-- #header -->
 		<div id="main">
 			<div class="enclosure main">
