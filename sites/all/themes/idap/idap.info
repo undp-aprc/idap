@@ -6,6 +6,7 @@ core = 7.x
 
 stylesheets[all][] = css/reset.css
 stylesheets[all][] = css/global.css
+stylesheets[all][] = css/header.css
 stylesheets[all][] = css/tabs.css
 stylesheets[all][] = css/main-menu.css
 stylesheets[all][] = css/block-customizations.css

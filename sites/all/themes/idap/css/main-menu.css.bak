@@ -1,0 +1,163 @@
+#main-menu {
+	width:908px;
+	float:left;
+}
+
+#main-menu a {
+	color:#535354;
+	font-weight:normal;
+}
+
+#main-menu ul {
+	
+}
+
+#main-menu ul.level-1 {
+	list-style-image:url('../images/widgets/menu-bullet-arrow.png');
+	position:absolute;
+}
+
+#main-menu ul.level-2 {
+	list-style-image:url('../images/widgets/menu-bullet-square.png');
+	position:relative;
+	top:11px;
+	display:none;
+}
+
+#main-menu ul.level-1 li {
+	float:left;
+	height:16px;	
+}
+
+#main-menu ul.level-2 li {
+	float:none;
+	padding:10px;
+	width:182px;
+	position:relative;
+	left:-20px;
+}
+
+#main-menu li.pillar {
+	width:192px;
+	list-style-position:inside;
+	padding-left:20px;
+	padding-top:15px;
+	padding-bottom:10px;
+	font-size:0.7em !important;
+}
+
+#main-menu li.theme {
+	position:relative;
+	left:-10px;
+	padding-left:20px !important;
+}
+
+#main-menu li.home {
+	background-color:#EEBC5F;
+	width:44px;
+	height:33px !important;
+	list-style:none;
+	padding:8px 0 0 15px !important;
+}
+
+#main-menu li.pillar-1 {
+	background-color:#F5E959;
+}
+
+#main-menu li.pillar-2 {
+	background-color:#F1CF5E;
+}
+
+#main-menu li.pillar-3 {
+	background-color:#EEBC5F;
+}
+
+#main-menu li.pillar-4 {
+	background-color:#E7A43F;
+}
+
+#main-menu li.theme-1 {
+	background-color:#FCEEB6;
+}
+
+#main-menu li.theme-2 {
+	background-color:#FDF8C1;
+}
+
+#main-menu li.theme-3 {
+	background-color:#FCFBE2;
+}
+
+/* Sub-theme Menu */
+#sub-theme-menu {
+	width:984px;
+	background-color:#F5E959;
+	position:relative;
+	top:-4px;
+}
+
+#sub-theme-menu ul {
+	list-style:none;
+}
+
+#sub-theme-menu li {
+	float:left;
+	border-right:1px dotted #F5E959;
+	margin-right:20px;
+	padding:10px;
+}
+
+#sub-theme-menu li.theme-root {
+	background-color:#E7B451;
+	background-image:url('../images/textures/bg-sub-theme-menu.png');
+	background-repeat:no-repeat;
+	background-position:right;
+	padding-right:20px;
+	border:0px;
+	color:#fff;
+}
+
+#sub-theme-menu a {
+	color:#000;
+}
+
+#sub-theme-menu a:hover {
+	text-decoration:underline;
+}
+
+/* Thematic Page Menus */
+#thematic-section-menu-block {
+	background-color:#F4E858;
+	margin-bottom:20px;
+}
+
+#thematic-section-menu-block a {
+	color:#000;
+}
+
+#thematic-section-menu-block a:hover {
+	text-decoration:underline;
+}
+
+#thematic-section-menu-block .enclosure {
+	
+}
+
+#thematic-section-menu-block li {
+	list-style:none;
+	float:left;
+	padding:20px 20px 20px 20px;
+	border-right:1px solid #E6B250;
+}
+
+#thematic-section-menu-block li.first {
+	background-color:#E6B250;
+	padding-left:20px;
+	padding-right:40px;
+	margin:0px;
+	background-image:url('../images/textures/bg-subtheme-menu-arrow.png');
+	background-position:right;
+	background-repeat:no-repeat;
+	border-right:0px;
+}
+

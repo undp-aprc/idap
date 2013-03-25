@@ -10,12 +10,18 @@
 		});
 		
 		/* Main Menu: Control the behaviour of the drop down menus */
-		$('#main-menu ul.level-1 li.pillar', context).mouseenter(function() {
-			$(this).children('ul').show();
-		});
-		
-		$('#main-menu ul.level-1 li.pillar').mouseleave(function() {
-			$(this).children('ul').hide();
+		$('.level-1-li').bind('click',function(e) {
+			$(e.target).closest('.level-1-li').addClass('selected');
+			$(e.target).closest('.items').find('.level-1-li').each(function() {
+				if(!$(this).hasClass('selected') || $(this).find('.level-2').css('display') == 'block') {
+					$(this).find('.level-2').css('display','none');
+					$(this).find('.has-background').css('display','none');
+				} else {
+					$(this).find('.level-2').slideToggle();
+					$(this).find('.has-background').slideToggle();
+				}
+			});
+			$(e.target).closest('.level-1-li').removeClass('selected');
 		});
 		
 		/* Manage Block Page Layout */

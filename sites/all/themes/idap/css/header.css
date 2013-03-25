@@ -1,0 +1,56 @@
+.header-top {
+	float:left;
+	width:100%;
+}
+
+.header-top ul {
+	height:20px;
+	padding:0px;
+	margin:0px;
+	list-style-image:url('../images/ul-bullet-small.png');
+}
+
+.header-top li {
+	float:left;
+	padding:0 30px 0 0;
+}
+
+.header-top a {
+	color:#000;
+}
+
+.header-middle {
+	float:left;
+	width:100%;
+	padding:20px 0px 10px 0;
+}
+
+.logo {
+	float:left;
+	margin:0 20px 0 0;
+}
+
+.title {
+	float:left;
+	width:560px;
+}
+
+.header-buttons {
+	float:right;
+}
+
+.social-media {
+	width:100%;
+	margin-bottom:10px;
+	height:25px;
+}
+
+.social-media ul {
+	list-style:none;
+	margin:0px;
+}
+
+.social-media li {
+	float:left;
+	padding:0 20px 0 0;
+}
