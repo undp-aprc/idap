@@ -313,6 +313,7 @@ function idap_preprocess_idap_main_menu(&$variables) {
 
 function idap_preprocess_idap_secondary_menu(&$variables) {
 	$variables['element']['menu_tree'] = menu_tree_all_data('menu-secondary-menu');
+	dsm($variables);
 }
 
 /*
