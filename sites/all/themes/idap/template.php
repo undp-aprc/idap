@@ -16,6 +16,11 @@ function idap_theme($existing, $type, $theme, $path) {
 			),
 		),
 	);
+	$items['idap_main_menu'] = array(
+		'render element' => 'element',
+		'template' => 'idap-main-menu',
+		'path' => drupal_get_path('theme','idap').'/templates/system-templates',
+	);
 	return $items;
 }
 
@@ -286,25 +291,27 @@ function idap_preprocess_block(&$variables) {
 /* Theme the main menu */
 function idap_links__system_main_menu($variables) {
 	$main_menu_tree = menu_tree_all_data('main-menu');
+	//kpr($main_menu_tree);
 	$array_depth = 1;
-	$pillar = 1;
 	
-	$html = '';
-	$html .= "<ul class='level-$array_depth'>";
+	$html = print theme('idap_main_menu');
 	
-	foreach($main_menu_tree as $key_level_{$array_depth}=>$value_level_{$array_depth}) {
+	
+	
+	
+	
+	
+	
+	/* foreach($main_menu_tree as $key_level_{$array_depth}=>$value_level_{$array_depth}) {
 		$theme = 1; //Reset theme counter for new pillar
 		$menu_items[$key_level_{$array_depth}]['text'] = $main_menu_tree[$key_level_{$array_depth}]['link']['title'];
 		$menu_items[$key_level_{$array_depth}]['path'] = $main_menu_tree[$key_level_{$array_depth}]['link']['href'];
 		
-		if ($menu_items[$key_level_{$array_depth}]['text'] == 'Home') {
-			$img_path = path_to_theme().'/images/widgets/menu-home.png';
-			$img = theme('image', array('path' => $img_path, 'alt' => t('Home')));
-			$html .= "<li class='home'>".theme('link', array('path'=>'<front>','text'=>$img, 'options'=>array('attributes'=>array(),'html'=>'true')));;
-		} else {
-			$html .= "<li class='pillar pillar-$pillar'>".$menu_items[$key_level_{$array_depth}]['text'];
-			$pillar++;
+		if ($menu_items[$key_level_{$array_depth}]['text'] != 'Home') {
+			$html .= "<li class='level-$array_depth-li'>".$menu_items[$key_level_{$array_depth}]['text'];
 		}
+		
+		$html = '</div>';
 		
 		if (isset($main_menu_tree[$key_level_{$array_depth}]['below'])) {
 			if(!empty($main_menu_tree[$key_level_{$array_depth}]['below'])) {
@@ -328,7 +335,7 @@ function idap_links__system_main_menu($variables) {
 		}
 		
 	}
-	$html .= "</ul>";
+	$html .= "</ul>"; */
 	
 	return $html;
 }

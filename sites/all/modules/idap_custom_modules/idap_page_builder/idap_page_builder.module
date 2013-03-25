@@ -69,7 +69,6 @@ function theme_subtheme_masthead_banner($variables) {
 	$output = '';
 	$output .= '<div class="subtheme-masthead-block">';
 	$output .= theme('image_style',array('style_name'=>'983x150','path'=>$elements['banner_image'], 'alt'=>t('Masthead Banner')));
-	$output .= "<h1>".$elements['taxonomy_title']."</h1>";
 	$output .= '</div>';
 	
 	return $output;
