@@ -81,11 +81,7 @@
 		<div id="header">
 			<div class="header enclosure">
 				<div class="header-top">
-					<ul>
-						<li/><a href="#">Home</a>
-						<li/><a href="#">Share Content</a>
-						<li/><a href="#">About Us</a>
-					</ul>
+					<?php print theme('idap_secondary_menu'); ?>
 				</div> <!-- .header-top -->
 				<div class="header-middle">
 					<div class="container logo undp">

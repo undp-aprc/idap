@@ -21,6 +21,11 @@ function idap_theme($existing, $type, $theme, $path) {
 		'template' => 'idap-main-menu',
 		'path' => drupal_get_path('theme','idap').'/templates/system-templates',
 	);
+	$items['idap_secondary_menu'] = array(
+		'render element' => 'element',
+		'template' => 'idap-secondary-menu',
+		'path' => drupal_get_path('theme','idap').'/templates/system-templates',
+	);
 	return $items;
 }
 
@@ -304,6 +309,10 @@ function idap_preprocess_idap_main_menu(&$variables) {
 	}
 	
 	$variables['element']['menu_tree'] = $menu_tree;
+}
+
+function idap_preprocess_idap_secondary_menu(&$variables) {
+	$variables['element']['menu_tree'] = menu_tree_all_data('menu-secondary-menu');
 }
 
 /*
