@@ -3,6 +3,10 @@
 	float:left;
 }
 
+#main-menu li {
+	font-size:0.9em;
+}
+
 #main-menu .stripe-top {
 	padding:0px 20px 3px 0;
 	background-color:#E6A616;
