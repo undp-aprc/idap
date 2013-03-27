@@ -493,7 +493,11 @@ function idap_custom_forms_form_alter(&$form, &$form_state, $form_id) {
 	
 	// Change the default label on the 'group audience' box from 'default' to 'group audience'
 	if (isset($form['og_group_ref']['und']['0']['default'])) {
-		$form['og_group_ref']['und']['0']['default']['#title'] = t('Group Audience');
+		$form['og_group_ref']['und']['0']['default']['#title'] = t('Collaboration Spaces');
+	}
+	
+	if (isset($form['group_content_access']['und']['#title'])) {
+		$form['group_content_access']['und']['#title'] = t('Space content visibility');
 	}
 	
 	// Remove 'group defaults' option and set default to 'public' (Value 1)
