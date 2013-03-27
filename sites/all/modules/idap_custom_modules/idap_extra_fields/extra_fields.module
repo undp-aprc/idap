@@ -96,9 +96,7 @@ function theme_extra_fields_title($variables) {
   $node = $variables['node'];
   $view_mode = $variables['view_mode'];
   $entity_uri = entity_uri('node', $node);
-  //$output = '<h3 class="node-title">';
-  $output .= l($node->title, $entity_uri['path']);
-  //$output .= '</h3>';
+  $output = l($node->title, $entity_uri['path']);
   return $output;
 }
 
