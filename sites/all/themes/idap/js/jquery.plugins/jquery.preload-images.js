@@ -4,4 +4,4 @@
         	$('<img/>')[0].src = this;
     	});
 	}
-} (jQuery);
+}) (jQuery);
