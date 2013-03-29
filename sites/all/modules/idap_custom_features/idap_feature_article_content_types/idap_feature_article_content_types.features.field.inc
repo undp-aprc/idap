@@ -243,7 +243,7 @@ function idap_feature_article_content_types_field_default_fields() {
   $fields['node-blog-field_theme'] = array(
     'field_config' => array(
       'active' => '1',
-      'cardinality' => '-1',
+      'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_theme',
@@ -491,9 +491,6 @@ function idap_feature_article_content_types_field_default_fields() {
           ),
           'membership_type' => 'og_membership_type_default',
           'sort' => array(
-            'direction' => 'ASC',
-            'field' => 'body:value',
-            'property' => 'nid',
             'type' => 'none',
           ),
           'target_bundles' => array(
@@ -796,6 +793,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'inline',
           'module' => 'entityreference',
           'settings' => array(
+            'links' => TRUE,
             'view_mode' => 'files',
           ),
           'type' => 'entityreference_entity_view',
@@ -865,7 +863,7 @@ function idap_feature_article_content_types_field_default_fields() {
   $fields['node-e_discussion-field_theme'] = array(
     'field_config' => array(
       'active' => '1',
-      'cardinality' => '-1',
+      'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_theme',
@@ -1120,9 +1118,6 @@ function idap_feature_article_content_types_field_default_fields() {
           ),
           'membership_type' => 'og_membership_type_default',
           'sort' => array(
-            'direction' => 'ASC',
-            'field' => 'body:value',
-            'property' => 'nid',
             'type' => 'none',
           ),
           'target_bundles' => array(
@@ -1962,7 +1957,7 @@ function idap_feature_article_content_types_field_default_fields() {
   $fields['node-event-field_theme'] = array(
     'field_config' => array(
       'active' => '1',
-      'cardinality' => '-1',
+      'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_theme',
@@ -2240,9 +2235,6 @@ function idap_feature_article_content_types_field_default_fields() {
           ),
           'membership_type' => 'og_membership_type_default',
           'sort' => array(
-            'direction' => 'ASC',
-            'field' => 'body:value',
-            'property' => 'nid',
             'type' => 'none',
           ),
           'target_bundles' => array(
@@ -2924,7 +2916,7 @@ function idap_feature_article_content_types_field_default_fields() {
   $fields['node-media_article-field_theme'] = array(
     'field_config' => array(
       'active' => '1',
-      'cardinality' => '-1',
+      'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_theme',
@@ -3089,7 +3081,7 @@ function idap_feature_article_content_types_field_default_fields() {
             'trim_length' => '200',
           ),
           'type' => 'text_summary_or_trimmed',
-          'weight' => '2',
+          'weight' => '3',
         ),
         'search_index' => array(
           'label' => 'hidden',
@@ -3127,7 +3119,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'title_bullets' => array(
           'label' => 'above',
@@ -3221,7 +3213,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => '5',
+          'weight' => '11',
         ),
         'search_index' => array(
           'label' => 'above',
@@ -3251,7 +3243,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'title_bullets' => array(
           'label' => 'above',
@@ -3349,7 +3341,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '8',
         ),
         'search_index' => array(
           'label' => 'above',
@@ -3379,7 +3371,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'title_bullets' => array(
           'label' => 'above',
@@ -3482,7 +3474,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '7',
         ),
         'search_index' => array(
           'label' => 'above',
@@ -3512,7 +3504,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'title_bullets' => array(
           'label' => 'above',
@@ -3654,7 +3646,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'title_bullets' => array(
           'label' => 'above',
@@ -3701,7 +3693,7 @@ function idap_feature_article_content_types_field_default_fields() {
   $fields['node-network_news-field_theme'] = array(
     'field_config' => array(
       'active' => '1',
-      'cardinality' => '-1',
+      'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_theme',
@@ -3760,7 +3752,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => '4',
+          'weight' => '10',
         ),
         'search_index' => array(
           'label' => 'above',
@@ -3790,7 +3782,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'title_bullets' => array(
           'label' => 'above',
@@ -3883,7 +3875,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '6',
         ),
         'search_index' => array(
           'label' => 'above',
@@ -3913,7 +3905,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'title_bullets' => array(
           'label' => 'above',
@@ -3948,8 +3940,8 @@ function idap_feature_article_content_types_field_default_fields() {
       'widget' => array(
         'module' => 'options',
         'settings' => array(),
-        'type' => 'options_select',
-        'weight' => 10,
+        'type' => 'options_buttons',
+        'weight' => '10',
       ),
       'widget_type' => 'options_select',
     ),
@@ -3991,9 +3983,6 @@ function idap_feature_article_content_types_field_default_fields() {
           ),
           'membership_type' => 'og_membership_type_default',
           'sort' => array(
-            'direction' => 'ASC',
-            'field' => 'body:value',
-            'property' => 'nid',
             'type' => 'none',
           ),
           'target_bundles' => array(
@@ -4036,7 +4025,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '9',
         ),
         'search_index' => array(
           'label' => 'above',
@@ -4066,7 +4055,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'title_bullets' => array(
           'label' => 'above',
@@ -4122,7 +4111,7 @@ function idap_feature_article_content_types_field_default_fields() {
         'module' => 'og',
         'settings' => array(),
         'type' => 'og_complex',
-        'weight' => 9,
+        'weight' => '9',
       ),
     ),
   );
@@ -4673,7 +4662,7 @@ function idap_feature_article_content_types_field_default_fields() {
   $fields['node-page-field_theme'] = array(
     'field_config' => array(
       'active' => '1',
-      'cardinality' => '-1',
+      'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_theme',
@@ -4840,7 +4829,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'teaser_no_title' => array(
           'label' => 'hidden',
@@ -4858,7 +4847,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '12',
         ),
       ),
       'entity_type' => 'node',
@@ -4957,7 +4946,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'teaser_no_title' => array(
           'label' => 'above',
@@ -4975,7 +4964,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '6',
         ),
       ),
       'entity_type' => 'node',
@@ -5067,7 +5056,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'teaser_no_title' => array(
           'label' => 'inline',
@@ -5086,7 +5075,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '10',
         ),
       ),
       'entity_type' => 'node',
@@ -5182,7 +5171,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'teaser_no_title' => array(
           'label' => 'above',
@@ -5200,7 +5189,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '9',
         ),
       ),
       'entity_type' => 'node',
@@ -5273,7 +5262,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'inline',
           'module' => 'link',
           'settings' => array(),
-          'type' => 'link_url',
+          'type' => 'link_default',
           'weight' => '2',
         ),
         'photo_teaser' => array(
@@ -5292,7 +5281,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'teaser_no_title' => array(
           'label' => 'inline',
@@ -5311,7 +5300,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '11',
         ),
       ),
       'entity_type' => 'node',
@@ -5351,7 +5340,7 @@ function idap_feature_article_content_types_field_default_fields() {
   $fields['node-resource-field_theme'] = array(
     'field_config' => array(
       'active' => '1',
-      'cardinality' => '-1',
+      'cardinality' => '1',
       'deleted' => '0',
       'entity_types' => array(),
       'field_name' => 'field_theme',
@@ -5422,7 +5411,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'teaser_no_title' => array(
           'label' => 'above',
@@ -5440,7 +5429,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '8',
         ),
       ),
       'entity_type' => 'node',
@@ -5533,7 +5522,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'teaser_no_title' => array(
           'label' => 'above',
@@ -5551,7 +5540,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '7',
         ),
       ),
       'entity_type' => 'node',
@@ -5617,9 +5606,6 @@ function idap_feature_article_content_types_field_default_fields() {
           ),
           'membership_type' => 'og_membership_type_default',
           'sort' => array(
-            'direction' => 'ASC',
-            'field' => 'body:value',
-            'property' => 'nid',
             'type' => 'none',
           ),
           'target_bundles' => array(
@@ -5674,7 +5660,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '0',
         ),
         'teaser_no_title' => array(
           'label' => 'above',
@@ -5692,7 +5678,7 @@ function idap_feature_article_content_types_field_default_fields() {
           'label' => 'above',
           'settings' => array(),
           'type' => 'hidden',
-          'weight' => 0,
+          'weight' => '5',
         ),
       ),
       'entity_type' => 'node',
