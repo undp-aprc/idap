@@ -318,7 +318,7 @@ function idap_workbench_form_create_page($form_id, &$form_state) {
 	);
 	$form['submit'] = array(
 		'#type' => 'submit',
-		'#value' => 'submit',
+		'#value' => 'Create Page',
 		'#title' => t('Create subpage'),
 	);
 	return $form;

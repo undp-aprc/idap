@@ -83,17 +83,17 @@
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 	<div class="region-content-blocks blocks">
-		<div class="content-block block news-block col-3 colPos-0 first odd">
-			<div class="inner-block">
+		<div class="content-block block col-4 colPos-0 first odd">
+			<div class="inner-block highlight">
 				<?php print render($content['field_block_1']); ?>
 			</div>
 		</div>
-		<div class="content-block block events-block col-1 even">
+		<div class="content-block block col-1 colPos-0 even">
 			<div class="inner-block">
 				<?php print render($content['field_block_2']); ?>
 			</div>
 		</div>
-		<div class="content-block block col-4 odd highlight">
+		<div class="content-block block col-1 colPos-1 odd">
 			<div class="inner-block">
 				<div class="block-content block">
 					<div class="inner-block">
@@ -102,20 +102,15 @@
 				</div>
 		 	</div>
 		</div>
-		<div class="content-block block country-activities-block col-3 colPos-0 first odd">
+		<div class="content-block block col-1 colPos-2 first odd">
 			<div class="inner-block">
 				<?php print render($content['field_block_4']); ?>
 			</div>
 		</div>
 		<div class="content-block block ediscussion-block col-1 colPos-3 last even">
 			<div class="inner-block">
-				<?php print render($content['field_block_6']); ?>
-		 	</div>
-		</div>
-		<div class="content-block block country-activities-block col-3 colPos-0 first odd">
-			<div class="inner-block">
 				<?php print render($content['field_block_5']); ?>
-			</div>
+		 	</div>
 		</div>
 	</div> <!-- region-content-blocks -->
 	<div class="clearfix"></div>

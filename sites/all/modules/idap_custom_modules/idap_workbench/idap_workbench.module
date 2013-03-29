@@ -125,6 +125,28 @@ function idap_workbench_menu_title($sid, $type) {
 	return $title.$section;
 }
 
+/* Implements hook_theme() */
+function idap_workbench_theme($existing, $type, $theme, $path) {
+	$items = array();
+	$items['page_thumbnails'] = array(
+		'render element' => 'element',
+		'template' => 'page-thumbnails',
+		'file' => 'idap_workbench.theme.inc',
+	);
+	$items['idap_workbench_form_create_subpage'] = array(
+		'render element' => 'form',
+		'template' => 'idap-workbench-form-create-subpage',
+		'file' => 'idap_workbench.theme.inc',
+	);
+	$items['idap_workbench_form_create_landing_page'] = array(
+		'render element' => 'form',
+		'template' => 'idap-workbench-form-create-subpage',
+		'file' => 'idap_workbench.theme.inc',
+	);
+	
+	return $items;
+}
+
 /* Implements hook_permission() */
 function idap_workbench_permission() {
   	return array(
@@ -133,4 +155,13 @@ function idap_workbench_permission() {
       		'description' => t('Create, manage and destroy thematic sections of the IDAP site.'),
     	),
   	);
+}
+
+/* Implements hook_form_alter() */
+function idap_workbench_form_alter(&$form, &$form_state, $form_id) {
+	if ($form_id == 'idap_workbench_form_create_subpage' || $form_id = 'idap_workbench_form_create_landing_page') {
+		drupal_add_js(drupal_get_path('theme','idap').'/js/jquery.plugins/jquery.equal-height-columns.js',array('group'=>JS_LIBRARY));
+		drupal_add_js(drupal_get_path('module','idap_workbench').'/js/idap_workbench.js',array('group'=>JS_DEFAULT));
+		drupal_add_css(drupal_get_path('module','idap_workbench').'/css/idap_workbench.css',array('group'=>CSS_DEFAULT));
+	}
 }

@@ -88,34 +88,31 @@
 					<!-- Begin Block -->
 						<?php print render($content['field_block_1']); ?>
 					<!-- End Block -->
-						<div class="sub-block-content inline col-1 first ">
-							<?php print render($content['field_block_2']); ?>
-						</div>
-						<div class="sub-block-content inline col-1 last ">
-							<?php print render($content['field_block_3']); ?>
-				 		</div>
 						<div class="clearfix"></div>
 					</div>
 				</div>
-		</div> <!-- #user-content-blocks-1 -->
+		</div> <!-- #user-content-blocks-2 -->
 		<div id="user-content-blocks-2" class="user-content-blocks blocks container-blocks"> <!-- The main container for content blocks with be user-content-blocks on sub-theme pages as this will allow us to wrap block regions into containers and place blocks within those containers using Drupal entity references. The reason for this is to allow us to create advanced custom page layouts for blocks -->
 				<div class="content-block block col-1 colPos-2 odd">
 					<div class="inner-block">
-						<?php print render($content['field_block_4']); ?>
+						<?php print render($content['field_block_2']); ?>
 					</div>
+				</div>
+				<div class="content-block block blogs-block col-1 colPos-2 last even">
+					<div class="inner-block">
+						<?php print render($content['field_block_3']); ?>
+					</div> <!-- .inner-block -->
 				</div>
 		</div> <!-- #user-content-blocks-2 -->
 		<div id="user-content-blocks-3" class="user-content-blocks blocks container-blocks"> <!-- The main container for content blocks with be user-content-blocks on sub-theme pages as this will allow us to wrap block regions into containers and place blocks within those containers using Drupal entity references. The reason for this is to allow us to create advanced custom page layouts for blocks -->
-				<div class="content-block block blogs-block col-1 colPos-3 last even">
-					<div class="inner-block">
-						<?php print render($content['field_block_5']); ?>
-					</div> <!-- .inner-block -->
-				</div>
-		</div> <!-- #user-content-blocks-3 -->
-		<div id="user-content-blocks-4" class="blocks container-blocks"> <!-- The main container for content blocks with be user-content-blocks on sub-theme pages as this will allow us to wrap block regions into containers and place blocks within those containers using Drupal entity references. The reason for this is to allow us to create advanced custom page layouts for blocks -->
-			<div class="content-block block col-4">
+			<div class="content-block block col-1 colPos-4">
 				<div class="inner-block">
-					<?php print render($content['field_block_6']); ?>
+					<?php print render($content['field_block_4']); ?>
+				</div> <!-- .inner-block -->
+			</div>
+			<div class="content-block block col-1 colPos-4">
+				<div class="inner-block">
+					<?php print render($content['field_block_5']); ?>
 				</div> <!-- .inner-block -->
 			</div>
 		</div> <!-- #user-content-blocks-4 -->
