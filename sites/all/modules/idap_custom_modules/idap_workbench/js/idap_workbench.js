@@ -20,7 +20,8 @@
 			$("input[value="+ value +"]").attr('checked',true);
 		});
 	
-		$('.form-type-radios').css('display','none');
+		$('.idap-workbench-form-create-subpage .form-type-radios').css('display','none');
+		$('.idap-workbench-form-create-landing-page .form-type-radios').css('display','none');
 	}	
 }
 
