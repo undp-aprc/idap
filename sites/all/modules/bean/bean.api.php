@@ -64,3 +64,11 @@ function hook_bean_access($bean, $op, $account) {
 function hook_bean_form_submit($form, $form_state) {
 
 }
+
+/**
+ * Implements hook_bean_cache_clear().
+ */
+function hook_bean_cache_clear() {
+
+}
+

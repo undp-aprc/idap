@@ -15,12 +15,15 @@ function bean_entity_info() {
       'entity class' => 'Bean',
       'controller class' => 'BeanEntityAPIController',
       'base table' => 'bean',
+      'revision table' => 'bean_revision',
       'fieldable' => TRUE,
       'entity keys' => array(
         'id' => 'bid',
         'bundle' => 'type',
         'label' => 'title',
         'name' => 'delta',
+        'revision' => 'vid',
+        'default revision' => 'default_revision',
       ),
       'bundles' => array(),
       'bundle keys' => array(
@@ -114,7 +117,7 @@ function bean_menu() {
 
   $items['block/%bean_delta'] = array(
     'title' => 'Block',
-    'page callback' => 'bean_view',
+    'page callback' => 'bean_view_page',
     'page arguments' => array(1),
     'access arguments' => array('view bean page'),
     'file' => 'includes/bean.pages.inc',
@@ -129,7 +132,7 @@ function bean_menu() {
 
 
   $items['block/%bean_delta/edit'] = array(
-    'title' => 'Edit',
+    'title' => 'Edit Block',
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'page callback' => 'bean_edit',
@@ -140,7 +143,7 @@ function bean_menu() {
   );
 
   $items['block/%bean_delta/delete'] = array(
-    'title' => 'Delete',
+    'title' => 'Delete Block',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('bean_delete_confirm', 1),
     'access callback' => 'bean_access',
@@ -151,6 +154,75 @@ function bean_menu() {
     'file' => 'includes/bean.pages.inc',
   );
 
+  $items['block/%bean_delta/revisions'] = array(
+    'title' => 'Revisions',
+    'page callback' => 'bean_revisions_page',
+    'page arguments' => array(1),
+    'access arguments' => array('view bean revisions'),
+    'file' => 'includes/bean.pages.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['block/%bean_delta/revisions/%'] = array(
+    'title callback' => 'bean_revision_title',
+    'title arguments' => array(1),
+    'page callback' => 'bean_view',
+    'page arguments' => array(1),
+    'access callback' => 'bean_access',
+    'access arguments' => array('view', 1),
+    'file' => 'includes/bean.pages.inc',
+    'load arguments' => array(3),
+  );
+
+  $items['block/%bean_delta/revisions/%/view'] = array(
+    'title' => 'View',
+    'page callback' => 'bean_view',
+    'page arguments' => array(1),
+    'access callback' => 'bean_access',
+    'access arguments' => array('view', 1),
+    'file' => 'includes/bean.pages.inc',
+    'load arguments' => array(3),
+    'weight' => -10,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'context' => MENU_CONTEXT_NONE,
+  );
+
+  $items['block/%bean_delta/revisions/%/edit'] = array(
+    'title' => 'Edit',
+    'page callback' => 'bean_edit',
+    'page arguments' => array(1),
+    'access callback' => 'bean_access',
+    'access arguments' => array('edit', 1),
+    'file' => 'includes/bean.pages.inc',
+    'load arguments' => array(3),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+
+  $items['block/%bean_delta/revisions/%/set-default'] = array(
+    'title' => 'Set Default',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('bean_set_default_confirm', 1),
+    'access callback' => 'bean_access',
+    'access arguments' => array('edit', 1),
+    'file' => 'includes/bean.pages.inc',
+    'load arguments' => array(3),
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
+  );
+
+  $items['block/%bean_delta/revisions/%/delete'] = array(
+    'title' => 'Delete',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('bean_delete_revision_confirm', 1),
+    'access callback' => 'bean_access',
+    'access arguments' => array('delete', 1),
+    'file' => 'includes/bean.pages.inc',
+    'load arguments' => array(3),
+    'weight' => 1,
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_NONE,
+  );
 
   $items['admin/content/blocks'] = array(
     'title' => 'Blocks',
@@ -193,6 +265,13 @@ function bean_menu() {
 }
 
 /**
+ * Title callback
+ */
+function bean_revision_title($bean) {
+  return $bean->label();
+}
+
+/**
  * Implements hook_admin_paths().
  */
 function bean_admin_paths() {
@@ -200,7 +279,8 @@ function bean_admin_paths() {
     'block/*/edit' => TRUE,
     'block/*/delete' => TRUE,
     'block/*/revisions' => TRUE,
-    'block/*/revisions/*/revert' => TRUE,
+    'block/*/revisions/*/edit' => TRUE,
+    'block/*/revisions/*/set-active' => TRUE,
     'block/*/revisions/*/delete' => TRUE,
     'block/add' => TRUE,
     'block/add/*' => TRUE,
@@ -225,9 +305,7 @@ function bean_type_load($type) {
 /**
  * Gets an array of all bean types, keyed by the type name.
  *
- * @param $type_name
- *   If set, the type with the given name is returned.
- * @return BeanType[]
+ * @return BeanType
  *   Depending whether $type isset, an array of bean types or a single one.
  */
 function bean_get_types() {
@@ -291,29 +369,40 @@ function bean_fetch_plugin_info($plugin = NULL) {
 }
 
 /**
- * Reset the static variables and caches
+ * Reset the static variables and caches.
  */
-function bean_reset() {
-  ctools_include('plugins');
+function bean_reset($skip_menu_rebuild = FALSE) {
   // Clear ctools cache.
+  ctools_include('plugins');
   ctools_get_plugins_reset();
-  drupal_static_reset('ctools_plugins');
-  drupal_static_reset('ctools_plugin_type_info_loaded');
-  drupal_static_reset('ctools_plugin_type_info');
+  cache_clear_all('plugins:bean:types', 'cache');
+  cache_clear_all('ctools_plugin_files', 'cache', TRUE);
 
-  // Clear the bean cache.
+  // Invoke modules to clear their caches.
+  foreach (module_implements('bean_cache_clear') as $module) {
+    module_invoke($module, 'bean_cache_clear');
+  }
+
+  // Rebuild ctools plugin types and the menu.
+  ctools_plugin_get_plugin_type_info(TRUE);
+  if (!$skip_menu_rebuild) {
+    menu_rebuild();
+  }
+}
+
+/**
+ * Implements hook_bean_cache_clear().
+ */
+function bean_bean_cache_clear() {
+  // Clear static variables.
+  drupal_static_reset('bean_access');
+  drupal_static_reset('bean_get_types');
+  drupal_static_reset('bean_get_all_beans');
   drupal_static_reset('bean_fetch_plugin_info');
   drupal_static_reset('bean_load_plugin_class');
 
-  // Flush plugin caches and rebuild the menu
+  // Flush caches.
   cache_clear_all('bean_plugins', 'cache');
-  cache_clear_all('ctools_plugin_type_info', 'cache');
-  cache_clear_all('ctools_plugin_files', 'cache', TRUE);
-  cache_clear_all('plugins', 'cache', TRUE);
-  cache_clear_all('bean_types', 'cache');
-  cache_clear_all('entity_info', 'cache', TRUE);
-
-  menu_rebuild();
 }
 
 /**
@@ -409,23 +498,38 @@ function bean_load($bid, $reset = FALSE) {
 }
 
 /**
+ * Fetch a bean revision
+ *
+ * A new function to not break the bean_load API
+ */
+function bean_load_revision($bid, $vid, $reset = FALSE) {
+  $conditions = array('vid' => $vid);
+  $beans = bean_load_multiple(array($bid), $conditions, $reset);
+  return reset($beans);
+}
+
+/**
  * Fetch a bean object by its delta.
  *
  * @param $delta
  *   String specifying the bean delta.
  * @param $reset
  *   A boolean indicating that the internal cache should be reset.
- * @return
+ * @return Bean
  *   A fully-loaded $bean object or FALSE if it cannot be loaded.
  */
-function bean_load_delta($delta, $reset = FALSE) {
+function bean_load_delta($delta, $reset = FALSE, $revision = NULL) {
   $result = db_select('bean', 'b')
     ->fields('b', array('bid'))
     ->condition('delta', $delta)
     ->execute();
   if ($bid = $result->fetchField()) {
-    $beans = bean_load_multiple(array($bid), array(), $reset);
-    return reset($beans);
+    if ($revision) {
+      return bean_load_revision($bid, $revision, $reset);
+    }
+    else {
+      return bean_load($bid, $reset);
+    }
   }
   return FALSE;
 }
@@ -433,8 +537,8 @@ function bean_load_delta($delta, $reset = FALSE) {
 /**
  * Menu callback to load a bean by the delta
  */
-function bean_delta_load($delta) {
-  return bean_load_delta($delta);
+function bean_delta_load($delta, $revision = NULL) {
+  return bean_load_delta($delta, FALSE, $revision);
 }
 
 /**
@@ -454,6 +558,13 @@ function bean_delta_load($delta) {
  */
 function bean_load_multiple($bids = array(), $conditions = array(), $reset = FALSE) {
   return entity_load('bean', $bids, $conditions, $reset);
+}
+
+/**
+ * Delete a bean revision
+ */
+function bean_delete_revision($vid) {
+  return entity_get_controller('bean')->deleteRevision($vid);
 }
 
 /**
@@ -481,9 +592,16 @@ function bean_permission() {
       'title' => t('View Bean page'),
       'description' => t('Visit !url', array('!url' => 'block/< delta >')),
     ),
+    'administer bean settings' => array(
+      'title' => t('Administer Bean Settings'),
+    ),
+    'view bean revisions' => array(
+      'title' => t('View Bean revisions'),
+    ),
   );
 
   // Add a Permission for each entity type.
+  bean_reset(TRUE);
   foreach (bean_get_types() as $bean_type) {
     $bean_type_name = check_plain($bean_type->type);
     $perms += array(
@@ -654,7 +772,6 @@ function bean_view(Bean $bean, $view_mode = 'default', $langcode = NULL) {
     $langcode = $GLOBALS['language_content']->language;
   }
 
-  drupal_set_title($bean->label());
   return $bean->view($view_mode, $langcode);
 }
 
@@ -666,7 +783,7 @@ function bean_block_info() {
   $beans = bean_get_all_beans();
   foreach ($beans as $bean) {
     $blocks[$bean->delta] = array(
-      'info' => $bean->label,
+      'info' => $bean->adminTitle(),
       'cache' => $bean->getInfo('cache_level'),
     );
   }
@@ -682,14 +799,23 @@ function bean_block_view($delta = '') {
   $bean = bean_load_delta($delta);
 
   if (bean_access('view', $bean) && $bean) {
-    $return = array(
-      'content' => $bean->view($bean->view_mode),
-      'subject' => $bean->title,
-    );
-
-    if (!empty($return['content']) && module_exists('contextual')) {
-      $return['content']['#contextual_links']['bean'] = array('block', array($bean->Identifier()));
+    $content = $bean->view($bean->view_mode);
+    if (!is_array($content)) {
+      $content = array(
+        '#markup' => $content,
+      );
     }
+
+    $return = array(
+      'content' => $content,
+      'subject' => $bean->label(),
+    );
+  }
+
+  if (!empty($return['content']) && module_exists('contextual')) {
+    $return['content']['#contextual_links']['bean'] = array(
+      'block', array($bean->Identifier())
+    );
   }
 
   return $return;
@@ -847,7 +973,7 @@ function bean_workbench_create_alter(&$output) {
  * Implements hook_modules_enabled()
  */
 function bean_modules_enabled($modules) {
-  bean_reset();
+  bean_reset(TRUE);
 }
 
 /**
@@ -866,4 +992,36 @@ function bean_field_extra_fields() {
   }
 
   return $extra;
+}
+
+/**
+ * Implements hook_views_api()
+ */
+function bean_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'bean') . '/views',
+  );
+}
+
+/**
+ * Implements hook_flush_caches().
+ */
+function bean_flush_caches() {
+  bean_reset(TRUE);
+  return array();
+}
+
+/**
+ * Implements hook_references_dialog_entity_admin_paths().
+ *
+ * Enables integration for the References Dialog module.
+ */
+function bean_references_dialog_entity_admin_paths() {
+  return array(
+    'bean' => array(
+      'add' => 'block/add/[bundle-sanitized]',
+      'edit' => 'block/[entity_id]/edit',
+    ),
+  );
 }

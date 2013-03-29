@@ -39,7 +39,7 @@ class context_og_reaction_set_group_context extends context_reaction {
 
     foreach ($contexts as $k => $v) {
       if (!empty($v->reactions[$this->plugin]['group'])) {
-        $group = og_load($v->reactions[$this->plugin]['group']);
+        $group = node_load($v->reactions[$this->plugin]['group']);
         og_context($group);
       }
     }
