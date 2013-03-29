@@ -4,7 +4,7 @@
 	attach: function (context, settings) {
 		
 		/* Preload images */
-		$(['../images/indicator-arrow.png','../images/ul-bullet-large.png']).preload();
+		$(['/sites/all/themes/idap/images/indicator-arrow.png','/sites/all/themes/idap/images/ul-bullet-large.png']).preload();
 		
 		/* Search Box: Autofill text that clears on click */
 		$('#edit-search-text', context).autofill({
