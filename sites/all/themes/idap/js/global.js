@@ -3,6 +3,9 @@
   Drupal.behaviors.idap = {
 	attach: function (context, settings) {
 		
+		/* Preload images */
+		$(['../images/indicator-arrow.png','../images/ul-bullet-large.png']).preload();
+		
 		/* Search Box: Autofill text that clears on click */
 		$('#edit-search-text', context).autofill({
 			value:'search...',
