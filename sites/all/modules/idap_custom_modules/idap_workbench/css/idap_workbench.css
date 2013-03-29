@@ -1,0 +1,27 @@
+.page-thumbnail-container {
+	border:2px solid #ccc;
+	border-radius:10px;
+	width:277px;
+	float:left;
+	margin:0 20px 20px 0;
+}
+
+.page-thumbnail-container.hover {
+	border:2px solid #999;
+}
+
+.page-thumbnail-container.active {
+	border: 2px solid #FFCC80 !important;
+}
+
+.page-thumbnail-container .inner {
+	padding:10px;
+}
+
+.page-thumbnail-container p {
+	text-align:center;
+	background-color:#FFEBCC;
+	border-radius:10px;
+	padding:5px;
+	margin-bottom:0px;
+}

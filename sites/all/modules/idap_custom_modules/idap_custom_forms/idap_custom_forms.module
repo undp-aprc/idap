@@ -55,6 +55,18 @@ function idap_custom_forms_theme($existing, $type, $theme, $path) {
       	// this will set to module/theme path by default:
       	'path' => $template_path,
   	);
+	$items['content_landing_page_type_4_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'content-landing-page-type-4-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
+	$items['content_landing_page_type_5_node_form'] = array(
+      	'render element' => 'form',
+      	'template' => 'content-landing-page-type-5-node-form',
+      	// this will set to module/theme path by default:
+      	'path' => $template_path,
+  	);
 	$items['group_collaboration_node_form'] = array(
       	'render element' => 'form',
       	'template' => 'group-collaboration-node-form',
@@ -413,6 +425,8 @@ function template_preprocess_content_landing_page_type_3_node_form(&$variables) 
 	$variables['block_4'] = array();
 	$variables['block_5'] = array();
 	$variables['block_6'] = array();
+	$variables['block_7'] = array();
+	$variables['block_8'] = array();
 	
 	// Put title field in main node region
 	$variables['node_main'][] = $variables['form']['title'];
@@ -428,12 +442,97 @@ function template_preprocess_content_landing_page_type_3_node_form(&$variables) 
 	$variables['block_4'][] = $variables['form']['field_block_4'];
 	$variables['block_5'][] = $variables['form']['field_block_5'];
 	$variables['block_6'][] = $variables['form']['field_block_6'];
+	$variables['block_7'][] = $variables['form']['field_block_7'];
+	$variables['block_8'][] = $variables['form']['field_block_8'];
 	hide($variables['form']['field_block_1']);
 	hide($variables['form']['field_block_2']);
 	hide($variables['form']['field_block_3']);
 	hide($variables['form']['field_block_4']);
 	hide($variables['form']['field_block_5']);
 	hide($variables['form']['field_block_6']);
+	hide($variables['form']['field_block_7']);
+	hide($variables['form']['field_block_8']);
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/**
+* Preprocessor for theme('content_landing_page_type_4_node_form').
+*/
+function template_preprocess_content_landing_page_type_4_node_form(&$variables) {
+    $variables['sidebar'] = array(); // Create a sidebar region
+	$variables['node_main'] = array(); // Create a main node region
+	$variables['block_1'] = array();
+	$variables['block_2'] = array();
+	$variables['block_3'] = array();
+	$variables['block_4'] = array();
+	$variables['block_5'] = array();
+	$variables['block_6'] = array();
+	$variables['block_7'] = array();
+	$variables['block_8'] = array();
+	
+	// Put title field in main node region
+	$variables['node_main'][] = $variables['form']['title'];
+	hide($variables['form']['title']);
+	
+    $variables['node_main'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	//Put blocks into their regions
+	$variables['block_1'][] = $variables['form']['field_block_1'];
+	$variables['block_2'][] = $variables['form']['field_block_2'];
+	$variables['block_3'][] = $variables['form']['field_block_3'];
+	$variables['block_4'][] = $variables['form']['field_block_4'];
+	$variables['block_5'][] = $variables['form']['field_block_5'];
+	$variables['block_6'][] = $variables['form']['field_block_6'];
+	$variables['block_7'][] = $variables['form']['field_block_7'];
+	$variables['block_8'][] = $variables['form']['field_block_8'];
+	hide($variables['form']['field_block_1']);
+	hide($variables['form']['field_block_2']);
+	hide($variables['form']['field_block_3']);
+	hide($variables['form']['field_block_4']);
+	hide($variables['form']['field_block_5']);
+	hide($variables['form']['field_block_6']);
+	hide($variables['form']['field_block_7']);
+	hide($variables['form']['field_block_8']);
+
+    // Extract the form buttons, and put them in independent variable.
+    $variables['buttons'] = $variables['form']['actions'];
+    hide($variables['form']['actions']);
+}
+
+/**
+* Preprocessor for theme('content_landing_page_type_5_node_form').
+*/
+function template_preprocess_content_landing_page_type_5_node_form(&$variables) {
+    $variables['sidebar'] = array(); // Create a sidebar region
+	$variables['node_main'] = array(); // Create a main node region
+	$variables['block_1'] = array();
+	$variables['block_2'] = array();
+	$variables['block_3'] = array();
+	$variables['block_4'] = array();
+	$variables['block_5'] = array();
+	
+	// Put title field in main node region
+	$variables['node_main'][] = $variables['form']['title'];
+	hide($variables['form']['title']);
+	
+    $variables['node_main'][] = $variables['form']['field_theme'];
+    hide($variables['form']['field_theme']);
+
+	//Put blocks into their regions
+	$variables['block_1'][] = $variables['form']['field_block_1'];
+	$variables['block_2'][] = $variables['form']['field_block_2'];
+	$variables['block_3'][] = $variables['form']['field_block_3'];
+	$variables['block_4'][] = $variables['form']['field_block_4'];
+	$variables['block_5'][] = $variables['form']['field_block_5'];
+	hide($variables['form']['field_block_1']);
+	hide($variables['form']['field_block_2']);
+	hide($variables['form']['field_block_3']);
+	hide($variables['form']['field_block_4']);
+	hide($variables['form']['field_block_5']);
 
     // Extract the form buttons, and put them in independent variable.
     $variables['buttons'] = $variables['form']['actions'];

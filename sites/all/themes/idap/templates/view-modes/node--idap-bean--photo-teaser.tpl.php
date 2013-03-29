@@ -80,9 +80,13 @@
 hide($content['links']);
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-  <div class="content block-content-item clearfix"<?php print $content_attributes; ?>>
-    <?php
-      print render($content);
-    ?>
+  <div class="content block-content-item photo-teaser clearfix"<?php print $content_attributes; ?>>
+    <div class="photo-container">
+		<?php print render($content['field_photo']); ?>
+	</div>
+	<div class="content">
+		<?php print render($content); ?>
+	</div>
+	<div class="clearfix"></div>
   </div>
 </div>

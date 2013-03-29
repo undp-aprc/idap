@@ -83,36 +83,34 @@
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
 	<div class="region-content-blocks blocks container-blocks">
-			<div class="content-block block news-block col-1 first colPos-0 odd">
-				<div class="inner-block">
-					<?php print render($content['field_block_1']); ?>
-				</div>
+		<div class="content-block block col-1 first colPos-0 odd">
+			<div class="inner-block">
+				<?php print render($content['field_block_1']); ?>
+				<div class="content-divider"></div>
+				<?php print render($content['field_block_2']); ?>
 			</div>
-			<div class="content-block block events-block col-1 colPos-1 even">
-				<div class="inner-block">
-					<?php print render($content['field_block_2']); ?>
-				</div> <!-- .inner-block -->
-			</div>
-			<div class="content-block block resources-block col-1 colPos-2 odd">
-				<div class="inner-block">
-					<?php print render($content['field_block_3']); ?>
-				</div> <!-- .inner-block -->
-			</div>
-			<div class="content-block block blogs-block col-1 last colPos-3 even">
-				<div class="inner-block">
-					<?php print render($content['field_block_4']); ?>
-				</div> <!-- .inner-block -->
-			</div>
-			<div class="content-block block country-activities-block col-3 first colPos-1 odd">
-				<div class="inner-block">
-					<?php print render($content['field_block_5']); ?>
-				</div> <!-- .inner-block -->
-			</div>
-			<div class="content-block block ediscussion-block col-1 last colPos-3 even">
-				<div class="inner-block highlight">
-					<?php print render($content['field_block_6']); ?>
-				</div> <!-- .inner-block -->
-			</div>
+		</div>
+		<div class="content-block block col-1 first colPos-1 even">
+			<div class="inner-block">
+				<?php print render($content['field_block_3']); ?>
+				<div class="content-divider"></div>
+				<?php print render($content['field_block_4']); ?>
+			</div> <!-- .inner-block -->
+		</div>
+		<div class="content-block block col-1 colPos-2 odd">
+		<div class="inner-block">
+				<?php print render($content['field_block_5']); ?>
+				<div class="content-divider"></div>
+				<?php print render($content['field_block_6']); ?>
+		</div> <!-- .inner-block -->
+		</div>
+		<div class="content-block block col-1 last colPos-3 even">
+			<div class="inner-block">
+				<?php print render($content['field_block_7']); ?>
+				<div class="content-divider"></div>
+				<?php print render($content['field_block_8']); ?>
+			</div> <!-- .inner-block -->
+		</div>
 	</div> <!-- region-content-blocks -->
 	<div class="clearfix"></div>
 </div> <!-- // #node-% -->

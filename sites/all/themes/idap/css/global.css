@@ -265,7 +265,7 @@ body {
 	margin:0 10px 0 0;
 }
 
-#search-block-form #edit-actions, #search-block-form #edit-actions--2 {
+#search-block-form #edit-actions, #search-block-form #edit-actions--2, #edit-actions--3 {
 	width:25px;
 	margin-left:20px;
 }
@@ -347,7 +347,7 @@ body {
 }
 
 .block.colPos-0 .inner-block {
-	padding:0 5px 0 0;
+	padding:0 5px;
 	margin:0 5px 0 0;
 	border-right:1px dotted #ccc;
 }
@@ -367,6 +367,15 @@ body {
 .block.colPos-3 .inner-block {
 	padding:0 0 0 5px;
 	margin:0 0 0 5px;
+}
+
+.block.colPos-4 .inner-block {
+	padding:0 0 0 5px;
+	margin:0 0 0 5px;
+}
+
+.content-block .inner-block.highlight {
+	padding:10px;
 }
 
 .region-content-blocks .block, .user-content-blocks {

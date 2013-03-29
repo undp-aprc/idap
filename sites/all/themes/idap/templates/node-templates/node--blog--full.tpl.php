@@ -77,6 +77,7 @@
  * @see template_preprocess_node()
  * @see template_process()
  */
+ unset($content['links']['statistics']);
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
   <div class="content clearfix"<?php print $content_attributes; ?>>

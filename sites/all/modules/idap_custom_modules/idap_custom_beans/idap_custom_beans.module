@@ -105,3 +105,16 @@ function idap_custom_beans_preprocess_block(&$variables) {
 		}
 	}
 }
+
+/* Implements hook_form_alter() */
+function idap_custom_beans_form_alter(&$form, &$form_state, $form_id) {
+	
+	// Sort available blocks into alphabetical order
+	if (preg_match('(node_form)',$form_id)) {
+		foreach($form as $field=>$array) {
+			if (preg_match('(field_block_)',$field)) {
+				asort($form[$field]['und']['#options']);
+			}
+		}
+	}
+}
