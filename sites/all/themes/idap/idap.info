@@ -17,6 +17,7 @@ scripts[] = js/jquery.plugins/jquery.autofill.js
 scripts[] = js/jquery.plugins/jquery.blockFunctions.js
 scripts[] = js/jquery.plugins/jquery.blockUserRegionWidth.js
 scripts[] = js/jquery.plugins/jquery.equal-height-columns.js
+scripts[] = js/jquery.plugins/jquery.preload-images.js
 scripts[] = js/global.js
 
 regions[page_top] = Page top
