@@ -50,16 +50,16 @@ function blockreference_theme() {
 function blockreference_field_info() {
   return array(
     'blockreference' => array(
-      'label'             => t('Block reference'),
-      'description'       => t('This field stores the ID of a related block as an integer value.'),
-      'settings'          => array(
+      'label' => t('Block reference'),
+      'description' => t('This field stores the ID of a related block as an integer value.'),
+      'settings' => array(
         'referenceable_regions' => array(),
         'referenceable_modules' => array(),
         'referenceable_operator' => 'AND',
         'respect_visibility' => 0,
         'referenceable_theme' => 'default',
       ),
-      'default_widget'    => 'options_select',
+      'default_widget' => 'options_select',
       'default_formatter' => 'blockreference_default',
     ),
   );
@@ -144,34 +144,34 @@ function blockreference_field_settings_form($field, $instance, $has_data) {
   }
 
   $form['referenceable_regions'] = array(
-    '#type'          => 'checkboxes',
-    '#title'         => t('Regions containing blocks that can be referenced'),
-    '#multiple'      => TRUE,
+    '#type' => 'checkboxes',
+    '#title' => t('Regions containing blocks that can be referenced'),
+    '#multiple' => TRUE,
     '#default_value' => $settings['referenceable_regions'],
-    '#options'       => $regions,
+    '#options' => $regions,
     '#description' => t('If no regions are selected, blocks from all regions will be available.'),
   );
   $form['referenceable_modules'] = array(
-    '#type'          => 'checkboxes',
-    '#title'         => t('Modules defining blocks that can be referenced'),
+    '#type' => 'checkboxes',
+    '#title' => t('Modules defining blocks that can be referenced'),
     '#multiple' => TRUE,
     '#default_value' => $settings['referenceable_modules'],
-    '#options'       => blockreference_get_block_modules(),
+    '#options' => blockreference_get_block_modules(),
     '#description' => t('If no modules are selected, blocks from all modules will be available.'),
   );
   $form['referenceable_operator'] = array(
-    '#type'          => 'radios',
-    '#title'         => t('Operator to use if referenceable regions and referenceable modules are selected.'),
+    '#type' => 'radios',
+    '#title' => t('Operator to use if referenceable regions and referenceable modules are selected.'),
     '#default_value' => $settings['referenceable_operator'],
-    '#options'       => array(
+    '#options' => array(
        'AND' => '<strong>AND</strong> - ' . t('Block must be both contained in a referenceable region and defined by a referenceable module.'),
-       'OR'  => '<strong>OR</strong> - ' . t('Block must be either contained in a referenceable region or defined by a referenceable module.'),
+       'OR' => '<strong>OR</strong> - ' . t('Block must be either contained in a referenceable region or defined by a referenceable module.'),
     ),
     '#description' => t('If regions and modules are selected, choose operator to use when retrieving blocks list.'),
   );
   $form['respect_visibility'] = array(
-    '#type'          => 'checkbox',
-    '#title'         => t('Respect block visibility settings'),
+    '#type' => 'checkbox',
+    '#title' => t('Respect block visibility settings'),
     '#default_value' => $settings['respect_visibility'],
     '#description' => t('Allows the block module to remove the block if it is restricted by visibility settings.'),
   );
@@ -180,13 +180,13 @@ function blockreference_field_settings_form($field, $instance, $has_data) {
   $current_theme = $themes[variable_get('theme_default', 'bartik')]->info['name'];
   $admin_theme = $themes[variable_get('admin_theme', 'seven')]->info['name'];
   $form['referenceable_theme'] = array(
-    '#type'          => 'radios',
-    '#title'         => t('Themes that can provide blocks for selection.'),
+    '#type' => 'radios',
+    '#title' => t('Themes that can provide blocks for selection.'),
     '#default_value' => $settings['referenceable_theme'],
-    '#options'       => array(
+    '#options' => array(
        'default' => t('Default theme (%theme) only.', array('%theme' => $current_theme)),
-       'all'  => t('All themes.'),
-       'not_admin'  => t('All themes except admin theme (%theme).', array('%theme' => $admin_theme)),
+       'all' => t('All themes.'),
+       'not_admin' => t('All themes except admin theme (%theme).', array('%theme' => $admin_theme)),
     ),
   );
 
@@ -312,7 +312,7 @@ function blockreference_field_widget_info() {
     ),
     'blockreference_select_sort' => array(
       'label' => t('Select list (with drag-and-drop sort) DEPRECATED'),
-      'description' => '<b>' . t('Deprecated in favor of <a href="!field_collection">Field collection</a>', array('!field_collection' => 'http://www.drupal.org/project/field_collection')) . '</b>',
+      'description' => '<b>' . t('Deprecated in favor of <a href="http://drupal.org/multiple_selects">Multiple Selects</a>') . '</b>',
       'field types' => array('blockreference'),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_DEFAULT,
@@ -328,6 +328,10 @@ function blockreference_field_widget_info() {
 function blockreference_field_widget_info_alter(&$info) {
   $info['options_select']['field types'][] = 'blockreference';
   $info['options_buttons']['field types'][] = 'blockreference';
+
+  if (module_exists('multiple_selects')) {
+    $info['multiple_selects']['field types'][] = 'blockreference';
+  }
 }
 
 /**
@@ -405,8 +409,8 @@ function blockreference_autocomplete_value($element, $input = FALSE, $form_state
  * Validation callback for a blockreference autocomplete element.
  */
 function blockreference_autocomplete_validate($element, &$form_state, $form) {
-  $field = $form_state['field'][$element['#field_name']][$element['#language']]['field'];
-  $instance = $form_state['field'][$element['#field_name']][$element['#language']]['instance'];
+  $field = field_info_field($element['#field_name']);
+  $instance = field_info_instance($element['#entity_type'], $element['#field_name'], $element['#bundle']);
 
   $current_bid = $element['#default_value'];
 
@@ -435,7 +439,7 @@ function blockreference_autocomplete_validate($element, &$form_state, $form) {
       // No explicit bid (the submitted value was not populated by autocomplete
       // selection). Get the bid of a referencable block from the entered title.
       $bids = _blockreference_potential_references($field, array($current_bid), FALSE, $value, TRUE);
-      if ($reference) {
+      if ($bids) {
         // @todo The best thing would be to present the user with an
         // additional form, allowing the user to choose between valid
         // candidates with the same title. ATM, we pick the first
@@ -482,20 +486,22 @@ function _blockreference_potential_references($field, $current_bids = array(), $
   $results = &drupal_static(__FUNCTION__, array());
 
   // Create unique id for static cache.
-  $cid = $field['field_name'] . ':'
-    . ($return_full_blocks ? 1 : 0) . ':'
-    . $string . ':'
-    . ($exact_string ? 1 : 0);
+  $cid = $field['field_name'] . ':' . (int) $return_full_blocks . ':' . $string . ':' . (int) $exact_string;
   if (!isset($results[$cid])) {
     $references = _blockreference_potential_references_standard($field, $current_bids, $return_full_blocks, $string, $exact_string);
+
+    // Incorrect legacy alter.
     drupal_alter('blockreference_potential_references', $references, $field, $current_bids, $return_full_blocks, $string, $exact_string);
+
+    // Correct new alter.
+    $context = compact('field', 'current_bids', 'return_full_blocks', 'string', 'exact_string');
+    drupal_alter('blockreference_potential_references2', $references, $context);
 
     // Store the results.
     $results[$cid] = !empty($references) ? $references : array();
   }
 
   return $results[$cid];
-
 }
 
 /**
@@ -564,8 +570,7 @@ function _blockreference_potential_references_standard($field, $current_bids = a
     'SELECT bid, module, delta, title, region, theme ' .
     'FROM {block} ' .
     "WHERE theme IN (:themes) " .
-    $related_clause . ' ' .
-    'ORDER BY region, weight',
+    $related_clause,
     $args
   );
 
@@ -604,6 +609,15 @@ function _blockreference_potential_references_standard($field, $current_bids = a
       }
     }
   }
+
+  // Default sort.
+  if ($return_full_blocks) {
+    _blockreference_sort_blocks($rows);
+  }
+  else {
+    natcasesort($rows);
+  }
+
   return $rows;
 }
 
@@ -636,9 +650,9 @@ function blockreference_autocomplete($entity_type, $field_name, $current_bid, $s
   $field = field_info_field($field_name);
 
   $matches = array();
-  $references = _blockreference_potential_references($field, array($current_bid), TRUE, $string, $current_bid);
-  foreach ($references as $rowbid => $rowname) {
-    $matches[_blockreference_item($field, $rowname) . ' [bid:' . $rowbid . ']'] = _blockreference_item($field, $rowname);
+  $blocks = _blockreference_potential_references($field, array($current_bid), TRUE, $string);
+  foreach ($blocks as $bid => $block) {
+    $matches[_blockreference_item($field, $block) . ' [bid:' . $bid . ']'] = _blockreference_item($field, $block);
   }
 
   drupal_json_output($matches);
@@ -697,7 +711,7 @@ function blockreference_content_migrate_instance_alter(&$instance_value) {
  */
 function blockreference_formatter_get_block($element) {
   if (!empty($element['item']['bid']) && is_numeric($element['item']['bid'])) {
-    $bid = &$element['item']['bid'];
+    $bid = $element['item']['bid'];
 
     $query = db_select('block', 'b');
     $result = $query
@@ -706,18 +720,23 @@ function blockreference_formatter_get_block($element) {
       ->addTag('block_load')
       ->addTag('translatable')
       ->execute();
-
     $blocks = $result->fetchAllAssoc('bid');
 
-    if ($element['field']['settings']['respect_visibility']) {
-      // Allow modules to modify the block list.
-      drupal_alter('block_list', $blocks);
-    }
-
     if (isset($blocks[$bid])) {
-      return $blocks[$bid];
+      if ($element['field']['settings']['respect_visibility']) {
+        // Set status to 1 manually, so block.module actually evaluates visibility.
+        $blocks[$bid]->status = 1;
+
+        // Allow block.module and other modules to modify the block list.
+        drupal_alter('block_list', $blocks);
+      }
+
+      if (isset($blocks[$bid])) {
+        return $blocks[$bid];
+      }
     }
   }
+
   return FALSE;
 }
 
@@ -891,6 +910,20 @@ function blockreference_list_values($field, $language, $current_bid) {
 }
 
 /**
+ * Helper to sort block objects.
+ */
+function _blockreference_sort_blocks(&$blocks) {
+  uasort($blocks, '_blockreference_block_sorter');
+}
+
+/**
+ * Helper to sort block titles.
+ */
+function _blockreference_block_sorter($block1, $block2) {
+  return strnatcasecmp($block1->info, $block2->info);
+}
+
+/**
  * Get the HTML for a block display title.
  */
 function _blockreference_item($field, $item, $html = FALSE) {
@@ -905,14 +938,30 @@ function _blockreference_item($field, $item, $html = FALSE) {
  * Pre-render blockreference fields attached to nodes to ensure forms are rendered early enough.
  */
 function blockreference_node_view($node, $view_mode) {
-	foreach ($node->content as $field_name => $field){
-    	if (!empty($field) && isset($field['#field_type'])) {
-			if ($field['#field_type'] == 'blockreference') {
-	      		$node->content[$field_name] = array(
-	        		'#markup' => render($field),
-	        		'#weight' => $field['#weight'],
-	      		);
-	    	}
-		} 
-  	}
+  foreach (element_children($node->content) as $field_name){
+    $field = $node->content[$field_name];
+
+    // This is a blockreference field.
+    if (isset($field['#field_type']) && $field['#field_type'] == 'blockreference') {
+      // Unset renderable field items.
+      foreach (element_children($field) as $n) {
+        unset($node->content[$field_name][$n]);
+      }
+
+      // Render.
+      $html = render($field);
+
+      // Add back to node content.
+      $keep_meta = array_flip(array(
+        '#weight',
+        '#title',
+        '#access',
+        '#label_display',
+        '#field_name',
+        '#entity_type',
+        '#bundle',
+      ));
+      $node->content[$field_name] = array('#markup' => $html) + array_intersect_key($field, $keep_meta);
+    }
+  }
 }

@@ -2,6 +2,70 @@ Current API VERSION: 5.
 
 bean 7.x-1.x-dev
 ================
+Issue #1911224 by DamienMcKenna: Added Support for references_dialog().
+Issue #1910566 by Bès: Added Use label of view mode in bean add and edit form.
+Issue #1912444 by John Bickar: Fixed Fatal Error: Call to undefined function entity_language().
+Issue #1354824 by DamienMcKenna, willvincent | mrfelton: Fixed Unable to add fields to newly created bean type.
+Issue #1918188 by eugene.ilyin: Added Few useful views handlers for work with bean blocks.
+Issue #1916938: Fixed Empty block name in entity reference field.
+Issue #1924006 by DamienMcKenna: Added Convert bean URL to lowercase.
+Issue #1920296 by fubhy | indytechcook: Fixed Can't delete revisions.
+
+bean 7.x-1.0
+================
+Issue #1850948 by indytechcook: Fixed Bean revision fields are not accessible in EntityFieldQuery.
+
+bean 7.x-1.0-rc9
+================
+Make sure bean_reset rebuilds the menu correctly.
+Fix issue in install of shortcuts.
+#1691482: Moved contextual links back to bean_view and check that return of plugin is a render array
+#1891532: Remove check_plain from bean entity class
+Issue #1897834 Fixed Bean, Features and permissions.
+Issue #1900104: Fixed Error when disabling bean.
+Issue #1892272 by stijndm: Fixed Unable to edit exported bean types due to form API syntax error.
+
+bean 7.x-1.0-rc9
+================
+Issue #1885958 by Steven Jones: Added EntityMetadataWrapper sets not working.
+Issue #1893950: Fixed Ctools warnings in log.
+Move check_plain into the entity class.
+Issue #1887778 by Deciphered: Fixed Incorrect operations colspan.
+Issue #1891358 by DamienMcKenna: Fixed Data loss if both 'Create new revision" and "Set Revision as default" options unchecked.
+Issue #1886002 by DamienMcKenna | paulhhowells: Fixed Administer Bean Settings x2.
+Issue #1889892 Fixed bean_reset() calls menu_rebuild(), which already happens during drupal_flush_all_caches().
+
+bean 7.x-1.0-rc8
+================
+Remove batches and use correct cache clear function.
+Issue #1883232 by Steven Jones: Fixed Bean EntityMetadataWrapper integration broken.
+Fix bean unit test.
+Issue #1885238 by indytechcook: Fixed xss bean type label not escaped sufficiently.
+
+bean 7.x-1.0-rc7
+================
+Issue #1828096 by Brandonian: Fixed bean_update_7007 does not work with real-world data.
+Issue #1691482 by Brandonian | mrfelton: Fixed contextual links not working.
+Issue #1601960 by indytechcook Fixed [bean_all()] Endless recursion in combination with views.
+Issue #1611676 by barraponto | hazah: Added Views filter by bean type.
+Issue #1799776 by bforchhammer: Fixed entity translation regressions.
+Issue #1710256 by jonhattan, indytechcook: Fixed «Delete block type» button misplaced.
+Issue #1785950 by jonhattan | indytechcook: Fixed Revert and delete should be separate operations.
+Issue #1786036 by jonhattan | indytechcook: Fixed Caches not completely cleared.
+Integrate Bean Revisions
+Issue #1814068 by jonhattan: Remove leftover patch files in repo.
+Issue #1833176 by darrenmothersele: Fixed List Shortcut module as a dependency or remove from bean_install().
+Issue #1836798 by bhauff: Block Label used rather than Title on block/delta and block/delta/view.
+Issue #1844538 by mrfelton: Fixed Field data missing when editing language neutral beans.
+Issue #1839966 by ultimateboy: Fixed block/add doesn't check for access before generating list.
+Issue #1838088 by jamesharv: Fixed Adding bean type and permissions to existing features module can cause drush cache clear to fail.
+Issue #1845974 by indytechcook: Fixed Block Admin label is correct.
+Issue #1793586 by Mixologic | indytechcook: Fixed Editing Bean Content Does not Trigger Page Cache Clear.
+Issue #1870730 by jm.federico: Fixed bean_view() changes the current page title.
+Issue #1859450 by jonhattan: Drop dependency on block.module.
+
+bean 7.x-1.0-rc6
+================
 Issue #1649312: Bean Usage sub-module
 Issue #1691458 by mrfelton: Fixed Unable to access bean overview page unless administer bean permissions is granted.
 Issue #1698548 by rsaddington: Fixed Block types tables has too many td's.
