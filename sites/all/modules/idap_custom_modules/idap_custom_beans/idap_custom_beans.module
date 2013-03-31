@@ -86,7 +86,7 @@ function idap_custom_beans_preprocess_block(&$variables) {
 	if(isset($variables['elements']['bean'])) {
 		$bean_elements = $variables['elements']['bean'];
 		foreach($bean_elements as $delta=>$value) {
-			if (is_integer($delta)) {
+			if (preg_match('^([a-zA-Z0-9]{1,}\-{1,}){1,}[a-zA-Z0-9]{1,}^', $delta)) {
 				$variables['title'] = $bean_elements[$delta]['#entity']->title;
 				if (isset($variables['more_link'])) {
 					$variables['more_link']['text'] = $bean_elements[$delta]['#entity']->more_link['text'];
