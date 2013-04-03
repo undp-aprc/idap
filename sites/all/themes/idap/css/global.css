@@ -437,7 +437,7 @@ body {
 }
 
 .content-block li > p {
-	text-indent: 0;
+	text-indent: 0; /* Set to 0 */
 }
 
 .content-block li > a:first-child {
