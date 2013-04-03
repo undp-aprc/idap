@@ -46,13 +46,13 @@
 }
 
 #main-menu .level-1 li.level-1-li .level-1-background {
-	background-color:#FCEAA7;
+	background-color:#EDC937;
 	padding:10px;
 	border-radius:10px;
 }
 
 #main-menu .level-1 li.level-1-li .level-1-background:hover {
-	background-color:#FCDC94;
+	/* background-color:#FCDC94; */
 }
 
 #main-menu .level-1 li.level-1-li .has-background {
@@ -162,7 +162,7 @@
 #thematic-section-menu-block li {
 	list-style:none;
 	float:left;
-	padding:20px 20px 20px 20px;
+	padding:16px;
 	border-right:1px solid #E6B250;
 }
 
@@ -175,4 +175,9 @@
 	background-position:right;
 	background-repeat:no-repeat;
 	border-right:0px;
+	height:18px;
+}
+
+#thematic-section-menu-block {
+	height:50px;
 }

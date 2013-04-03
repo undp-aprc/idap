@@ -24,11 +24,7 @@ h3 {
 }
 
 p {
-	text-align:justify;
-}
-
-.content-block p {
-	text-align:justify; /* Only justify text in blocks; left aligned on pages ok */
+	text-align:left;
 }
 
 p + p { /* Gap between paragraphs */
@@ -409,6 +405,7 @@ body {
 	list-style-image:url('../images/widgets/menu-bullet-arrow.png');
 }
 
+/* Bullet Lists in content blocks */
 .content-block .block-content li {
 	margin-bottom:10px;
 	padding-bottom:10px;
@@ -424,6 +421,32 @@ body {
 .content-block .block-content li.last {
 	border-bottom:0px;
 }
+
+.content-block li span, .content-block li a {
+	display:block;
+}
+
+.content-block li span:first-child, .content-block li a:first-child {
+	display:inline !important;
+}
+
+.content-block li > a {
+	padding-left:13px;
+}
+
+.content-block li > a:first-child {
+	padding-left:0px;
+}
+
+.content-block li > span {
+	padding-left:13px;
+}
+
+.content-block li > span:first-child {
+	padding-left:0px !important;
+}
+
+/* End Bullet Lists in content blocks */
 
 .content-block .block-content .col-1-indent { /* Indent this content by 1 column width */
 	padding-left:236px;

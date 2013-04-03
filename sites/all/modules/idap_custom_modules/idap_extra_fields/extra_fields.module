@@ -86,9 +86,9 @@ function extra_fields_theme($existing, $type, $theme, $path) {
 function theme_extra_fields_created($variables) {
   $node = $variables['node'];
   $view_mode = $variables['view_mode'];
-  $output = '<div class="node-created">';
+  $output = '<span class="node-created">';
   $output .= date('F j, Y', $node->created);
-  $output .= '</div>';
+  $output .= '</span>';
   return $output;
 }
 
@@ -96,7 +96,9 @@ function theme_extra_fields_title($variables) {
   $node = $variables['node'];
   $view_mode = $variables['view_mode'];
   $entity_uri = entity_uri('node', $node);
-  $output = l($node->title, $entity_uri['path']);
+  $output .= '<span class="title">';
+  $output .= l($node->title, $entity_uri['path']);
+  $output .= "</span>";
   return $output;
 }
 
@@ -104,13 +106,13 @@ function theme_extra_fields_author($variables) {
   $node = $variables['node'];
   $view_mode = $variables['view_mode'];
   $user = user_load($node->uid);
-  $output = '<div class="node-author">';
+  $output = '<span class="node-author">';
 	if (!empty($user->profile_full_name)) {
 		$output .= $user->profile_full_name;
 	} else {
 		$output .= $user->name;
 	}
-  $output .= '</div>';
+  $output .= '</span>';
   return $output;
 }
 
