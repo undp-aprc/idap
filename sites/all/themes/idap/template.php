@@ -285,11 +285,9 @@ function idap_preprocess_block(&$variables) {
 		
 		$beans = $variables['elements']['bean'];
 		foreach($beans as $delta=>$value) {
-			if(is_integer($delta)) {
-				if (isset($beans[$delta]['group_photo'])) {
-					$photo = $beans[$delta]['group_photo'];
-					$variables['block_content']['bean_items']['photo'] = render($photo);
-				}
+			if (isset($beans[$delta]['group_photo']['field_photo'])) {
+				$photo = $beans[$delta]['group_photo']['field_photo'];
+				$variables['block_content']['bean_items']['photo'] = render($photo);
 			}
 		}
 	}
