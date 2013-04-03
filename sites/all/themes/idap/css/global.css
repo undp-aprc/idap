@@ -410,6 +410,8 @@ body {
 	margin-bottom:10px;
 	padding-bottom:10px;
 	border-bottom:1px #ccc dotted;
+	padding-left: 14px;
+	text-indent: -14px;
 }
 
 .content-block .block-content li:last-child {
@@ -431,7 +433,7 @@ body {
 }
 
 .content-block li > a {
-	padding-left:13px;
+	text-indent: 0;
 }
 
 .content-block li > a:first-child {
