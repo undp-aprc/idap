@@ -345,19 +345,16 @@ body {
 .block.colPos-0 .inner-block {
 	padding:0 5px;
 	margin:0 5px 0 0;
-	border-right:1px dotted #ccc;
 }
 
 .block.colPos-1 .inner-block {
 	padding:0 5px;
 	margin:0 5px;
-	border-right:1px dotted #ccc;
 }
 
 .block.colPos-2 .inner-block {
 	padding:0 5px;
 	margin:0 5px;
-	border-right:1px dotted #ccc;
 }
 
 .block.colPos-3 .inner-block {
