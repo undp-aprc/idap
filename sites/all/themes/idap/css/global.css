@@ -402,7 +402,7 @@ body {
 }
 
 .content-block .block-content ul {
-	list-style-image:url('../images/widgets/menu-bullet-arrow.png');
+	list-style-image:url('../images/widgets/list-bullet-square-small.png');
 }
 
 /* Bullet Lists in content blocks */
@@ -410,8 +410,8 @@ body {
 	margin-bottom:10px;
 	padding-bottom:10px;
 	border-bottom:1px #ccc dotted;
-	padding-left: 14px;
-	text-indent: -14px;
+	padding-left: 18px;
+	text-indent: -18px;
 }
 
 .content-block .block-content li:last-child {
@@ -432,12 +432,16 @@ body {
 	display:inline !important;
 }
 
-.content-block li > a {
+.content-block li a {
 	text-indent: 0;
 }
 
 .content-block li p {
 	text-indent: 0; /* Set to 0 */
+}
+
+.content-block li span {
+	text-index: 0;
 }
 
 .content-block li > a:first-child {
