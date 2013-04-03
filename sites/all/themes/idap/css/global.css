@@ -436,7 +436,7 @@ body {
 	text-indent: 0;
 }
 
-.content-block li > p {
+.content-block li p {
 	text-indent: 0; /* Set to 0 */
 }
 
