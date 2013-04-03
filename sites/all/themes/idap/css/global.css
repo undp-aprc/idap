@@ -436,6 +436,10 @@ body {
 	text-indent: 0;
 }
 
+.content-block li > p {
+	text-indent: 0;
+}
+
 .content-block li > a:first-child {
 	padding-left:0px;
 }
