@@ -300,11 +300,13 @@ function idap_links__system_main_menu($variables) {
 }
 
 function idap_preprocess_idap_main_menu(&$variables) {
+	$front_url = variable_get('site_frontpage', 'node');
+	$front_url = drupal_get_normal_path($front_url);
 	$menu_tree = menu_tree_all_data('main-menu');
 	
 	// Remove home link to <front>
 	foreach($menu_tree as $item_1=>$array_1) {
-		if ($array_1['link']['link_path'] == '<front>') {
+		if ($array_1['link']['link_path'] == $front_url || $array_1['link']['link_path'] == '<front>') {
 			unset($menu_tree[$item_1]);
 		}
 	}
