@@ -399,7 +399,8 @@ body {
 }
 
 .content-block .block-content ul {
-	list-style-image:url('../images/widgets/list-bullet-square-small.png');
+	list-style-type:square;
+	/* list-style-image:url('../images/widgets/list-bullet-square-small.png'); */
 }
 
 /* Bullet Lists in content blocks */
@@ -665,4 +666,6 @@ body {
 #footer .theme-block ul li ul li {
 	list-style:square;
 	list-style-position:inside;
+	padding-left:14px;
+	text-indent:-14px;
 }
