@@ -638,6 +638,10 @@ body {
 	padding:20px;
 }
 
+#footer #block-idap-footer-links-footer-links a {
+	color:#706d63;
+}
+
 #footer .theme-block {
 	width:25%;
 }
