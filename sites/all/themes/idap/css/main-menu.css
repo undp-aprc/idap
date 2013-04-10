@@ -46,6 +46,7 @@
 }
 
 #main-menu .level-1 li.level-1-li .level-1-background {
+	behavior:url('border-radius.htc');
 	background-color:#EDC937;
 	padding:10px;
 	border-radius:10px;
