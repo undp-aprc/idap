@@ -55,6 +55,12 @@ ol, ul {
 	list-style-position:inside;
 }
 
+.field-type-text-with-summary ol, .field-type-text-with-summary ul { /* Only for bullets and lists in text boxes */
+	padding-left:20px;
+	text-indent:-20px;
+	margin-left:20px;
+}
+
 li {
 	/* font-size:0.9em; */
 }
