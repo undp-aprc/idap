@@ -146,7 +146,6 @@ class IDAPItemSummaryListing extends BeanPlugin {
    * Displays the bean.
    */
   public function view($bean, $content, $view_mode = 'default', $langcode = NULL) {
-	
     $query = new IDAPEntityFieldQuery();
     $query
       ->entityCondition('entity_type', 'node')
@@ -175,7 +174,9 @@ class IDAPItemSummaryListing extends BeanPlugin {
     else {
       foreach ($result['node'] as $node) {
         $node = node_load($node->nid, $node->vid);
-        $content['nodes'][$node->nid] = node_view($node, $bean->settings['node_view_mode']);
+		if (node_access('view',$node)) { // Check if current user has access to a node. If not, then don't add to node listing
+			$content['nodes'][$node->nid] = node_view($node, $bean->settings['node_view_mode']);
+		}
       }
     }
     return $content;

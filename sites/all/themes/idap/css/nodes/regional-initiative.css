@@ -1,0 +1,18 @@
+.metadata {
+	margin-top:10px;
+	padding-top:10px;
+	border-top:1px solid #ccc;
+}
+
+#regional-initiative-body {
+	margin-top:10px;
+	padding-top:10px;
+	float:left;
+	width:679px;
+}
+
+.sidebar-right {
+	float:left;
+	width:295px;
+	padding-left:10px;
+}
