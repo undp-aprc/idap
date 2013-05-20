@@ -151,9 +151,10 @@ class IDAPItemSummaryPhoto extends BeanPlugin {
       ->entityCondition('bundle', array($bean->filters['types']))
       ->propertyCondition('status', 1)
       ->propertyOrderBy('created', 'DESC')
-      ->range(0, $bean->settings['records_shown']);
+      ->range(0, $bean->settings['records_shown'])
+	  ->CheckGroupContentAccess();
 
-		if($node = menu_get_object()) {
+	if($node = menu_get_object()) {
 			if(isset($node->group_group)) { // Filter by group take precendence over filter by theme
 				
 				if($node->group_group['und']['0']['value'] == 1) {
