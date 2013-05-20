@@ -151,7 +151,8 @@ class IDAPItemSummaryListing extends BeanPlugin {
       ->entityCondition('entity_type', 'node')
       ->entityCondition('bundle', array($bean->filters['types']))
       ->propertyCondition('status', 1)
-      ->propertyOrderBy('created', 'DESC');
+      ->propertyOrderBy('created', 'DESC')
+	  ->CheckGroupContentAccess();
 
 	if ($bean->settings['records_shown'] > 0) {
 		$query->range(0, $bean->settings['records_shown']);
