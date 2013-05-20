@@ -17,3 +17,15 @@
 .summary-listing-photo-3col ul {
 	padding-left:500px;
 }
+
+/* Customisations for collaboration group blocks */
+.node-type-group-collaboration .user-content-blocks .col-3 {
+	width:679px;
+}
+
+.node-type-group-collaboration #group-description {
+	border-bottom:2px #E6A616 solid;
+	border-top:1px #E6A616 solid;
+	padding:5px 0 5px 0;
+	margin-bottom:10px;
+}
