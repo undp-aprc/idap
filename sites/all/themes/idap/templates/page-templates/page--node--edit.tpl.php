@@ -68,6 +68,7 @@
  * @see bartik_process_page()
  * @see html.tpl.php
  */
+
 ?>
 <!-- Beginning page.tpl.php template -->
 <div id="top">
