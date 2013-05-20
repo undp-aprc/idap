@@ -75,6 +75,14 @@ function idap_feature_article_content_types_node_info() {
       'title_label' => t('Page Title'),
       'help' => '',
     ),
+    'regional_initiative' => array(
+      'name' => t('Regional Initiative'),
+      'base' => 'node_content',
+      'description' => t('Post information about regional initiatives in each of the thematic areas.'),
+      'has_title' => '1',
+      'title_label' => t('Regional Initiative Title'),
+      'help' => '',
+    ),
     'resource' => array(
       'name' => t('Resource'),
       'base' => 'node_content',
