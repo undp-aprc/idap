@@ -77,40 +77,47 @@
  * @see template_preprocess_node()
  * @see template_process()
  */
-// We hide the comments and links now so that we can render them later.
-  hide($content['comments']);
-  hide($content['links']);
+ unset($content['links']['statistics']);
 ?>
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-	<div class="region-content-blocks blocks container-blocks">
-		<div class="content-block block col-1 first colPos-0 odd">
-			<div class="inner-block">
-				<?php print render($content['field_block_1']); ?>
-				<div class="content-divider"></div>
-				<?php print render($content['field_block_2']); ?>
-			</div>
+  <div class="content clearfix"<?php print $content_attributes; ?>>
+    <?php
+      // We hide the comments and links now so that we can render them later.
+      hide($content['comments']);
+      hide($content['links']);
+	  hide($content['body']);
+	?>
+    <?php print render($content); ?>
+	<div id="regional-initiative-body">
+		<?php print render($content['body']); ?>
+	</div>
+	<?php if($sidebar_right): ?>
+		<div class="sidebar-right">
+			<?php print render($sidebar_right); ?>
 		</div>
-		<div class="content-block block col-1 first colPos-1 even">
-			<div class="inner-block">
-				<?php print render($content['field_block_3']); ?>
-				<div class="content-divider"></div>
-				<?php print render($content['field_block_4']); ?>
-			</div> <!-- .inner-block -->
-		</div>
-		<div class="content-block block col-1 colPos-2 odd">
-		<div class="inner-block">
-				<?php print render($content['field_block_5']); ?>
-				<div class="content-divider"></div>
-				<?php print render($content['field_block_6']); ?>
-		</div> <!-- .inner-block -->
-		</div>
-		<div class="content-block block col-1 last colPos-3 even">
-			<div class="inner-block">
-				<?php print render($content['field_block_7']); ?>
-				<div class="content-divider"></div>
-				<?php print render($content['field_block_8']); ?>
-			</div> <!-- .inner-block -->
-		</div>
-	</div> <!-- region-content-blocks -->
+	<?php endif; ?>
 	<div class="clearfix"></div>
-</div> <!-- // #node-% -->
+  </div>
+  <?php if($region_metadata): ?>
+	<div class="metadata">
+		<?php print render($region_metadata); ?>
+	</div> 	
+  <?php endif; ?>
+  <?php
+    // Remove the "Add new comment" link on the teaser page or if the comment
+    // form is being displayed on the same page.
+    if ($teaser || !empty($content['comments']['comment_form'])) {
+      unset($content['links']['comment']['#links']['comment-add']);
+    }
+    // Only display the wrapper div if there are links.
+    $links = render($content['links']);
+    if ($links):
+  ?>
+    <div class="link-wrapper">
+      <?php print $links; ?>
+    </div>
+  <?php endif; ?>
+
+  <?php print render($content['comments']); ?>
+
+</div>

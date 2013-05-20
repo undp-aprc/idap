@@ -154,19 +154,27 @@ class IDAPItemSummaryPhoto extends BeanPlugin {
       ->range(0, $bean->settings['records_shown']);
 
 		if($node = menu_get_object()) {
-			if($tid = $node->field_theme['und']['0']['tid']) {
+			if(isset($node->group_group)) { // Filter by group take precendence over filter by theme
+				
+				if($node->group_group['und']['0']['value'] == 1) {
+					$query->SetGroupContentCondition($node->nid);
+				}
+			} elseif($tid = $node->field_theme['und']['0']['tid']) {
 				$query->SetContentTermCondition($tid); 
 			};
 		};
 
     $result = $query->execute();
+
     if (empty($result)) {
       $content['nodes'] = array();
     }
     else {
       foreach ($result['node'] as $node) {
         $node = node_load($node->nid, $node->vid);
-        $content['nodes'][$node->nid] = node_view($node, $bean->settings['node_view_mode']);
+		if (node_access('view',$node)) { // Check if current user has access to a node. If not, then don't add to node listing
+			$content['nodes'][$node->nid] = node_view($node, $bean->settings['node_view_mode']);
+		}
       }
     }
     return $content;

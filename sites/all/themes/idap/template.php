@@ -166,6 +166,44 @@ function idap_preprocess_node(&$variables) {
 				}
 			}
 		break;
+		case 'regional_initiative':
+			drupal_add_css(path_to_theme().'/css/nodes/regional-initiative.css');
+			if ($variables['view_mode'] == 'full') {
+				$variables['theme_hook_suggestions'][] = 'node__regional_initiative__full';
+			
+				$variables['region_metadata'] = array();
+			
+				$variables['region_metadata'][] = $variables['content']['field_theme'];
+				hide($variables['content']['field_theme']);
+				
+				$variables['sidebar_right'][] = $variables['content']['field_linked_collaboration_space'];
+				hide($variables['content']['field_linked_collaboration_space']);
+				
+			}
+			
+			break;
+		case 'group_collaboration':
+			drupal_add_css(path_to_theme().'/css/nodes/group-collaboration.css');
+			if ($variables['view_mode'] == 'teaser') {
+				$variables['theme_hook_suggestions'][] = 'node__group_collaboration__teaser';
+			}
+			
+			if (node_access('view',$variables['nid'])) {
+				$variables['content']['group_access_link'] = array(
+					'#theme' => 'link',
+					'#text' => 'Access Group',
+					'#path' => 'node/'.$variables['nid'],
+					'#options' => array(
+					    'attributes' => array('class' => array('cool-class'), 'id' => 'cool-id'),
+					      //REQUIRED:
+					      'html' => FALSE,
+					),
+				);
+			} else {
+				$variables['content']['group_access_link'] = l('Apply to Join','mailto:sysop@inclusivedevelopmentasiapacific.net');
+			}
+		
+		break;
 	}
 	
 	/* Special settings for custom view modes */
