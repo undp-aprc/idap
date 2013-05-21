@@ -1782,12 +1782,6 @@ function idap_feature_article_content_types_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 2,
       ),
-      'files' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'full' => array(
         'label' => 'hidden',
         'module' => 'text',
@@ -1870,12 +1864,6 @@ function idap_feature_article_content_types_field_default_field_instances() {
         'type' => 'taxonomy_term_reference_link',
         'weight' => 6,
       ),
-      'files' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'full' => array(
         'label' => 'above',
         'module' => 'taxonomy',
@@ -1954,12 +1942,6 @@ function idap_feature_article_content_types_field_default_field_instances() {
         ),
         'type' => 'date_default',
         'weight' => 8,
-      ),
-      'files' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
       ),
       'full' => array(
         'label' => 'above',
@@ -2052,12 +2034,6 @@ function idap_feature_article_content_types_field_default_field_instances() {
         'type' => 'text_default',
         'weight' => 7,
       ),
-      'files' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
       'full' => array(
         'label' => 'above',
         'module' => 'text',
@@ -2134,12 +2110,6 @@ function idap_feature_article_content_types_field_default_field_instances() {
         'settings' => array(),
         'type' => 'link_default',
         'weight' => 4,
-      ),
-      'files' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
       ),
       'full' => array(
         'label' => 'above',
@@ -2230,12 +2200,6 @@ function idap_feature_article_content_types_field_default_field_instances() {
         'settings' => array(),
         'type' => 'taxonomy_term_reference_link',
         'weight' => 5,
-      ),
-      'files' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
       ),
       'full' => array(
         'label' => 'above',
@@ -4561,6 +4525,84 @@ function idap_feature_article_content_types_field_default_field_instances() {
     ),
   );
 
+  // Exported field_instance: 'taxonomy_term-countries-field_flag'
+  $field_instances['taxonomy_term-countries-field_flag'] = array(
+    'bundle' => 'countries',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'module' => 'image',
+        'settings' => array(
+          'image_link' => '',
+          'image_style' => '',
+        ),
+        'type' => 'image',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_flag',
+    'label' => 'Flag',
+    'required' => 0,
+    'settings' => array(
+      'alt_field' => 0,
+      'default_image' => 0,
+      'file_directory' => '',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'title_field' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'image',
+      'settings' => array(
+        'preview_image_style' => 'thumbnail',
+        'progress_indicator' => 'throbber',
+      ),
+      'type' => 'image_image',
+      'weight' => 2,
+    ),
+  );
+
+  // Exported field_instance: 'taxonomy_term-countries-field_official_name'
+  $field_instances['taxonomy_term-countries-field_official_name'] = array(
+    'bundle' => 'countries',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Please enter the official name for this country, if it is different than the common name.',
+    'display' => array(
+      'default' => array(
+        'label' => 'inline',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'taxonomy_term',
+    'field_name' => 'field_official_name',
+    'label' => 'Official Name',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 1,
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('<em>IMPORTANT!</em> Please do not copy text from other sources unless you have express written permission to re-publish the content. Articles that violate copyright will be deleted. You may, however, summarise the main points of the article and provide a link to the original source.');
@@ -4579,6 +4621,7 @@ function idap_feature_article_content_types_field_default_field_instances() {
   t('Event Participation');
   t('Event Type');
   t('File');
+  t('Flag');
   t('Group content visibility');
   t('Groups audience');
   t('If this event will be held in a particular country, or is relevant to particular countries, please choose the country(s) here.');
@@ -4587,11 +4630,13 @@ function idap_feature_article_content_types_field_default_field_instances() {
   t('Linked Collaboration Space');
   t('News Article Text');
   t('News Item Date');
+  t('Official Name');
   t('Page Content');
   t('Photo');
   t('Please choose the type of job or opportunity you are sharing eg. Contract, grant or scholarship.');
   t('Please enter the date this article was published.');
   t('Please enter the name of the publication in which this media article appeared.');
+  t('Please enter the official name for this country, if it is different than the common name.');
   t('Please enter the text for the discussion starter here.');
   t('Please indicate the type of event you are planning eg. A workshop, conference or meeting.');
   t('Please provide a <em>landscape (wide)</em> format photo or image to accompany your news article. This may be a photo from the event to which this article refers, or a relevant image from a stock library that you have permission to use.');
