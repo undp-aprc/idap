@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the IDAP Feature (Country Activity Database) feature.
- */
-
-include_once 'idap_feature_country_activity_database.features.inc';
