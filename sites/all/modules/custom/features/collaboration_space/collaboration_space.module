@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Collaboration Space feature.
+ */
+
+include_once 'collaboration_space.features.inc';
