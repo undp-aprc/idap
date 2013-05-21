@@ -1015,10 +1015,9 @@ function idap_feature_article_content_types_field_default_fields() {
       'display' => array(
         'default' => array(
           'label' => 'above',
-          'module' => 'list',
           'settings' => array(),
-          'type' => 'list_default',
-          'weight' => 8,
+          'type' => 'hidden',
+          'weight' => '8',
         ),
         'files' => array(
           'label' => 'above',
