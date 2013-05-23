@@ -1,0 +1,23 @@
+.page-help-idap-help p {
+	margin-bottom:10px;
+}
+
+.page-help-idap-help li {
+	margin-bottom:5px;
+}
+
+.page-help-idap-help p + ol {
+	margin-left:20px;
+}
+
+.page-help-idap-help ol {
+	margin-bottom:20px;
+}
+
+.page-help-idap-help li + ul {
+	margin-left:20px;
+}
+
+.page-help-idap-help .enclosure.main {
+	margin-bottom:20px;
+}

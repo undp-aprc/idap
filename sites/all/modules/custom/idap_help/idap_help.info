@@ -1,0 +1,9 @@
+name = Help system for inclusivedevelopmentasiapacific.net
+description = A system to provide online help and instructions for inclusivedevelopmentasiapacific.net.
+core = 7.x
+
+dependencies[] = advanced_help
+
+files[] = idap_help.module
+
+stylesheets[all][] = idap-help.css

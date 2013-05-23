@@ -1,0 +1,30 @@
+<?php
+/**
+ * @file
+ *
+ * Provide example help for the advanced help module.
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function idap_help_menu() {
+  // View help topic index.
+  $items['admin/help/idap'] = array(
+    'title' => 'Inclusive Development Asia Pacific Administrator Manual',
+    'page callback' => 'idap_help_index_page',
+    'access arguments' => array('view advanced help index'),
+    'weight' => 9,
+  );
+  return $items;
+}
+
+function idap_help_index_page() {
+  
+  $output = theme('advanced_help_topic', array(
+    'module' => 'idap_help',
+    'topic' => 'admin-manual',
+  ));
+  
+  return $output;
+}

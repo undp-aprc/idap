@@ -125,6 +125,29 @@ function idap_preprocess_node(&$variables) {
 				$variables['content']['vertical_table'] = theme('vertical_table',array('element'=>array('data' => $variables['content'])));
 			}
 		break;
+		case 'event':
+			drupal_add_css(path_to_theme().'/css/nodes/event.css');
+			if ($variables['view_mode'] == 'full') {
+				$variables['theme_hook_suggestions'][] = 'node__event__full';
+			}
+			
+			$variables['region_metadata'] = array();
+			$variables['region_right'] = array();
+			
+			$variables['region_right'][] = $variables['content']['event_participation'];
+			hide($variables['content']['event_participation']);
+			
+			$variables['region_right'][] = $variables['content']['event_contact_details'];
+			hide($variables['content']['event_contact_details']);
+			
+			$variables['region_metadata'][] = $variables['content']['field_theme'];
+			hide($variables['content']['field_theme']);
+			
+			if (isset($variables['content']['og_group_ref'])) {
+				$variables['region_metadata'][] = $variables['content']['og_group_ref'];
+				hide($variables['content']['og_group_ref']);
+			}
+		break;
 		case 'blog':
 			drupal_add_css(path_to_theme().'/css/nodes/blog.css');
 			if ($variables['view_mode'] == 'full') {
@@ -139,6 +162,17 @@ function idap_preprocess_node(&$variables) {
 					$variables['region_metadata'][] = $variables['content']['og_group_ref'];
 					hide($variables['content']['og_group_ref']);
 				}
+			}
+		break;
+		case 'opportunities':
+			drupal_add_css(path_to_theme().'/css/nodes/opportunities.css');
+			if ($variables['view_mode'] == 'full') {
+				$variables['theme_hook_suggestions'][] = 'node__opportunities__full';
+				
+				$variables['region_metadata'] = array();
+				
+				$variables['closing_date'] = $variables['content']['field_opportunity_closing_date'][0]['#markup'];
+				hide($variables['content']['field_opportunity_closing_date']);
 			}
 		break;
 		case 'resource':
@@ -182,6 +216,18 @@ function idap_preprocess_node(&$variables) {
 			}
 			
 			break;
+			case 'e_discussion':
+				drupal_add_css(path_to_theme().'/css/nodes/e-discussion.css');
+				if ($variables['view_mode'] == 'full') {
+					$variables['theme_hook_suggestions'][] = 'node__ediscussion__full';
+
+					$variables['region_metadata'] = array();
+
+					$variables['region_metadata'][] = $variables['content']['field_theme'];
+					hide($variables['content']['field_theme']);
+				}
+
+				break;
 		case 'group_collaboration':
 			drupal_add_css(path_to_theme().'/css/nodes/group-collaboration.css');
 			if ($variables['view_mode'] == 'teaser') {
