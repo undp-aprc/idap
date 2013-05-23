@@ -1,0 +1,23 @@
+.notice {
+	padding:20px;
+	border:2px solid #000;
+	background-color:#ccc;
+	margin-top:20px;
+	font-weight:bold;
+}
+
+.type-of-opportunity {
+	background-color:#E6B250;
+	margin-bottom:10px;
+}
+
+.type-of-opportunity .field-item {
+	font-size:18pt;
+	color:#FCF8C1;
+	padding:10px;
+}
+
+.how-to-apply {
+	margin:10px 0;
+	padding:10px 0;
+}

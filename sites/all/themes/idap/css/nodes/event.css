@@ -1,0 +1,27 @@
+.field-name-field-date {
+	margin:5px 0;
+	padding:5px;
+	background-color:#E6B250;
+	color:#FCF8C1;
+	font-size:14pt;
+	font-weight:bold;
+}
+
+.content.left {
+	width:680px;
+	padding:0 20px 0 0;
+	float:left;
+	border-right:1px dotted #ccc;
+}
+
+.content.right {
+	width:263px;
+	float:left;
+	padding:0 0 0 20px;
+}
+
+.metadata {
+	border-top:1px solid #ccc;
+	margin:10px 0;
+	padding:10px 0;
+}
