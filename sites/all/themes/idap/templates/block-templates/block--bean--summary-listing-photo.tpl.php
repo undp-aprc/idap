@@ -4,7 +4,7 @@
 </div>
 <div class="clearfix block-heading-divider"></div>
 <div class="block-main-content block-content summary-listing-photo">
-	<?php print $block_content['bean_items']['photo']; ?>
+	<?php print render($bean['photo']); ?>
 	<ul>
 	<?php print $block_content['node_items']; ?>
 	</ul>

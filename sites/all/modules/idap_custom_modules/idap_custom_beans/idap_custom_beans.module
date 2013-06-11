@@ -83,11 +83,25 @@ function idap_custom_beans_theme() {
 }
 
 function idap_custom_beans_preprocess_block(&$variables) {
+	
 	if(isset($variables['elements']['bean'])) {
+		
+		foreach($variables['elements']['bean'] as $delta=>$array) {
+			if(!preg_match("(#{1})",$delta)) {
+				$variables['bean']['photo'] = $variables['elements']['bean'][$delta]['group_photo'];
+				foreach($variables['elements']['nodes'] as $node=>$node_array) {
+					if (is_integer($node)) {
+						strip_tags($variables['elements']['nodes'][$node]['body'][0]['#markup']);
+					}
+				}
+			}
+		}
+		
 		$bean_elements = $variables['elements']['bean'];
 		foreach($bean_elements as $delta=>$value) {
 			if (preg_match('^([a-zA-Z0-9]{1,}\-{1,}){1,}[a-zA-Z0-9]{1,}^', $delta)) {
 				$variables['title'] = $bean_elements[$delta]['#entity']->title;
+				
 				if (isset($variables['more_link'])) {
 					$variables['more_link']['text'] = $bean_elements[$delta]['#entity']->more_link['text'];
 					$variables['more_link']['path'] = $bean_elements[$delta]['#entity']->more_link['path'];
