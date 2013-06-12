@@ -2,10 +2,6 @@
 	margin-top:3px !important;
 }
 
-.summary-listing-photo ul {
-	padding-left:230px;
-}
-
 .bean-editorial-listing-with-photo-3-c .block-content-item {
 	border:0px !important;
 }
@@ -39,3 +35,14 @@
 	margin-bottom:10px;
 }
 
+.col-4 .summary-listing-photo .content {
+	width:723px;
+}
+
+.col-3 .summary-listing-photo .content {
+	width:487px;
+}
+
+.col-2 .summary-listing-photo .content {
+	width:241px;
+}
