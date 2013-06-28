@@ -89,9 +89,9 @@
 	  hide($content['group_access_link']);
 	?>
 	<div class="group-collaboration-space-teaser">
-    <?php print render($content); ?>
 		<div id="group-collaboration-body-teaser">
 			<?php print render($content['body']); ?>
+			<?php print render($content); ?>
 		</div>
 		<div>
 			<?php print render($content['group_access_link']); ?>
