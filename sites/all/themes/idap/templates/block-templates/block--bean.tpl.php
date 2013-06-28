@@ -4,7 +4,6 @@
 </div>
 <div class="clearfix block-heading-divider"></div>
 <div class="block-main-content">
-	<div class="content block-content-item "<?php print $content_attributes; ?>>
 	<?php print render($content); ?>
 	<div class="clearfix"></div>
 </div>
