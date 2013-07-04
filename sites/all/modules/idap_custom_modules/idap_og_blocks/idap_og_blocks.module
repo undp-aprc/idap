@@ -14,12 +14,18 @@ function idap_og_blocks_block_view($delta = '') {
 	switch ($delta) {
 		case 'idap_og_content_block':
 			$node_id = menu_get_object()->nid;
-			$types = idap_og_blocks_get_types_array($node_id);
-			$links = array();
 			
-			foreach($types as $type) {
-				$links[] = "<a href='/{$type['#path']}'>{$type['#text']}</a>"; //Can't render array because it escapes HTML entities
+			if (_is_group_member($node_id)) {
+				$types = idap_og_blocks_get_types_array($node_id);
+				$links = array();
+			
+				foreach($types as $type) {
+					$links[] = "<a href='/{$type['#path']}'>{$type['#text']}</a>"; //Can't render array because it escapes HTML entities
+				}
+			} else {
+				$links[] = "Please <a href='/group/node/$node_id/subscribe' />join this group</a> to create content.";
 			}
+			
 			$block['subject'] = t('Create content');
 			$block['content'] = array(
 				'#theme' => 'item_list',
@@ -33,6 +39,7 @@ function idap_og_blocks_block_view($delta = '') {
 					),
 				),
 			);
+			
 		break;
 	}
 	return $block;
@@ -76,4 +83,18 @@ function idap_og_blocks_get_group_ids($entity_id) {
 			return $group_id;
 		}
 	}	
+}
+
+function _is_group_member($node_id) {
+	global $user;
+	$account = user_load(array('uid'=>$user->uid));
+	$og = $account->og_user_group_ref;
+	$language = $account->languaage ? $account->language : 'und';
+	
+	foreach($og[$language] as $delta=>$array) {
+		if ($array['target_id'] == $node_id) {
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
