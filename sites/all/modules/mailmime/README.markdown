@@ -42,12 +42,13 @@ installed and available somewhere on the
 *    `PEAR5.php`
 
 1.   One way to satisfy the requirements is to run the following
-     command from a Unix root shell prompt:
+     commands from a Unix root shell prompt:
 
      `pear install -a Mail_Mime`
+     `pear install Mail_mimeDecode`
 
      The `-a` parameter ensures that dependencies, including
-     `Mail/mimeDecode.php` and `Mail/mimePart.php`, are also installed.
+     `Mail/mimePart.php`, are also installed.
 
 2.   Another way is to install and enable the
      [Include](http://drupal.org/project/include) module before enabling the

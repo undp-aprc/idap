@@ -103,7 +103,6 @@ function mailmime_download_requirements() {
       'remote_path' => 'https://raw.github.com/pear/Mail_Mime/master/Mail/',
       'files' => array(
         'mime.php',
-        'mimeDecode.php',
         'mimePart.php',
       ),
     ),

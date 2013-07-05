@@ -184,6 +184,10 @@ function workflow_extensions_form_alter(&$form, &$form_state, $form_id) {
   }
   $form['#validate'][] = 'workflow_extensions_workflow_form_validate';
 
+  if (isset($form['workflow']['workflow_comment']) && !variable_get('workflow_extensions_allow_blank_comments', TRUE)) {
+    $form['workflow']['workflow_comment']['#required'] = TRUE;
+  }
+
   // 2) Suppress Workflow fieldset on the create/edit form if not permitted.
   if (isset($form['#node_edit_form']) && !user_access('change workflow state via node edit form')) {
     unset($form['workflow']);
@@ -248,7 +252,7 @@ function workflow_extensions_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implements hook_forms();().
+ * Implements hook_forms().
  *
  * Called as a result of the fact that there are no form handlers for the
  * unique form_id's generated in workflow_extensions_change_state_form().
@@ -257,6 +261,9 @@ function workflow_extensions_form_alter(&$form, &$form_state, $form_id) {
  * Note: first of the args is typically the node object.
  */
 function workflow_extensions_forms($form_id, $args) {
+  if (function_exists('workflow_forms')) {
+    return array();
+  }
   if (strpos($form_id, 'workflow_tab_form_nid') === 0) {
     $form = array(
       $form_id => array(
@@ -311,6 +318,8 @@ function workflow_extensions_form_submit($form, &$form_state) {
   if (isset($form['#node'])) {
     $form_state['values']['node'] = $form['#node'];
   }
+  // [#1786346] I believe this is superfluous, though not harmful
+  form_load_include($form_state, 'inc', 'workflow', 'workflow.pages');
   // ... now proceed to next handler, e.g. node_form_submit for a normal save
 }
 
@@ -475,7 +484,7 @@ function workflow_extensions_single_state_form($form, $form_state, $workflow_nam
 
 function workflow_extensions_extract_workflow_name($form) {
   // Current and allowed next states for this user and node live in
-  // $form['workflow'][$workflow_name]['#options].
+  // $form['workflow'][$workflow_name]['#options'].
   // At the time of writing, the workflow.module (6.x.1-4) contained a bug that
   // resulted in the $workflow_name being passed as blank. Luckily we can work
   // around this and also be compatible with later versions that don't have the
