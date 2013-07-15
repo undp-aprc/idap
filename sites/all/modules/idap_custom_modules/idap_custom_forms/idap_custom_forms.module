@@ -605,7 +605,9 @@ function idap_custom_forms_form_alter(&$form, &$form_state, $form_id) {
 	$language = isset($form['language']['#value']) ? $form['language']['#value'] : 'und';
 	if (isset($form['group_content_access'][$language])) {
 		unset($form['group_content_access'][$language]['#options'][0]);
-		$form['group_content_access'][$language]['#default_value'] = 2; /* To Do: Set the default value based on settings of parent group (if any) */
+		if ($form['group_content_access'][$language]['#default_value'] == 0) { // If no default value has been set, then set the content to private by default, otherwise use the stored values.
+				$form['group_content_access'][$language]['#default_value'] = 2; /* To Do: Set the default value based on settings of parent group (if any) */
+		}
 	}
 }
 
