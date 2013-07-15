@@ -549,7 +549,6 @@ function idap_custom_forms_form_alter(&$form, &$form_state, $form_id) {
 		drupal_add_css($path_to_css);
 		
 		if (isset($form['#node_edit_form'])) { // Only for node edit forms
-			dsm($form);
 			if($form['#node_edit_form']) {
 
 				//Change the text on the submit buttom for node edit forms
