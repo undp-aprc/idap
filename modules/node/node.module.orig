@@ -1185,8 +1185,10 @@ function node_save($node) {
     module_invoke_all('node_' . $op, $node);
     module_invoke_all('entity_' . $op, $node, 'node');
 
-    // Update the node access table for this node.
-    node_access_acquire_grants($node);
+    // Update the node access table for this node. There's no need to delete
+    // existing records if the node is new.
+    $delete = $op == 'update';
+    node_access_acquire_grants($node, $delete);
 
     // Clear internal properties.
     unset($node->is_new);
