@@ -90,7 +90,7 @@ function idap_workbench_manage_pages_add_subpage($sid) {
 	);
 	
 	$output = '<h1>Manage Pages: Add Sub-page</h1>';
-	$output .= drupal_render(drupal_build_form('idap_workbench_form_create_subpage',&$form_state));
+	$output .= drupal_render(drupal_build_form('idap_workbench_form_create_subpage',$form_state));
 	return $output;
 }
 
@@ -254,7 +254,7 @@ function idap_workbench_manage_pages_add_landing_page($sid) {
 	);
 	
 	$output = '<h1>Manage Pages: Section Home Page</h1>';
-	$output .= drupal_render(drupal_build_form('idap_workbench_form_create_landing_page',&$form_state));
+	$output .= drupal_render(drupal_build_form('idap_workbench_form_create_landing_page',$form_state));
 	return $output;
 }
 

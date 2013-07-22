@@ -9,7 +9,7 @@ function idap_workbench_section_edit($sid) {
 	$form_state['values']['taxonomy_parent'] = $section_values->pid;
 	$form_state['values']['banner_fid'] = $section_values->banner_fid;
 	
-	$form = drupal_build_form('idap_workbench_form_edit_theme_section', &$form_state);
+	$form = drupal_build_form('idap_workbench_form_edit_theme_section', $form_state);
 	return $form;
 }
 
