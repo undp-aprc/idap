@@ -78,7 +78,7 @@
 	}
 </style>
 <!-- Beginning page.tpl.php template -->
-<table width="800" border="0" align="center" cellpadding="10" cellspacing="0" style="background-color:#ffffff;margin:0 auto 0 auto;padding:10px;margin-bottom:20px;">
+<table width="750" border="0" align="center" cellpadding="10" cellspacing="0" style="background-color:#ffffff;margin:0 auto 0 auto;padding:10px;margin-bottom:20px;">
 <tr>
 <td width="77" rowspan="2"><a href="http://www.undp.org" target="_blank"><img src="http://idap:8888/sites/all/themes/idap/images/logos/undp.png" alt="UNDP Logo" style="border:0px;"/></a></td>
 <td width="25"><a href="http://www.youtube.com" target="_blank"><img src="http://idap:8888/sites/all/themes/idap/images/icons/youtube.png" alt="Youtube" border="0" /></a></td>
@@ -96,7 +96,7 @@
 <?php endif; ?>
 </td></tr>
 <tr style="background-color:#EEBC5F;">
-  	<td width="480" colspan="4" style="font-size:0.7em;">&copy; United Nations Development Programme 2012</td>
+  	<td width="430" colspan="4" style="font-size:0.7em;">&copy; United Nations Development Programme 2012</td>
     <td width="80"><a title="About Inclusive Development Asia-Pacific" href="http://www.inclusivedevelopmentasiapacific.net/about" style="text-decoration:none;color:#000;font-size:0.7em;">About Us</a></td>
     <td width="80"><a title="Contact us using our contact form or through other contact methods." href="http://www.inclusivedevelopmentasiapacific.net/contact" style="text-decoration:none;color:#000;font-size:0.7em;">Contact</a></td>
     <td width="80"><a title="Information about the privacy policy that governs how IDAP may use personal information collected through this site." href="http://www.inclusivedevelopmentasiapacific.net/privacy" style="text-decoration:none;color:#000;font-size:0.7em;">Privacy Statement</a></td>
