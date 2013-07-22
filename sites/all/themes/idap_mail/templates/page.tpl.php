@@ -95,6 +95,8 @@
 <?php print render($page['content']); ?>
 <?php endif; ?>
 </td></tr>
+</table>
+<table width="800">
 <tr style="background-color:#EEBC5F;">
   	<td width="480" colspan="4" style="font-size:0.7em;">&copy; United Nations Development Programme 2012</td>
     <td width="80"><a title="About Inclusive Development Asia-Pacific" href="http://www.inclusivedevelopmentasiapacific.net/about-us" style="text-decoration:none;color:#000;font-size:0.7em;">About Us</a></td>
@@ -102,7 +104,9 @@
     <td width="80"><a title="Information about the privacy policy that governs how IDAP may use personal information collected through this site." href="http://www.inclusivedevelopmentasiapacific.net/privacy" style="text-decoration:none;color:#000;font-size:0.7em;">Privacy Statement</a></td>
     <td width="80"><a title="Terms and Conditions for membership, content creation and sharing." href="http://www.inclusivedevelopmentasiapacific.net/terms" style="text-decoration:none;color:#000;font-size:0.7em;">Terms &amp; Conditions</a></td>
   </tr>
-  <tr style="background-color:#EAEAEB"><td colspan="8">
+</table>
+<table width="800">
+  <tr style="background-color:#EAEAEB"><td>
   <address style="font-style:normal;font-size:0.7em">
   <b>The United Nations Development Programme (Asia Pacific Regional Center)</b>
   Level 3 Service Building
