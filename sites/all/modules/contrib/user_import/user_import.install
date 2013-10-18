@@ -26,6 +26,13 @@ function user_import_schema() {
         'not null'    => TRUE,
         'default'     => ''
       ),
+      'auto_import_directory'    => array(
+        'description' => t("Name of directory associated with an import template."),
+        'type'        => 'varchar',
+        'length'      => '255',
+        'not null'    => TRUE,
+        'default'     => ''
+      ),
       'filename'    => array(
         'description' => t("Name of file being used as source of data for import."),
         'type'        => 'varchar',
@@ -225,6 +232,23 @@ function user_import_update_6003() {
 
   return $ret;
 }
+
+/**
+ *  Add database field to store the name of a directory associated with an import template.
+ *
+ **/
+function user_import_update_7200(&$sandbox) {
+  $field = array(
+    'description' => t("Name of directory associated with an import template."),
+    'type'        => 'varchar',
+    'length'      => '255',
+    'not null'    => TRUE,
+    'default'     => '',
+  );
+
+  db_add_field('user_import', 'auto_import_directory', $field);
+}
+
 
 /**
  * Implementation of hook_uninstall().

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Drush integration for the User Import module.
+ */
+
 function user_import_drush_help($command) {
   switch ($command) {
     case 'drush:user-import':
@@ -13,6 +18,21 @@ function user_import_drush_help($command) {
   }
 }
 
+/**
+ * Implementation of hook_drush_command().
+ *
+ * In this hook, you specify which commands your
+ * drush module makes available, what it does and
+ * description.
+ *
+ * Notice how this structure closely resembles how
+ * you define menu hooks.
+ *
+ * See `drush topic docs-commands` for a list of recognized keys.
+ *
+ * @return
+ *   An associative array describing your command(s).
+ */
 function user_import_drush_command() {
   $commands                = array();
   $commands['user-import'] = array(
@@ -29,7 +49,8 @@ function user_import_drush_command() {
   return $commands;
 }
 
-function drush_user_import_user_import($original_file = NULL, $template_name = NULL) {
+function drush_user_import($original_file = NULL, $template_name = NULL) {
+
   if (!file_exists($original_file)) {
     return drush_set_error('file-not-found');
   }
@@ -65,23 +86,19 @@ function drush_user_import_user_import($original_file = NULL, $template_name = N
   $file           = new stdClass();
   $file->filepath = $original_file;
   $file->filename = basename($original_file);
-  file_copy($file, file_directory_temp(), FILE_EXISTS_RENAME);
+  $destination = 'private://user_import/processing';
+  $filepath = file_unmanaged_copy($file->filepath, $destination, FILE_EXISTS_RENAME);
 
   // initialize import from template
   $import                  = new stdClass();
-  $import->first_line_skip = $template->first_line_skip;
-  $import->contact         = $template->contact;
-  $import->username_space  = $template->username_space;
-  $import->send_email      = $template->send_email;
+  $import->oldfilename     = basename($original_file);
+  $import->filename        = $file->filename;
+  $import->filepath        = $filepath;
+  $import->started         = time();
   $import->field_match     = $template->field_match;
   $import->roles           = $template->roles;
   $import->options         = $template->options;
-  $import->options['ftp']  = 0;
-  $import->oldfilename     = basename($original_file);
-  $import->filename        = $file->filename;
-  $import->filepath        = $file->filepath;
-  $import->setting         = 'tested';
-  $import->started         = time();
+  $import->setting         = 'import';
   $result                  = drupal_write_record('user_import', $import);
 
   if ($result == SAVED_NEW) {

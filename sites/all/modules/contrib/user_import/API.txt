@@ -25,4 +25,8 @@ Manipulate imported data before creating or amending user accounts.
 hook_user_import_after_save()
 ===========================================
 Take action(s) after each user account is created or amended.
- 
+
+
+hook_user_import_imported()
+===========================================
+Take action(s) after import is complete.

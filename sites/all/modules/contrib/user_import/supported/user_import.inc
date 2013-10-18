@@ -34,6 +34,15 @@ function user_import_user_import_after_save($settings, $account, $password, $fie
   }
 }
 
+/**
+ * Implementation of hook_user_import_imported().
+ */
+function user_import_user_import_imported($import_id, $settings) {
+  // Delete file after it's been processed,
+  //_user_import_file_deletion($settings['filepath'], $settings['filename'], $settings['oldfilename'], FALSE, FALSE);
+  file_unmanaged_delete($settings['filepath']);
+}
+
 // Send email when account is created
 function _user_import_send_email($account, $password, $profile, $subject, $body, $format, $css, $subscribed) {
 
@@ -182,6 +191,13 @@ function _user_import_edit_settings_fields(&$form, $import, $collapsed) {
     '#description'   => t("Character(s) to use to split data so that it can be added to a field set to multiple values, e.g. '||', '*||*'"),
   );
 
+  $form['optional']['email_domain'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Email Domain'),
+    '#description'   => t("Create an email address with the combined contents of Email Address (in Field Match above) and this field. <em><br />For example if Email Address is 'Luthor' and Email Domain is '@lexcorp.com', the account address woud be 'luthor@lexcorp.com'. <br />Note that '@example.com' is recommended for dummy addresses.</em>"),
+    '#default_value' => isset($import['email_domain']) ? $import['email_domain'] : '',
+  );
+
   return;
 }
 
@@ -208,6 +224,17 @@ function _user_import_edit_template_fields(&$form, $import) {
       '#maxlength'   => 25,
       '#description' => t('Name to identify these settings by.'),
     );
+
+    $auto_imports_enabled = variable_get('user_import_auto_imports_enabled', FALSE);
+
+    if (!empty($auto_imports_enabled)) {
+      $form['save']['auto_import_directory'] = array(
+        '#type'          => 'textfield',
+        '#title'         => t('Auto Import Directory Name'),
+        '#description'   => t('If this is set a directory with this name will be created, into which files can be uploaded and automatically processed, using the settings on this page to create new user accounts.'),
+        '#default_value' => isset($import['auto_import_directory']) ? $import['auto_import_directory'] : '',
+      );
+    }
 
     $form['save'][] = array(
       '#type'     => 'submit',
@@ -239,6 +266,17 @@ function _user_import_edit_template_fields(&$form, $import) {
       '#description' => t("Update '%name' settings template", array('%name' => $import['name'])),
     );
 
+    $auto_imports_enabled = variable_get('user_import_auto_imports_enabled', FALSE);
+
+    if (!empty($auto_imports_enabled)) {
+      $form['save']['auto_import_directory'] = array(
+        '#type'          => 'textfield',
+        '#title'         => t('Auto Import Directory Name'),
+        '#description'   => t('If this is set a directory with this name will be created, into which files can be uploaded and automatically processed, using the settings on this page to create new user accounts.'),
+        '#default_value' => isset($import['auto_import_directory']) ? $import['auto_import_directory'] : '',
+      );
+    }
+
     $form['save']['update']['submit'] = array(
       '#type'     => 'submit',
       '#value'    => t('Update'),
@@ -259,6 +297,17 @@ function _user_import_edit_template_fields(&$form, $import) {
       '#maxlength'   => 25,
       '#description' => t('Name to identify these settings by.'),
     );
+
+    $auto_imports_enabled = variable_get('user_import_auto_imports_enabled', FALSE);
+
+    if (!empty($auto_imports_enabled)) {
+      $form['save']['auto_import_directory'] = array(
+        '#type'          => 'textfield',
+        '#title'         => t('Auto Import Directory Name'),
+        '#description'   => t('If this is set a directory with this name will be created, into which files can be uploaded and automatically processed, using the settings on this page to create new user accounts.'),
+        '#default_value' => isset($import['auto_import_directory']) ? $import['auto_import_directory'] : '',
+      );
+    }
 
     $form['save']['new'][] = array(
       '#type'     => 'submit',
@@ -339,7 +388,8 @@ function user_import_edit_remove_file_validate($form, &$form_state) {
 
   $settings = _user_import_settings_select($form_state['values']['import_id']);
   _user_import_settings_deletion($form_state['values']['import_id']);
-  _user_import_file_deletion($settings['filepath'], $settings['filename'], $settings['oldfilename'], $settings['options']['ftp']);
+  //_user_import_file_deletion($settings['filepath'], $settings['filename'], $settings['oldfilename'], $settings['options']['ftp']);
+  file_unmanaged_delete($settings['filepath']);
   drupal_goto('admin/people/user_import/add');
 }
 

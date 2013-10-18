@@ -12,6 +12,7 @@ function user_user_import_form_field_match() {
   $options['user']['email']    = t('Email Address*');
   $options['user']['password'] = t('Password');
   $options['user']['roles']    = t('Roles');
+  $options['user']['created']    = t('Account Creation Date');
 
   // $options['user']['username'] = t('Username');
   // $options['user']['uid'] = t('UID');
@@ -56,11 +57,36 @@ function user_user_import_data($settings, $update_setting, $column_settings, $mo
 
   if ($field_id == 'email') {
     $value = trim($data[$column_id]);
+
+    if (!empty($settings['options']['email_domain'])) {
+      $value .= $settings['options']['email_domain'];
+    }
+
     _user_import_validate_email($value, $update_setting);
   }
 
   if ($field_id == 'password') {
     $value = trim($data[$column_id]);
+  }
+
+  if ($field_id == 'created') {
+    $value = trim($data[$column_id]);
+
+    if (!empty($value) && !is_numeric($value)) {
+      $parsed = date_parse($value);
+      $timestamp = mktime(
+        $parsed['hour'],
+        $parsed['minute'],
+        $parsed['second'],
+        $parsed['month'],
+        $parsed['day'],
+        $parsed['year']
+      );
+
+      if (!empty($timestamp) && is_numerric($timestamp)) {
+        $value = $timestamp;
+      }
+    }
   }
 
   if ($field_id == 'roles') {
@@ -125,6 +151,13 @@ function user_user_import_pre_save($settings, $account, $fields, $errors, $updat
     $account_add['status']   = 1;
     $account_add['init']     = $fields['user']['email'][0];
     $account_add['pass']     = (empty($fields['user']['password'][0])) ? user_password() : $fields['user']['password'][0];
+
+    if (isset($fields['user']['created'][0]) && !empty($fields['user']['created'][0])) {
+      $account_add['created'] = $fields['user']['created'][0];
+    }
+
+    $account_add['init']     = $fields['user']['email'][0];
+
 
     if (!empty($settings['options']['activate'])) {
       $account_add['access'] = time();

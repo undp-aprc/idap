@@ -36,10 +36,10 @@ function profile_user_import_data($settings, $update_setting, $column_settings, 
 function profile_user_import_after_save($settings, $account, $password, $fields, $updated, $update_setting_per_module) {
 
   // get all fields
-  $profile_fields = profile_get_fields();
+  $profile_field = profile_get_fields();
   $data           = $old_data = unserialize($account->data);
 
-  foreach ($profile_fields as $field) {
+  foreach ($profile_field as $field) {
     profile_user_import_save_profile($field, $account->uid, $fields['profile'][$field->fid][0], $updated, $update_setting_per_module['profile'], $data);
   }
 
@@ -59,7 +59,7 @@ function profile_user_import_after_save($settings, $account, $password, $fields,
 function profile_user_import_save_profile($field, $uid, $value, $updated, $update_setting, &$data) {
 
   // when the profile field is displayed on the registration form an empty value is automatically saved by the Profile module
-  $exists = db_query_range('SELECT value FROM {profile_values} WHERE fid = :fid AND uid = :uid', 0, 1, array(':fid' => $field->fid, ':uid' => $uid))->fetchField();
+  $exists = db_query_range('SELECT value FROM {profile_value} WHERE fid = :fid AND uid = :uid', 0, 1, array(':fid' => $field->fid, ':uid' => $uid))->fetchField();
 
   user_import_profile_date($value, $field->type);
 
@@ -76,7 +76,7 @@ function profile_user_import_save_profile($field, $uid, $value, $updated, $updat
 
         if (empty($value) && $update_setting == UPDATE_REPLACE) {
 
-          db_query("DELETE FROM {profile_values} WHERE fid = :fid AND uid = :uid", array(':fid' => $field->fid, ':uid' => $uid));
+          db_query("DELETE FROM {profile_value} WHERE fid = :fid AND uid = :uid", array(':fid' => $field->fid, ':uid' => $uid));
           unset($data[$field->name]);
 
           return;
@@ -84,7 +84,7 @@ function profile_user_import_save_profile($field, $uid, $value, $updated, $updat
 
         if ((empty($exists) && $exists != '') || $exists === FALSE) {
 
-          $id = db_insert('profile_values')
+          $id = db_insert('profile_value')
             ->fields(array(
             'fid'   => $field->fid,
             'uid'   => $uid,
@@ -94,7 +94,7 @@ function profile_user_import_save_profile($field, $uid, $value, $updated, $updat
         }
         else {
 
-          $id = db_update('profile_values')
+          $id = db_update('profile_value')
             ->fields(array(
             'value' => $value,
           ))
@@ -115,18 +115,18 @@ function profile_user_import_save_profile($field, $uid, $value, $updated, $updat
 
     if ((empty($exists) && $exists != '') || $exists === FALSE) {
 
-      $id = db_insert('profile_values')
+      $id = db_insert('profile_value')
         ->fields(array('fid' => $field->fid, 'uid' => $uid, 'value' => $value))
         ->execute();
 
     }
     else {
 
-      db_update('profile_values')
+      db_update('profile_value')
         ->fields(array('value' => $value))
         ->condition('fid', $field->fid)
         ->condition('uid', $uid)
-        ->limit(1)
+        //->limit(1)
         ->execute();
 
       $data[$field->name] = $value;

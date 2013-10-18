@@ -135,14 +135,125 @@ function user_import_menu() {
  */
 function user_import_cron() {
   module_load_include('inc', 'user_import', 'user_import.import');
+
+  // Continue any on-going imports.
+  user_import_continue_imports();
+
+  // Check for new imports.
+  user_import_trigger_imports();
+}
+
+/**
+ *  Continue any on-going imports, durring a cron run.
+ *
+ **/
+function user_import_continue_imports() {
   $imports = _user_import_settings_select();
 
-  if (!$imports) return;
+  if ($imports) {
+
+    foreach ($imports as $import) {
+      if ($import['setting'] == 'test' || $import['setting'] == 'import') {
+        _user_import_process($import);
+      }
+    }
+  }
+}
+
+/**
+ * Trigger imports if new files are found durring a cron run.
+ */
+function user_import_trigger_imports() {
+
+  $auto_imports_enabled = variable_get('user_import_auto_imports_enabled', FALSE);
+
+  if (empty($auto_imports_enabled)) {
+    return;
+  }
+
+  // Load import functions.
+  module_load_include('inc', 'user_import', 'user_import.admin');
+
+  // Get list of templates to check.
+  $imports = db_query("SELECT * FROM {user_import} WHERE auto_import_directory != '' AND setting = 'template'");
 
   foreach ($imports as $import) {
-    if ($import['setting'] == 'test' || $import['setting'] == 'import') {
-      _user_import_process($import);
+    // Check for file in the uploads directory of this template.
+    $directory = 'private://user_import/uploads/' . $import->auto_import_directory;
+    $files = file_scan_directory($directory, '/.*$/');
+
+    foreach ($files as $import_file) {
+      // Move file to processing directory.
+      $filename_new = $import_file->filename . '-' . rand(1000000, 2000000);
+      $import_file_new = file_unmanaged_move($import_file->uri, 'private://user_import/processing/' . $filename_new);
+
+      // Create import.
+
+      // Get template.
+      $settings = _user_import_settings_select($import->import_id);
+      $import_id = '';
+      $name = '';
+      $pointer = 0;
+      $processed   = 0;
+      $valid       = 0;
+      $field_match = isset($settings['field_match']) ? serialize($settings['field_match']) : '';
+      $roles       = isset($settings['roles']) ? serialize($settings['roles']) : '';
+      $options     = isset($settings['options']) ? serialize($settings['options']) : '';
+      $setting     = 'import';
+
+      $file->filename = $filename_new;
+      $file->oldfilename = $import_file->filename;
+      $file->filepath    = 'private://user_import/processing/' . $filename_new;
+
+      $import_id = user_import_import_set($name, $file, $pointer, $processed, $valid, $field_match, $roles, $options, $setting, $import_id);
+      $settings = _user_import_settings_select($import_id);
+      _user_import_process($settings);
+
     }
+  }
+
+
+  return;
+
+
+
+  // Get template.
+  $settings = _user_import_settings_select(2);
+
+  foreach ($files as $filename) {
+
+    if ($filename == 'sample.txt') {
+
+
+      // Check if it's used for an import already.
+      $imported = db_query('SELECT import_id FROM {user_import} WHERE filename = :filename', array(':filename' => $filename))->fetchField();
+
+      if (!$imported) {
+
+        $import_id = '';
+        $name = '';
+        $pointer = 0;
+        $processed   = 0;
+        $valid       = 0;
+
+
+        $field_match = isset($settings['field_match']) ? serialize($settings['field_match']) : '';
+        $roles       = isset($settings['roles']) ? serialize($settings['roles']) : '';
+        $options     = isset($settings['options']) ? serialize($settings['options']) : '';
+        $setting     = 'import';
+
+        $file->filename = $filename;
+        $file->oldfilename = $filename;
+        $file->filepath    = drupal_get_path('module', 'user_import') . '/' . $filename;
+
+        $import_id = user_import_import_set($name, $file, $pointer, $processed, $valid, $field_match, $roles, $options, $setting, $import_id);
+        $settings = _user_import_settings_select($import_id);
+        _user_import_process($settings);
+
+      }
+
+    }
+
   }
 
   return;
@@ -257,12 +368,10 @@ function theme_user_import_list() {
     $output .= theme('table', array('header' => $header, 'rows' => $rows));
 
     // action buttons
-    $settings_link = l(t('Settings'), 'admin/people/user_import/add/' . $import['import_id']);
     $delete_link   = l(t('Delete'), 'admin/people/user_import/delete/' . $import['import_id']);
     $continue_link = l(t('Continue Processing'), 'admin/people/user_import/continue/' . $import['import_id']);
     $import_link   = l(t('Import'), 'admin/people/user_import/import/' . $import['import_id']);
 
-    $output .= $settings_link . ' | ';
     $output .= $delete_link;
     if ($import['setting'] == 'tested' || $import['setting'] == 'test') $output .= ' | ' . $import_link;
     if ($import['setting'] == 'test' || $import['setting'] == 'import') $output .= ' | ' . $continue_link;
@@ -391,19 +500,20 @@ function theme_user_import_username_errors($errors) {
 
 function _user_import_settings_save($settings) {
   // Database field defaults.
-  $database_fields = array('import_id'   => NULL,
-                           'name'        => '',
-                           'filename'    => '',
-                           'oldfilename' => '',
-                           'filepath'    => '',
-                           'started'     => 0,
-                           'pointer'     => 0,
-                           'processed'   => 0,
-                           'valid'       => 0,
-                           'field_match' => array(),
-                           'roles'       => '',
-                           'options'     => array(),
-                           'setting'     => '',
+  $database_fields = array('import_id'             => NULL,
+                           'name'                  => '',
+                           'auto_import_directory' => '',
+                           'filename'              => '',
+                           'oldfilename'           => '',
+                           'filepath'              => '',
+                           'started'               => 0,
+                           'pointer'               => 0,
+                           'processed'             => 0,
+                           'valid'                 => 0,
+                           'field_match'           => array(),
+                           'roles'                 => '',
+                           'options'               => array(),
+                           'setting'               => '',
   );
 
   // Form elements we never want to save in the options column.
@@ -414,9 +524,27 @@ function _user_import_settings_save($settings) {
   $options = array_diff_key($settings, $database_fields);
   $options = array_diff_key($options, $form_variables);
 
+  // Optimise Email Domain option if it's set.
+  if (!empty($options['email_domain'])) {
+    $options['email_domain'] = trim($options['email_domain']);
+
+    if (substr($options['email_domain'], 0, 1) != '@') {
+      $options['email_domain'] = '@'. $options['email_domain'];
+    }
+  }
+
   // Set defaults for options.
   foreach ($options as $key => $value) {
     $settings['options'][$key] = isset($settings[$key]) ? $settings[$key] : '';
+  }
+
+  // Optimise Email Domain option if it's set.
+  if (!empty($settings['options']['email_domain'])) {
+    $settings['options']['email_domain'] = trim($settings['options']['email_domain']);
+
+    if (substr($settings['options']['email_domain'], 0, 1) != '@') {
+      $settings['options']['email_domain'] = '@'. $settings['options']['email_domain'];
+    }
   }
 
   // Set defaults for fields.
@@ -424,49 +552,79 @@ function _user_import_settings_save($settings) {
     $settings[$key] = isset($settings[$key]) ? $settings[$key] : $value;
   }
 
+    // Set default values.
+  $import_id = isset($settings['import_id']) ? $settings['import_id'] : '';
+  $name = isset($settings['name']) ? trim($settings['name']) : '';
+  $pointer     = isset($settings['pointer']) ? $settings['pointer'] : 0;
+  $processed   = isset($settings['processed']) ? $settings['processed'] : 0;
+  $valid       = isset($settings['valid']) ? $settings['valid'] : 0;
+  $field_match = isset($settings['field_match']) ? serialize($settings['field_match']) : '';
+  $roles       = isset($settings['roles']) ? serialize($settings['roles']) : '';
+  $options     = isset($settings['options']) ? serialize($settings['options']) : '';
+  $setting     = isset($settings['setting']) ? $settings['setting'] : '';
+
+  // Only set an auto import directory if saving a template.
+  if (isset($settings['auto_import_directory']) && $settings['setting'] == 'template') {
+    $auto_import_directory = $settings['auto_import_directory'];
+  }
+  else {
+    $auto_import_directory = '';
+  }
+
+  $file->filename = isset($settings['filename']) ? $settings['filename'] : '';
+  $file->oldfilename = isset($settings['oldfilename']) ? $settings['oldfilename'] : '';
+  $file->filepath    = isset($settings['filepath']) ? $settings['filepath'] : '';
+
+  $settings['import_id'] = user_import_import_set($name, $file, $pointer, $processed, $valid, $field_match, $roles, $options, $setting, $auto_import_directory, $import_id);
+
+  return $settings;
+}
+
+
+function user_import_import_set($name = '', $file = '', $pointer = 0, $processed = 0, $valid = 0, $field_match = '', $roles = '', $options = '', $setting = '', $auto_import_directory = '', $import_id = '') {
   // Update settings for existing import.
-  if (isset($settings['import_id'])) {
+  if (!empty($import_id)) {
 
     db_update('user_import')
       ->fields(array(
-      'name'        => (isset($settings['name'])) ? trim($settings['name']) : '',
-      'filename'    => $settings['filename'],
-      'oldfilename' => $settings['oldfilename'],
-      'filepath'    => $settings['filepath'],
-      'pointer'     => (isset($settings['pointer'])) ? $settings['pointer'] : 0,
-      'processed'   => (isset($settings['processed'])) ? $settings['processed'] : 0,
-      'valid'       => (isset($settings['valid'])) ? $settings['valid'] : 0,
-      'field_match' => (isset($settings['field_match'])) ? serialize($settings['field_match']) : '',
-      'roles'       => (isset($settings['roles'])) ? serialize($settings['roles']) : '',
-      'options'     => (isset($settings['options'])) ? serialize($settings['options']) : '',
-      'setting'     => (isset($settings['setting'])) ? $settings['setting'] : ''
+      'name'                  => $name,
+      'auto_import_directory' => $auto_import_directory,
+      'filename'              => $file->filename,
+      'oldfilename'           => $file->oldfilename,
+      'filepath'              => $file->filepath,
+      'pointer'               => $pointer,
+      'processed'             => $processed,
+      'valid'                 => $valid,
+      'field_match'           => $field_match,
+      'roles'                 => $roles,
+      'options'               => $options,
+      'setting'               => $setting
     ))
-      ->condition('import_id', $settings['import_id'])
+      ->condition('import_id', $import_id)
       ->execute();
-
   }
   else {
 
-    $settings['import_id'] = db_insert('user_import')
+    $import_id = db_insert('user_import')
       ->fields(array(
-      'name'        => (isset($settings['name'])) ? trim($settings['name']) : '',
-      'filename'    => $settings['filename'],
-      'oldfilename' => $settings['oldfilename'],
-      'filepath'    => $settings['filepath'],
-      'started'     => time(),
-      'pointer'     => (isset($settings['pointer'])) ? $settings['pointer'] : 0,
-      'processed'   => (isset($settings['processed'])) ? $settings['processed'] : 0,
-      'valid'       => (isset($settings['valid'])) ? $settings['valid'] : 0,
-      'field_match' => (isset($settings['field_match'])) ? serialize($settings['field_match']) : '',
-      'roles'       => (isset($settings['roles'])) ? serialize($settings['roles']) : '',
-      'options'     => (isset($settings['options'])) ? serialize($settings['options']) : '',
-      'setting'     => (isset($settings['setting'])) ? $settings['setting'] : '',
-
+      'name'                  => $name,
+      'auto_import_directory' => $auto_import_directory,
+      'filename'              => $file->filename,
+      'oldfilename'           => $file->oldfilename,
+      'filepath'              => $file->filepath,
+      'started'               => time(),
+      'pointer'               => $pointer,
+      'processed'             => $processed,
+      'valid'                 => $valid,
+      'field_match'           => $field_match,
+      'roles'                 => $roles,
+      'options'               => $options,
+      'setting'               => $setting
     ))
       ->execute();
   }
 
-  return $settings;
+  return $import_id;
 }
 
 /**
@@ -519,6 +677,18 @@ function _user_import_settings_select($import_id = NULL, $template = FALSE) {
 }
 
 function _user_import_settings_deletion($import_id) {
+
+  $sql = 'SELECT auto_import_directory FROM {user_import} WHERE import_id = :import_id';
+  $auto_import_directory = db_query_range($sql, 0, 1, array(':import_id' => $import_id))->fetchField();
+
+  if (!empty($auto_import_directory)) {
+    $deleted = file_unmanaged_delete_recursive('private://user_import/uploads/' . $auto_import_directory);
+
+    if ($deleted) {
+      watchdog('Usr Import', t("Directory '%directory' has been deleted."), array('%directory' => $auto_import_directory));
+    }
+  }
+
   db_delete('user_import')
     ->condition('import_id', $import_id)
     ->execute();
@@ -602,6 +772,43 @@ function user_import_simpletest() {
   $tests       = file_scan_directory($dir, '\.test$');
 
   return array_keys($tests);
+}
+
+/**
+ * @param $filepath
+ * @param $filename
+ * @param $old_filename
+ * @param $ftp
+ * @param bool $message
+ */
+function _user_import_file_deletion($filepath, $filename, $old_filename, $ftp, $message = TRUE) {
+
+  $path_parts = explode(':', $filepath);
+
+  if ($path_parts[0] == 'private') {
+    // Delete files in the private files directory that have been uploaded by sftp/ftp.
+    file_unmanaged_delete($filepath);
+  }
+  else {
+    // Delete files uploaded through browser.
+    $file           = new stdClass();
+    $file->uri      = $filepath;
+    $file->filename = $filename;
+    $file->fid      = db_query("SELECT fid FROM {file_managed} WHERE uri = :filepath", array(':filepath' => $filepath))->fetchField();
+    ;
+    $removed = file_delete($file);
+  }
+
+  if (!$message) return;
+
+  if (empty($removed)) {
+    drupal_set_message(t("File error: file '%old_filename' (%filename) could not be deleted.", array('%old_filename' => $oldfilename, '%filename' => $filename)), 'error');
+  }
+  else {
+    drupal_set_message(t("File '%old_filename' was deleted.", array('%old_filename' => $old_filename)));
+  }
+
+  return;
 }
 
 

@@ -18,7 +18,6 @@ function user_import_list($action = NULL, $import_id = NULL) {
     $import   = _user_import_settings_select($import_id);
 
     $total = db_query('SELECT count(data) FROM {user_import_errors} WHERE import_id = :import_id', array(':import_id' => $import_id))->fetchField();
-    //$results = pager_query("SELECT * FROM {user_import_errors} WHERE import_id = %d", $max, $pager_id, NULL, array($import['import_id']));
 
     // Select table
     $query = db_select('user_import_errors', 'imp_usr_errors');
@@ -32,14 +31,8 @@ function user_import_list($action = NULL, $import_id = NULL) {
     // For pagination
     $query = $query->extend('TableSort')->extend('PagerDefault')->limit($limit);
 
-    // $result = $query
-    //  ->range(0, 1)
-    //  ->orderByHeader($header)
-    //  ->execute();
-
     // Execute query
     $result = $query->execute();
-
 
     foreach ($result as $line) {
       $rows[] = array('import_id' => $line->import_id, 'data' => unserialize($line->data), 'errors' => unserialize($line->errors));
@@ -59,6 +52,15 @@ function user_import_list($action = NULL, $import_id = NULL) {
 function user_import_preferences($import_id = NULL, $template_id = NULL) {
 
   if (empty($import_id)) {
+    $private_path = variable_get('file_private_path', FALSE);
+
+    // Private path hasn't been set, show a message instead of the form.
+    if (!$private_path) {
+      drupal_set_message(t('!path needs to be set before users can be imported.', array('!path' => l('Private file system path', 'admin/config/media/file-system', array('query' => array('destination' => 'admin/people/user_import/add'))))), 'warning');
+      return ' ';
+    }
+
+
     $output = drupal_get_form('user_import_add_form');
   }
   else {
@@ -96,7 +98,8 @@ function user_import_delete($import_id = NULL, $return_path = 'admin/people/user
 
   $import = _user_import_settings_select($import_id);
   _user_import_settings_deletion($import_id);
-  _user_import_file_deletion($import['filepath'], $import['filename'], $import['oldfilename'], $import['ftp']);
+  //_user_import_file_deletion($import['filepath'], $import['filename'], $import['oldfilename'], $import['ftp']);
+  file_unmanaged_delete($import['filepath']);
   drupal_goto($return_path);
 
   return;
@@ -106,6 +109,43 @@ function user_import_delete($import_id = NULL, $return_path = 'admin/people/user
  * Configuration form define (settings affect all user imports)
  */
 function user_import_configure_form() {
+
+  $form['selectable_files'] = array(
+    '#type'        => 'fieldset',
+    '#title'       => t('Uploads Directory'),
+    '#collapsible' => TRUE,
+    '#collapsed'   => TRUE,
+  );
+
+  if (variable_get('user_import_selectable_files', 0) == 0) {
+    $selectable_files_description = t('This option provides a directory where files can be uploaded, and then selected when setting up an import.');
+  }
+  else {
+    $selectable_files_description = t('');
+  }
+
+  $form['selectable_files']['selectable_files'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Enable Uploads Directory'),
+    '#description'   => $selectable_files_description,
+    '#default_value' => variable_get('user_import_selectable_files', 0),
+  );
+
+
+  $form['auto_imports'] = array(
+    '#type'        => 'fieldset',
+    '#title'       => t('Automated Imports'),
+    '#collapsible' => TRUE,
+    '#collapsed'   => TRUE,
+  );
+
+  $form['auto_imports']['auto_imports_enabled'] = array(
+    '#type'          => 'checkbox',
+    '#title'         => t('Enable Automated Imports'),
+    '#description'   => t('Each import template will have the option to create a directory which will be scanned for any files that have been uploaded to it,
+                           and when a file is found it will automatically be used to create new user accounts. Directories are scanned durring !cron runs.', array('!cron' => l(t('cron'), 'admin/config/system/cron'))),
+    '#default_value' => variable_get('user_import_auto_imports_enabled', 0),
+  );
 
   $form['performance'] = array(
     '#type'        => 'fieldset',
@@ -214,18 +254,52 @@ function user_import_configure_form_validate($form, &$form_state) {
     form_set_error('user_import_line_max', t('Value must be a number.'));
   }
 
+  // Check private files path is set.
+  if (!empty($form_state['values']['auto_imports_enabled'])) {
+    $file_private_path = variable_get('file_private_path', FALSE);
+
+    if (!$file_private_path) {
+      form_set_error('auto_imports_enabled', t('The !private_file_path must be set to use this feature.', array('!private_file_path' => l(t('Private file system path'), 'admin/config/media/file-system'))));
+    }
+  }
+
+  // Check private files path is set.
+  if (!empty($form_state['values']['selectable_files'])) {
+    $file_private_path = variable_get('file_private_path', FALSE);
+
+    if (!$file_private_path) {
+      form_set_error('selectable_files', t('The !private_file_path must be set to use the Uploads Directory feature.', array('!private_file_path' => l(t('Private file system path'), 'admin/config/media/file-system'))));
+    }
+  }
+
   return;
 }
 
 function user_import_configure_form_submit($form, &$form_state) {
-
+  $deleted = '';
   settype($form_state['values']['user_import_max'], 'integer');
   settype($form_state['values']['user_import_line_max'], 'integer');
   variable_set('user_import_max', $form_state['values']['user_import_max']);
   variable_set('user_import_line_max', $form_state['values']['user_import_line_max']);
-  variable_set('user_import_settings', $form_state['values']['user_import_settings']);
+
+  $user_import_settings = isset($form_state['values']['user_import_settings']) ? $form_state['values']['user_import_settings'] : 0;
+  variable_set('user_import_settings', $user_import_settings);
+
   $profile_date_format = isset($form_state['values']['profile_date_format']) ? $form_state['values']['profile_date_format'] : 0;
   variable_set('user_import_profile_date_format', $profile_date_format);
+
+  variable_set('user_import_selectable_files', $form_state['values']['selectable_files']);
+  variable_set('user_import_auto_imports_enabled', $form_state['values']['auto_imports_enabled']);
+
+  // Create a directory for processing incoming files if auto imports are enabled.
+  if (!empty($form_state['values']['auto_imports_enabled'])) {
+    user_import_create_directory('processing', '');
+  }
+
+  // Create a directory for processing incoming files if auto imports are enabled.
+  if (!empty($form_state['values']['selectable_files'])) {
+    user_import_create_directory('selectable');
+  }
 
   if (!empty($form_state['values']['templates'])) {
 
@@ -247,11 +321,21 @@ function user_import_configure_form_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/people/user_import';
 }
 
+/**
+ *  Start new import.
+ *  Form to select file.
+ **/
 function user_import_add_form($import_id = NULL) {
 
-  $form      = array();
-  $ftp_files = _user_import_ftp_files();
+  $form = array();
+  $ftp_files = array();
+
+  if (variable_get('user_import_selectable_files', 0) == 1) {
+    $ftp_files = _user_import_ftp_files();
+  }
+
   user_import_add_file_form($form, $ftp_files);
+
   user_import_delimiter_form($form);
   $settings = _user_import_settings_select(NULL, TRUE);
 
@@ -285,26 +369,43 @@ function user_import_add_form($import_id = NULL) {
 
 function user_import_add_form_validate($form, &$form_state) {
 
-  $file = _user_import_file(NULL, $form_state['values']['file_ftp']);
+  if (isset($form_state['values']['file_ftp']) && !empty($form_state['values']['file_ftp'])) {
+    $file_ftp = $form_state['values']['file_ftp'];
+  }
+  else {
+    $file_ftp = FALSE;
+  }
+
+  $file = _user_import_file(NULL, $file_ftp);
 
   // check file uploaded OK
-  if (empty($file->filename)) form_set_error('file_upload', t('A file must be uploaded or selected from FTP updates.'));
-
-  /**
-   * @todo check file matches saved settings selected
-   */
+  if (empty($file->filename)) {
+    form_set_error('file_upload', t('A file must be uploaded or selected from FTP updates.'));
+  }
+  else {
+    $form_state['values']['file_info'] = $file;
+  }
 
   return;
 }
 
 function user_import_add_form_submit($form, &$form_state) {
   $redirect = 'admin/people/user_import/add/';
-  $file     = _user_import_file(NULL, $form_state['values']['file_ftp']);
 
-  $form_state['values']['ftp']         = empty($form_state['values']['file_ftp']) ? FALSE : TRUE;
-  $form_state['values']['filename']    = $file->filename;
+  if (isset($form_state['values']['file_ftp']) && !empty($form_state['values']['file_ftp'])) {
+    $file_ftp = $form_state['values']['file_ftp'];
+  }
+  else {
+    $file_ftp = FALSE;
+  }
+
+  $file = _user_import_file(NULL, $file_ftp);
+  $file_name = user_import_move_file_for_processing($file->uri, $file->filename);
+
+  $form_state['values']['ftp']         = $file_ftp;
+  $form_state['values']['filename']    = $file_name;
   $form_state['values']['oldfilename'] = $file->filename;
-  $form_state['values']['filepath']    = $file->uri;
+  $form_state['values']['filepath']    = 'private://user_import/processing/' . $file_name;
   $form_state['values']['setting']     = 'file set';
 
   // create import setting
@@ -447,7 +548,8 @@ function user_import_edit_cancel_validate($form, &$form_state) {
   if ($form_state['values']['setting'] == 'file set') {
     $settings = _user_import_settings_select($form_state['values']['import_id']);
     _user_import_settings_deletion($form_state['values']['import_id']);
-    _user_import_file_deletion($settings['filepath'], $settings['filename'], $settings['oldfilename'], $settings['options']['ftp']);
+    // _user_import_file_deletion($settings['filepath'], $settings['filename'], $settings['oldfilename'], $settings['options']['ftp']);
+    file_unmanaged_delete($settings['filepath']);
   }
 
   $form_state['redirect'] = 'admin/people/user_import';
@@ -480,6 +582,15 @@ function user_import_edit_validate($form, &$form_state) {
     }
   }
 
+  // Check auto uploads directory is not already in use by another template.
+  if (!empty($form_state['values']['auto_import_directory'])) {
+    $auto_import_directory = 'private://user_import/uploads/' . $form_state['values']['auto_import_directory'];
+
+    if (file_prepare_directory($auto_import_directory, FILE_MODIFY_PERMISSIONS) || $form_state['values']['auto_import_directory'] == 'selectable') {
+      form_set_error('auto_import_directory', t("Directory '%directory' already exists and can not be used.", array('%directory' => $form_state['values']['auto_import_directory'])));
+    }
+  }
+
   return;
 }
 
@@ -495,6 +606,12 @@ function user_import_template_new_submit($form, &$form_state) {
   $import_id                       = $form_state['values']['import_id'];
   $form_state['values']['setting'] = 'template';
   unset($form_state['values']['import_id']);
+
+  if (isset($form_state['values']['auto_import_directory']) && !empty($form_state['values']['auto_import_directory'])) {
+    user_import_create_directory($form_state['values']['auto_import_directory']);
+  }
+
+
   _user_import_initialise_import($form_state['values']);
   drupal_set_message(t("'%name' was saved as a settings template.", array('%name' => $form_state['values']['name'])));
 
@@ -545,6 +662,16 @@ function user_import_import_submit($form, &$form_state) {
   drupal_set_message(t('Imported'));
 }
 
+function user_import_move_file_for_processing($source, $file_name) {
+  // Make sure processing directory exists.
+  user_import_create_directory(NULL, 'processing');
+
+  $destination = 'private://user_import/processing/' . $file_name;
+  $uri = file_unmanaged_move($source, $destination, FILE_EXISTS_RENAME);
+  $file_name = substr($uri, 33);
+  return $file_name;
+}
+
 /**
  *
  */
@@ -560,10 +687,11 @@ function user_import_edit_submit($form, &$form_state) {
   module_load_include('inc', 'user_import', 'user_import.import');
 
   if ($form_state['values']['setting'] == 'file set') {
-    $file           = new stdClass();
-    $file->uri      = $form_state['values']['filepath'];
-    $file->filename = $form_state['values']['filename'];
-    $filepath       = file_move($file, file_directory_path() . '/' . $form_state['values']['filename']);
+//    $file           = new stdClass();
+//    $file->uri      = $form_state['values']['filepath'];
+//    $file->filename = $form_state['values']['filename'];
+    //$filepath       = file_move($file, file_directory_path() . '/' . $form_state['values']['filename']);
+    $filepath       = user_import_move_file_for_processing($form_state['values']['filepath']);
   }
 
   if (!empty($form_state['values']['og_id'])) $form_state['values']['groups'][$form_state['values']['og_id']] = $form_state['values']['og_id'];
@@ -586,7 +714,7 @@ function user_import_add_file_form(&$form, $ftp_files = NULL) {
   );
 
   if (function_exists('file_upload_max_size')) {
-    $file_size = t('Maximum file size: %size.', array('%size' => format_size(file_upload_max_size())));
+    $file_size = t('Maximum file size: @size.', array('@size' => format_size(file_upload_max_size())));
   }
 
   $form['browser']['file_upload'] = array(
@@ -609,7 +737,7 @@ function user_import_add_file_form(&$form, $ftp_files = NULL) {
     $form['ftp']['file_ftp'] = array(
       '#type'          => 'radios',
       '#title'         => t('Files'),
-      '#default_value' => 0,
+      '#default_value' => '0',
       '#options'       => $ftp_files,
     );
 
@@ -665,33 +793,6 @@ function _user_import_file_open($filepath, $filename) {
   return $handle;
 }
 
-function _user_import_file_deletion($filepath, $filename, $old_filename, $ftp, $message = TRUE) {
-
-  if ($ftp) {
-    drupal_set_message(t("File '%filename' was uploaded using FTP and should be deleted manually once the import has been completed.", array('%filename' => $filename)));
-
-    return;
-  }
-
-  $file           = new stdClass();
-  $file->uri      = $filepath;
-  $file->filename = $filename;
-  $file->fid      = db_query("SELECT fid FROM {file_managed} WHERE uri = :filepath", array(':filepath' => $filepath))->fetchField();
-  ;
-  $removed = file_delete($file);
-
-  if (!$message) return;
-
-  if (empty($removed)) {
-    drupal_set_message(t("File error: file '%old_filename' (%filename) could not be deleted.", array('%old_filename' => $oldfilename, '%filename' => $filename)), 'error');
-  }
-  else {
-    drupal_set_message(t("File '%old_filename' was deleted.", array('%old_filename' => $old_filename)));
-  }
-
-  return;
-}
-
 /*
  * File being used
  * $import_id - use file info stored in database
@@ -703,24 +804,25 @@ function _user_import_file($import_id = NULL, $ftp_file_selected = NULL) {
   static $file;
   if (!empty($file)) return $file;
 
-  // file was uploaded through browser
-  $file = file_save_upload('file_upload', array('file_validate_extensions' => array('csv txt')));
-  if (!empty($file)) return $file;
+  // File was uploaded through browser.
+  if (empty($ftp_file_selected) && empty($import_id)) {
+    // Delete record from database management so we don't have duplicates problems.
+    db_delete('file_managed')->condition('uri', 'temporary://' . $_FILES['files']['name']['file_upload'])->execute();
 
-  // file was uploaded by FTP
+    $file = file_save_upload('file_upload', array('file_validate_extensions' => array('csv txt')), FALSE, FILE_EXISTS_RENAME);
+    if (!empty($file)) return $file;
+  }
+
+  // File was uploaded by FTP
   if (!empty($ftp_file_selected)) {
-    $ftp_files      = _user_import_ftp_files();
-    $filepath       = drupal_get_path('module', 'user_import');
-    $filename       = $ftp_files[$ftp_file_selected];
-    $file           = new stdClass();
-    $file->uri      = "$filepath/$filename";
-    $file->filepath = "$filepath/$filename";
-    $file->filename = $filename;
+    $ftp_files      = file_scan_directory('private://user_import/uploads/selectable', '/.*$/', array('key' => 'filename'));
+    $file           = $ftp_files[$ftp_file_selected];
+    $file->filepath = $file->uri;
 
     return $file;
   }
 
-  // use file info stored in database
+  // Use file info stored in database
   if (!empty($import_id)) {
     $import            = _user_import_settings_select($import_id);
     $file->uri         = $import['filepath'];
@@ -737,19 +839,14 @@ function _user_import_file($import_id = NULL, $ftp_file_selected = NULL) {
 // get info on files  uploaded via FTP
 function _user_import_ftp_files() {
 
-  $directory       = opendir(drupal_get_path('module', 'user_import'));
-  $filenames[]     = t('none');
-  $ignorable_files = array('.', '..', '.DS_Store', 'CVS', '.svn', '.git', 'user_import.test', 'API.txt', 'user_import.drush.inc',
-    'README.txt', 'LICENSE.txt', 'UPDATES.txt', 'user_import.module', 'user_import.install', 'user_import.info',
-    'user_import.admin.inc', 'user_import.import.inc', 'supported', 'tests');
+  //$directory       = opendir(drupal_get_path('module', 'user_import'));
 
-  while ($file = readdir($directory)) {
-    if (!in_array($file, $ignorable_files)) {
-      $filenames[] = $file;
-    }
+  $files       = file_scan_directory('private://user_import/uploads/selectable', '/.*$/');
+  $filenames[] = t('none');
+
+  foreach ($files as $file) {
+    $filenames[$file->filename] = $file->filename;
   }
-
-  closedir($directory);
 
   return $filenames;
 }
@@ -761,11 +858,30 @@ function  _user_import_incomplete_deletion() {
 
   foreach ($result as $import) {
     $options = unserialize($import->options);
-    _user_import_file_deletion($import->filepath, $import->filename, $import->oldfilename, $options['ftp'], FALSE);
+    //_user_import_file_deletion($import->filepath, $import->filename, $import->oldfilename, $options['ftp'], FALSE);
+    file_unmanaged_delete($import->filepath);
     _user_import_settings_deletion($import->import_id);
   }
 
   return;
+}
+
+/**
+ *  Create a directory in the private files directory.
+ *
+ **/
+function user_import_create_directory($directory_name, $path_prefix = 'uploads/') {
+
+  if (!file_stream_wrapper_valid_scheme('private')) {
+    drupal_set_message(t('Directory %path could not be created as the Private files path has not been set.', array('%path' => $directory_name)), 'warning');
+  }
+
+  $path = 'private://user_import/' . $path_prefix . $directory_name;
+  $directory_created = file_prepare_directory($path, FILE_CREATE_DIRECTORY);
+
+  if ($directory_created) {
+    file_create_htaccess($path);
+  }
 }
 
 // - - - - - - - -  MISC - - - - - - - -

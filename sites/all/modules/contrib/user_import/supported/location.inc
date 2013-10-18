@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 // Functionality depends on User Location.
 if (module_exists('location_user')) {

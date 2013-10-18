@@ -43,7 +43,7 @@ function _user_import_process($settings) {
       // check if this is first line - if so should we skip?
       if (!empty($settings['first_line_skip']) && $settings['processed'] == 0) {
         // reset to false on second process
-        $first_line_skip = (empty($first_line_skip)) ? TRUE : FALSE;
+        $first_line_skip = ($first_line_skip === 0) ? TRUE : FALSE;
       }
 
       if (!$first_line_skip) {
@@ -109,11 +109,12 @@ function _user_import_process($settings) {
             module_invoke_all('user_import_after_save', $settings, $account, $password, $fields, $updated, $update_setting_per_module);
             $processed_counter++;
           }
-          $settings['processed']++;
+
           $settings['valid']++;
         }
 
-
+        // If first line is skipped it doesn't count as processed.
+        $settings['processed']++;
       }
 
       $settings['pointer'] = ftell($handle);
@@ -126,11 +127,14 @@ function _user_import_process($settings) {
     }
 
     $settings['setting'] = _user_import_save_progress($settings['setting'], $remaining_data, $settings['pointer'], $settings['processed'], $settings['valid'], $settings['import_id']);
-
   }
 
   // Save progress.
   $settings['setting'] = _user_import_save_progress($settings['setting'], $remaining_data, $settings['pointer'], $settings['processed'], $settings['valid'], $settings['import_id'], TRUE);
+
+  if ($settings['setting'] == 'imported') {
+    module_invoke_all('user_import_imported', $settings['import_id'], $settings);
+  }
 
   fclose($handle);
 
@@ -234,6 +238,13 @@ function _user_import_unique_username($username, $start = FALSE) {
   // loop until name is valid
   if (!empty($duplicate)) {
     $suffix++;
+
+    // If we loop to many times PHP will kill the script,
+    // for large user bases that might be a problem with popular names.
+    if ($suffix > 10) {
+      $suffix = $suffix * mt_rand(10, 99);
+    }
+
     _user_import_unique_username($username);
   }
 
